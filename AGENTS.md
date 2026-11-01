@@ -16,7 +16,7 @@ The project has two equal goals:
 
 ## Product decisions belong to the designer
 
-The product definition is still in progress and will be documented in `docs/` as it is decided.
+The product brief lives in `docs/product-brief.md`. Read it before any task that touches product screens, data, components or copy. It is a living document and may change.
 
 - Do not make product decisions on your own: features, screens, user flows, content or AI behavior.
 - If a task requires a product decision that is not documented, do not guess. List it under **Open questions** in the PR description.
