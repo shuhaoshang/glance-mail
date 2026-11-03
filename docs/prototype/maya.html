@@ -1,0 +1,611 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<style>
+body { margin: 0 }
+a { color: #4A3FD0 }
+a:hover { color: #3529B0 }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 2px solid #5A4FE0; outline-offset: 2px }
+@keyframes glance-in { from { opacity: 0; transform: translateY(-4px) } to { opacity: 1; transform: none } }
+@keyframes glance-sweep { from { background-size: 0% 100% } to { background-size: 100% 100% } }
+@keyframes glance-ring { from { box-shadow: 0 0 0 1.5px transparent } to { box-shadow: 0 0 0 1.5px var(--ring) } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 1ms !important; animation-delay: 0ms !important; transition-duration: 1ms !important }
+}
+</style>
+</head><body><!-- Generated from the Glance design canvas. The small script at the bottom is a stand-in runtime for the prototype only; it is not app code. --><template id="tpl">
+
+<div style="font-family: Inter, system-ui, sans-serif; color: #16151C; background: #F4F4F7; min-height: 1200px; padding: 24px 32px 48px; box-sizing: border-box">
+<div style="max-width: 1120px; margin: 0 auto; display: flex; flex-direction: column; gap: 24px">
+
+<nav aria-label="Demo controls" style="background: #16151C; color: #FFFFFF; border-radius: 16px; padding: 8px 8px 8px 16px; display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="display: flex; flex-direction: column; margin-right: auto">
+<span style="font-size: 12px; line-height: 16px; font-weight: 600">Demo controls</span>
+<span style="font-size: 12px; line-height: 16px; color: #B9B6C8">Not part of the product</span>
+</span>
+<div role="group" aria-label="Persona" style="display: flex; gap: 4px; background: #2A2833; border-radius: 999px; padding: 4px">
+<sc-for list="{{personas}}" as="pp" hint-placeholder-count="3">
+<sc-if value="{{pp.current}}" hint-placeholder-val="{{false}}"><span aria-current="page" style="font-size: 14px; line-height: 20px; font-weight: 600; color: #16151C; background: #FFFFFF; border-radius: 999px; padding: 8px 12px">{{pp.label}}</span></sc-if>
+<sc-if value="{{pp.other}}" hint-placeholder-val="{{true}}"><a href="{{pp.href}}" style="font-size: 14px; line-height: 20px; font-weight: 600; color: #FFFFFF; text-decoration: none; border-radius: 999px; padding: 8px 12px">{{pp.label}}</a></sc-if>
+</sc-for>
+</div>
+<div role="group" aria-label="Show the brief as" style="display: flex; gap: 4px; background: #2A2833; border-radius: 999px; padding: 4px">
+<sc-for list="{{levels}}" as="lv" hint-placeholder-count="3">
+<button type="button" aria-pressed="{{lv.pressed}}" onClick="{{lv.go}}" style="font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: {{lv.fg}}; background: {{lv.bg}}; border: none; border-radius: 999px; padding: 8px 12px; cursor: pointer; transition: background-color 160ms ease, color 160ms ease"><span style="color: {{lv.numFg}}">{{lv.num}}</span>  {{lv.label}}</button>
+</sc-for>
+</div>
+<button type="button" onClick="{{simulate}}" style="font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: #FFFFFF; background: transparent; border: 1px dashed #6E6A80; border-radius: 999px; padding: 8px 16px; min-height: 44px; cursor: pointer">{{simLabel}}</button>
+</nav>
+
+<header style="display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; height: 44px">
+<span style="display: inline-flex; align-items: center; gap: 4px; font-size: 18px; line-height: 24px; font-weight: 700; letter-spacing: -0.03em">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="#5A4FE0" aria-hidden="true"><path d="M12 2C12.6 7.5 16.5 11.4 22 12C16.5 12.6 12.6 16.5 12 22C11.4 16.5 7.5 12.6 2 12C7.5 11.4 11.4 7.5 12 2Z"></path></svg>glance</span>
+<button type="button" aria-label="Account and settings" style="width: 44px; height: 44px; padding: 0; border: none; background: transparent; display: flex; align-items: center; justify-content: flex-end; cursor: pointer">
+<span style="width: 32px; height: 32px; border-radius: 50%; background: #E3ECFF; color: #1D4BAE; font-size: 14px; line-height: 20px; font-weight: 700; display: flex; align-items: center; justify-content: center">{{pr.initial}}</span>
+</button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 500; color: #6A6875">{{pr.date}}</span>
+<h1 style="margin: 0; font-size: 32px; line-height: 40px; font-weight: 700; letter-spacing: -0.03em">{{pr.greeting}}</h1>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #4A4856">{{coverage}}</p>
+<sc-if value="{{pr.hasNote}}" hint-placeholder-val="{{false}}">
+<span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; color: #6A6875"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6A6875" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"></path></svg>{{pr.note}}</span>
+</sc-if>
+</div>
+</header>
+
+<sc-if value="{{isL1}}" hint-placeholder-val="{{false}}">
+<section aria-label="Brief as plain text" style="max-width: 720px; background: #FFFFFF; border-radius: 20px; padding: 24px 32px 32px; display: flex; flex-direction: column; gap: 8px; animation: glance-in 240ms ease both">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">Your inbox summary</span>
+<p style="margin: 0; font-size: 16px; line-height: 28px; color: #2B2933">{{l1}}</p>
+</section>
+</sc-if>
+
+<sc-if value="{{isL2}}" hint-placeholder-val="{{false}}">
+<section aria-label="Brief as formatted text" style="max-width: 720px; background: #FFFFFF; border-radius: 20px; padding: 24px 32px 32px; display: flex; flex-direction: column; gap: 12px; font-size: 16px; line-height: 24px; color: #2B2933; animation: glance-in 240ms ease both">
+<h2 style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 700; color: #16151C">Needs you</h2>
+<ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{l2.needs}}" as="ln" hint-placeholder-count="3"><li><strong style="font-weight: 600; color: #16151C">{{ln.lead}}</strong>{{ln.text}}</li></sc-for>
+</ul>
+<h2 style="margin: 4px 0 0; font-size: 20px; line-height: 28px; font-weight: 700; color: #16151C">Good to know</h2>
+<ul style="margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{l2.know}}" as="lk" hint-placeholder-count="2"><li>{{lk.text}}</li></sc-for>
+</ul>
+<sc-if value="{{l2.hasDone}}" hint-placeholder-val="{{true}}">
+<h2 style="margin: 4px 0 0; font-size: 20px; line-height: 28px; font-weight: 700; color: #16151C">Done</h2>
+<ul style="margin: 0; padding-left: 20px">
+<sc-for list="{{l2.done}}" as="ld" hint-placeholder-count="1"><li>{{ld.text}}</li></sc-for>
+</ul>
+</sc-if>
+<p style="margin: 4px 0 0; color: #6A6875">{{l2.setAside}}</p>
+</section>
+</sc-if>
+
+<sc-if value="{{isL3}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; gap: 32px; align-items: flex-start; flex-wrap: wrap">
+
+<div style="flex: 0 1 416px; min-width: 320px; display: flex; flex-direction: column; gap: 32px">
+
+<section aria-label="Needs you" style="display: flex; flex-direction: column; gap: 12px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 0 4px">
+<h2 style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 700; letter-spacing: -0.01em">Needs you <span style="color: #6A6875; font-weight: 600">{{openCount}}</span></h2>
+<span style="display: inline-flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; color: #6A6875">{{doneCount}} of {{totalCount}} done
+<span role="img" aria-label="{{doneCount}} of {{totalCount}} actions done" style="width: 64px; height: 4px; border-radius: 999px; background: #E6E3FA; overflow: hidden; display: block"><span style="display: block; width: {{progressPct}}; height: 4px; border-radius: 999px; background: #5A4FE0; transition: width 320ms ease"></span></span></span>
+</div>
+<div style="background: #FFFFFF; border-radius: 20px; padding: 8px; display: flex; flex-direction: column">
+<sc-if value="{{notAdded}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{addNew}}" style="width: 100%; font: inherit; color: #16151C; text-align: left; background: transparent; border: none; border-radius: 12px; display: flex; align-items: center; gap: 12px; padding: 8px 12px; min-height: 44px; cursor: pointer">
+<span style="width: 16px; display: flex; justify-content: center; flex: none" aria-hidden="true"><span style="width: 8px; height: 8px; border-radius: 50%; background: #5A4FE0"></span></span>
+<span style="flex: 1; font-size: 14px; line-height: 20px; font-weight: 600">{{newMail.label}}</span>
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0">Add to brief</span>
+</button>
+<div style="height: 1px; background: #ECECF1; margin: 4px 12px" aria-hidden="true"></div>
+</sc-if>
+<sc-if value="{{justAdded}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; min-height: 44px; box-sizing: border-box; animation: glance-in 240ms ease both">
+<span style="width: 16px; flex: none" aria-hidden="true"></span>
+<span style="flex: 1; font-size: 14px; line-height: 20px; color: #6A6875">{{newMail.added}}</span>
+</div>
+<div style="height: 1px; background: #ECECF1; margin: 4px 12px" aria-hidden="true"></div>
+</sc-if>
+<sc-for list="{{list}}" as="it" hint-placeholder-count="3">
+<div style="overflow: hidden; max-height: {{it.maxH}}; opacity: {{it.op}}; transition: max-height 240ms ease 80ms, opacity 160ms ease">
+<button type="button" onClick="{{it.pick}}" aria-pressed="{{it.current}}" style="width: 100%; text-align: left; font: inherit; color: #16151C; border: none; border-radius: 12px; padding: 12px; background: {{it.rowBg}}; display: flex; gap: 12px; align-items: flex-start; cursor: pointer; transition: background-color 160ms ease">
+<span style="flex: none; width: 16px; font-size: 14px; line-height: 24px; font-weight: 600; color: {{it.rankFg}}">{{it.rank}}</span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<span style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap"><span style="font-size: 16px; line-height: 24px; font-weight: 600">{{it.name}}</span><sc-if value="{{it.hasAccount}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #4A4856; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D9D8E0; border-radius: 999px; padding: 2px 8px">{{it.account}}</span></sc-if><sc-if value="{{it.isNew}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #4A3FD0; background: #EEECFD; border-radius: 999px; padding: 2px 8px">New</span></sc-if></span>
+<span style="font-size: 14px; line-height: 20px; color: #4A4856; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden"><sc-if value="{{it.isSummary}}" hint-placeholder-val="{{false}}"><span style="color: #5A4FE0; font-weight: 700">✦ </span></sc-if>{{it.ask}}</span>
+<span style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px">
+<sc-for list="{{it.chips}}" as="c" hint-placeholder-count="2">
+<span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 600; color: {{c.fg}}; background: {{c.bg}}; border-radius: 999px; padding: 4px 12px 4px 8px"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{c.dot}}" aria-hidden="true"></span>{{c.label}}</span>
+</sc-for>
+</span>
+</span>
+</button>
+</div>
+</sc-for>
+<sc-if value="{{hasDoneArea}}" hint-placeholder-val="{{true}}">
+<sc-if value="{{hasOpen}}" hint-placeholder-val="{{true}}">
+<div style="height: 1px; background: #ECECF1; margin: 4px 12px" aria-hidden="true"></div>
+</sc-if>
+<sc-for list="{{doneBefore}}" as="db" hint-placeholder-count="1">
+<div style="display: flex; align-items: center; gap: 12px; padding: 8px 12px; min-height: 44px; box-sizing: border-box">
+<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex: none"><circle cx="12" cy="12" r="10" fill="#5A4FE0"></circle><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+<span style="flex: 1; font-size: 14px; line-height: 20px; color: #6A6875"><strong style="font-weight: 600; color: #4A4856">{{db.name}}</strong> · {{db.note}}</span>
+</div>
+</sc-for>
+<sc-for list="{{doneRows}}" as="d" hint-placeholder-count="0">
+<div style="display: flex; align-items: center; gap: 12px; padding: 8px 4px 8px 12px; min-height: 44px; box-sizing: border-box; animation: glance-in 240ms ease both">
+<sc-if value="{{d.isDone}}" hint-placeholder-val="{{true}}">
+<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true" style="flex: none"><circle cx="12" cy="12" r="10" fill="#5A4FE0"></circle><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+</sc-if>
+<sc-if value="{{d.isMoved}}" hint-placeholder-val="{{false}}">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6A6875" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"></path><path d="M12 4v10M8 10l4 4 4-4"></path></svg>
+</sc-if>
+<sc-if value="{{d.isSnoozed}}" hint-placeholder-val="{{false}}">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6A6875" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg>
+</sc-if>
+<span style="flex: 1; font-size: 14px; line-height: 20px; color: #6A6875"><strong style="font-weight: 600; color: #4A4856">{{d.name}}</strong> · {{d.note}}</span>
+<button type="button" onClick="{{d.undo}}" style="font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0; background: transparent; border: none; padding: 8px; min-height: 40px; cursor: pointer">Undo</button>
+</div>
+</sc-for>
+</sc-if>
+</div>
+</section>
+
+<section aria-label="Good to know" style="display: flex; flex-direction: column; gap: 12px">
+<h2 style="margin: 0; padding: 0 4px; font-size: 20px; line-height: 28px; font-weight: 700; letter-spacing: -0.01em">Good to know <span style="color: #6A6875; font-weight: 600">{{gtkCount}}</span></h2>
+<div style="background: #FFFFFF; border-radius: 20px; padding: 4px 20px">
+<sc-for list="{{gtk}}" as="g" hint-placeholder-count="3">
+<sc-if value="{{g.notFirst}}" hint-placeholder-val="{{true}}"><div style="height: 1px; background: #ECECF1; margin-left: 44px" aria-hidden="true"></div></sc-if>
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 0">
+<span style="width: 32px; height: 32px; border-radius: 8px; background: {{g.tileBg}}; display: flex; align-items: center; justify-content: center; flex: none" aria-hidden="true">
+<sc-if value="{{g.isTag}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{g.stroke}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12.5V4a1 1 0 0 1 1-1h8.5L21 11.5 12 20.5z"></path><circle cx="7.5" cy="7.5" r="1.5"></circle></svg></sc-if>
+<sc-if value="{{g.isClock}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{g.stroke}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg></sc-if>
+<sc-if value="{{g.isPeople}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{g.stroke}}" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="9" r="3.5"></circle><circle cx="17" cy="10" r="2.5"></circle><path d="M3 19c.8-3 3.2-4.5 6-4.5s5.2 1.5 6 4.5M15 15.2c2.3-.5 4.6.6 5.5 3.3"></path></svg></sc-if>
+<sc-if value="{{g.isChart}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{g.stroke}}" stroke-width="2" stroke-linecap="round"><path d="M5 19V11M12 19V5M19 19v-6"></path></svg></sc-if>
+<sc-if value="{{g.isPackage}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{g.stroke}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"></path><path d="M4 7.5l8 4.5 8-4.5M12 12v9"></path></svg></sc-if>
+<sc-if value="{{g.isMail}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{g.stroke}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg></sc-if>
+</span>
+<span style="flex: 1; min-width: 0; font-size: 14px; line-height: 20px"><strong style="font-weight: 600">{{g.title}}</strong><sc-if value="{{g.hasFact}}" hint-placeholder-val="{{true}}">{{g.textPre}}<button type="button" onClick="{{g.toggleSrc}}" aria-pressed="{{g.srcPressed}}" aria-label="{{g.srcAria}}" style="font: inherit; color: #16151C; background: {{g.factBg}}; border: none; border-radius: 4px; padding: 0 2px; margin: 0 -2px; cursor: pointer; text-decoration: underline dotted {{g.factLine}} 2px; text-underline-offset: 4px; transition: background-color 200ms ease">{{g.value}}</button>{{g.textPost}}</sc-if><sc-if value="{{g.noFact}}" hint-placeholder-val="{{false}}">{{g.text}}</sc-if></span>
+<sc-if value="{{g.hasAccount}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #4A4856; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D9D8E0; border-radius: 999px; padding: 2px 8px; flex: none">{{g.account}}</span></sc-if>
+<sc-if value="{{g.isKept}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; line-height: 16px; color: #6A6875; flex: none">Moved by you</span></sc-if>
+<sc-if value="{{g.hasJudgment}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{g.toggle}}" aria-expanded="{{g.expanded}}" style="font: inherit; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 600; color: #4A3FD0; background: #FFFFFF; box-shadow: inset 0 0 0 1.5px #5A4FE0; border: none; border-radius: 999px; padding: 4px 12px 4px 8px; min-height: 24px; cursor: pointer; flex: none">
+<svg width="12" height="12" viewBox="0 0 24 24" fill="#5A4FE0" aria-hidden="true"><path d="M12 2C12.6 7.5 16.5 11.4 22 12C16.5 12.6 12.6 16.5 12 22C11.4 16.5 7.5 12.6 2 12C7.5 11.4 11.4 7.5 12 2Z"></path></svg>{{g.jLabel}}</button>
+</sc-if>
+</div>
+<sc-if value="{{g.open}}" hint-placeholder-val="{{false}}">
+<div style="margin: 0 0 12px 44px; background: #F7F7FA; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; animation: glance-in 200ms ease both">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0">Glance’s read <span style="font-weight: 500; color: #6A6875">· not stated in the email</span></span>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #2B2933">{{g.jRead}}</p>
+<span style="margin-top: 4px; font-size: 14px; line-height: 20px; color: #6A6875">Based on · {{g.jFrom}} · {{g.jWhen}}</span>
+<p style="margin: 0; font-size: 16px; line-height: 28px; color: #2B2933">{{g.jPre}}<span style="background-image: linear-gradient(#E3DEFF, #E3DEFF); background-repeat: no-repeat; background-size: 100% 100%; border-radius: 4px; padding: 2px; animation: glance-sweep 480ms cubic-bezier(0.2, 0.7, 0.2, 1) 120ms both">{{g.jHl}}</span>{{g.jPost}}</p>
+</div>
+</sc-if>
+<sc-if value="{{g.srcOpen}}" hint-placeholder-val="{{false}}">
+<div style="margin: 0 0 12px 44px; background: #F7F7FA; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px; animation: glance-in 200ms ease both">
+<span style="font-size: 14px; line-height: 20px; color: #6A6875">Source · {{g.sFrom}} · {{g.sWhen}}</span>
+<p style="margin: 0; font-size: 16px; line-height: 28px; color: #2B2933">{{g.sPre}}<span style="background-image: linear-gradient({{g.srcInk}}, {{g.srcInk}}); background-repeat: no-repeat; background-size: 100% 100%; border-radius: 4px; padding: 2px; animation: glance-sweep 480ms cubic-bezier(0.2, 0.7, 0.2, 1) 120ms both">{{g.sHl}}</span>{{g.sPost}}</p>
+</div>
+</sc-if>
+</sc-for>
+</div>
+</section>
+
+<button type="button" onClick="{{openSetAside}}" aria-pressed="{{setAsidePressed}}" style="font: inherit; color: #16151C; text-align: left; background: {{setAsideBg}}; border: none; border-radius: 20px; display: flex; align-items: center; gap: 12px; padding: 16px 20px; min-height: 72px; cursor: pointer; transition: background-color 160ms ease">
+<span style="flex: 1; display: flex; flex-direction: column">
+<span style="font-size: 16px; line-height: 24px; font-weight: 600">{{setAsideCount}} set aside</span>
+<span style="font-size: 14px; line-height: 20px; color: #6A6875">{{saSummary}}</span>
+</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#8A8796" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</button>
+
+</div>
+
+<div style="flex: 1 1 560px; min-width: 0; padding-top: 40px">
+<sc-if value="{{showSetAside}}" hint-placeholder-val="{{false}}">
+<article aria-label="Set aside" style="background: #FFFFFF; border-radius: 20px; padding: 24px 32px 32px; display: flex; flex-direction: column; gap: 24px; animation: glance-in 240ms ease both">
+<button type="button" onClick="{{backToBrief}}" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0; background: transparent; border: none; padding: 8px 0; min-height: 40px; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A3FD0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>Back to brief</button>
+<div style="display: flex; flex-direction: column; gap: 8px; margin-top: -8px">
+<h2 style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -0.02em">Set aside <span style="color: #6A6875; font-weight: 600">{{setAsideCount}}</span></h2>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #4A4856"><span style="color: #5A4FE0; font-weight: 700">✦ </span>Glance set these aside because none of them asks anything of you. Nothing is deleted; they all stay in {{appNames}}.</p>
+</div>
+
+<sc-for list="{{saGroups}}" as="g" hint-placeholder-count="3">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h3 style="margin: 0; font-size: 16px; line-height: 24px; font-weight: 700">{{g.title}} <span style="color: #6A6875; font-weight: 600">{{g.count}}</span></h3>
+<div style="box-shadow: inset 0 0 0 1px #ECECF1; border-radius: 16px; padding: 0 16px">
+<sc-for list="{{g.rows}}" as="r" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid #ECECF1">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+<span style="display: flex; gap: 8px; align-items: center"><span style="font-size: 14px; line-height: 20px; font-weight: 600">{{r.title}}</span><sc-if value="{{r.isNew}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #4A3FD0; background: #EEECFD; border-radius: 999px; padding: 2px 8px">New</span></sc-if></span>
+<span style="font-size: 14px; line-height: 20px; color: #6A6875; overflow: hidden; text-overflow: ellipsis; white-space: nowrap">{{r.sub}}</span>
+</div>
+<sc-if value="{{r.notKept}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{r.keep}}" style="font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0; background: transparent; border: none; padding: 8px; min-height: 40px; cursor: pointer">Show in brief</button>
+</sc-if>
+<sc-if value="{{r.isMovedRow}}" hint-placeholder-val="{{false}}">
+<button type="button" onClick="{{r.back}}" style="font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0; background: transparent; border: none; padding: 8px; min-height: 40px; cursor: pointer">Back to Needs you</button>
+</sc-if>
+<sc-if value="{{r.kept}}" hint-placeholder-val="{{false}}">
+<span style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; line-height: 20px; color: #6A6875; animation: glance-in 200ms ease both"><svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="#5A4FE0"></circle><path d="M7.5 12.5l3 3 6-6.5" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"></path></svg>In Good to know</span>
+<button type="button" onClick="{{r.undo}}" style="font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0; background: transparent; border: none; padding: 8px; min-height: 40px; cursor: pointer">Undo</button>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{g.hasMore}}" hint-placeholder-val="{{true}}"><span style="display: block; font-size: 14px; line-height: 20px; color: #6A6875; padding: 12px 0">{{g.more}}</span></sc-if>
+</div>
+</div>
+</sc-for>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #6A6875">“Show in brief” moves the email to Good to know, and “Move to Set aside” in Glance’s read does the opposite. Both teach Glance for next time.</p>
+</article>
+</sc-if>
+
+<sc-if value="{{hasSel}}" hint-placeholder-val="{{true}}">
+<article aria-label="Selected item" style="background: #FFFFFF; border-radius: 20px; padding: 24px 32px 32px; display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">Needs you · {{cur.rankLabel}}</span>
+<div role="tablist" aria-label="Item views" style="display: flex; gap: 2px; background: #F0F0F4; border-radius: 999px; padding: 4px">
+<sc-for list="{{tabs}}" as="tb" hint-placeholder-count="3">
+<button type="button" role="tab" aria-selected="{{tb.selected}}" onClick="{{tb.go}}" style="font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: {{tb.fg}}; background: {{tb.bg}}; box-shadow: {{tb.shadow}}; border: none; border-radius: 999px; padding: 8px 16px; min-height: 40px; cursor: pointer; transition: background-color 160ms ease, color 160ms ease">{{tb.label}}</button>
+</sc-for>
+</div>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 8px">
+<h2 style="margin: 0; font-size: 20px; line-height: 28px; font-weight: 700; letter-spacing: -0.01em">{{cur.name}}</h2>
+<span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; color: #4A4856"><span style="width: 24px; height: 24px; border-radius: 50%; background: #E3ECFF; color: #1D4BAE; display: flex; align-items: center; justify-content: center; font-size: 12px; line-height: 16px; font-weight: 700">{{cur.initial}}</span>{{cur.person}}<sc-if value="{{cur.hasAccount}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #4A4856; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D9D8E0; border-radius: 999px; padding: 2px 8px">{{cur.account}}</span></sc-if></span>
+</div>
+
+<sc-if value="{{isDetails}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 24px">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<sc-if value="{{cur.isSummary}}" hint-placeholder-val="{{false}}">
+<span style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0"><svg width="12" height="12" viewBox="0 0 24 24" fill="#5A4FE0" aria-hidden="true"><path d="M12 2C12.6 7.5 16.5 11.4 22 12C16.5 12.6 12.6 16.5 12 22C11.4 16.5 7.5 12.6 2 12C7.5 11.4 11.4 7.5 12 2Z"></path></svg>Glance’s summary<span style="font-weight: 500; color: #6A6875">· not the sender’s words</span></span>
+</sc-if>
+<sc-if value="{{cur.isQuote}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">{{cur.askBy}}</span>
+</sc-if>
+<p style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 600; letter-spacing: -0.015em">{{cur.ask}}</p>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">From the email <span style="font-weight: 500">· select an underlined value to see where it says so</span></span>
+
+<sc-if value="{{sc.isDeal}}" hint-placeholder-val="{{true}}">
+<div style="background: #F7F7FA; border-radius: 16px; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 24px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">{{sc.label}}</span>
+<sc-if value="{{sc.hasUrgent}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 600; color: #FFFFFF; background: #C2255C; border-radius: 999px; padding: 4px 12px 4px 8px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #FFFFFF" aria-hidden="true"></span>{{sc.urgent}}</span></sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px">
+<sc-for list="{{sc.fields}}" as="f" hint-placeholder-count="3">
+<sc-if value="{{f.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{f.toggle}}" aria-pressed="{{f.pressed}}" aria-label="{{f.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 20px; line-height: 28px; font-weight: 600; text-decoration: underline dotted {{f.line}} 2px; text-underline-offset: 6px; background: {{f.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{f.value}}</span></button></sc-if>
+<sc-if value="{{f.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 20px; line-height: 28px; font-weight: 600">{{f.value}}</span></span></sc-if>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{sc.isDecision}}" hint-placeholder-val="{{false}}">
+<div style="background: #F7F7FA; border-radius: 16px; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 24px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">{{sc.label}}</span>
+<sc-if value="{{sc.hasUrgent}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 600; color: #FFFFFF; background: #C2255C; border-radius: 999px; padding: 4px 12px 4px 8px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #FFFFFF" aria-hidden="true"></span>{{sc.urgent}}</span></sc-if>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px">
+<sc-for list="{{sc.options}}" as="o" hint-placeholder-count="2">
+<div style="background: #FFFFFF; border-radius: 12px; box-shadow: inset 0 0 0 1px #E6E5EC; padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px">
+<span style="display: flex; align-items: center; gap: 8px"><span style="width: 24px; height: 24px; border-radius: 50%; background: #F0F0F4; font-size: 12px; line-height: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex: none">{{o.key}}</span><span style="font-size: 16px; line-height: 24px; font-weight: 600">{{o.title}}</span></span>
+<sc-if value="{{o.f.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{o.f.toggle}}" aria-pressed="{{o.f.pressed}}" aria-label="{{o.f.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 16px; line-height: 24px; font-weight: 600; text-decoration: underline dotted {{o.f.line}} 2px; text-underline-offset: 6px; background: {{o.f.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{o.f.value}}</span></button></sc-if>
+<sc-if value="{{o.f.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; line-height: 24px; font-weight: 600">{{o.f.value}}</span></span></sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{sc.isAmount}}" hint-placeholder-val="{{false}}">
+<div style="background: #F7F7FA; border-radius: 16px; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 24px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">{{sc.label}}</span>
+<sc-if value="{{sc.hasUrgent}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 600; color: #FFFFFF; background: #C2255C; border-radius: 999px; padding: 4px 12px 4px 8px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #FFFFFF" aria-hidden="true"></span>{{sc.urgent}}</span></sc-if>
+</div>
+<div style="display: flex; flex-wrap: wrap; align-items: flex-end; gap: 16px 32px">
+<sc-if value="{{sc.amount.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{sc.amount.toggle}}" aria-pressed="{{sc.amount.pressed}}" aria-label="{{sc.amount.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{sc.amount.label}}</span><span style="font-size: 32px; line-height: 40px; font-weight: 700; text-decoration: underline dotted {{sc.amount.line}} 2px; text-underline-offset: 6px; background: {{sc.amount.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{sc.amount.value}}</span></button></sc-if>
+<sc-if value="{{sc.amount.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{sc.amount.label}}</span><span style="font-size: 32px; line-height: 40px; font-weight: 700">{{sc.amount.value}}</span></span></sc-if>
+<sc-for list="{{sc.fields}}" as="f" hint-placeholder-count="2">
+<sc-if value="{{f.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{f.toggle}}" aria-pressed="{{f.pressed}}" aria-label="{{f.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 16px; line-height: 24px; font-weight: 600; text-decoration: underline dotted {{f.line}} 2px; text-underline-offset: 6px; background: {{f.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{f.value}}</span></button></sc-if>
+<sc-if value="{{f.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 16px; line-height: 24px; font-weight: 600">{{f.value}}</span></span></sc-if>
+</sc-for>
+</div>
+<sc-if value="{{sc.hasNote}}" hint-placeholder-val="{{false}}"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{sc.note}}</span></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{sc.isMismatch}}" hint-placeholder-val="{{false}}">
+<div style="background: #F7F7FA; border-radius: 16px; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 24px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">{{sc.label}}</span>
+<sc-if value="{{sc.hasUrgent}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 600; color: #FFFFFF; background: #C2255C; border-radius: 999px; padding: 4px 12px 4px 8px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #FFFFFF" aria-hidden="true"></span>{{sc.urgent}}</span></sc-if>
+</div>
+<div style="display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap">
+<sc-for list="{{sc.compare}}" as="f" hint-placeholder-count="2">
+<span style="display: flex; align-items: flex-end; gap: 16px"><sc-if value="{{f.notFirst}}" hint-placeholder-val="{{false}}"><span style="font-size: 24px; line-height: 40px; font-weight: 600; color: #C2255C" aria-label="does not match">≠</span></sc-if>
+<sc-if value="{{f.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{f.toggle}}" aria-pressed="{{f.pressed}}" aria-label="{{f.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 32px; line-height: 40px; font-weight: 700; text-decoration: underline dotted {{f.line}} 2px; text-underline-offset: 6px; background: {{f.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{f.value}}</span></button></sc-if>
+<sc-if value="{{f.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 32px; line-height: 40px; font-weight: 700">{{f.value}}</span></span></sc-if></span>
+</sc-for>
+<span style="margin-left: auto"></span>
+<sc-for list="{{sc.fields}}" as="f" hint-placeholder-count="1">
+<sc-if value="{{f.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{f.toggle}}" aria-pressed="{{f.pressed}}" aria-label="{{f.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 16px; line-height: 24px; font-weight: 600; text-decoration: underline dotted {{f.line}} 2px; text-underline-offset: 6px; background: {{f.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{f.value}}</span></button></sc-if>
+<sc-if value="{{f.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 16px; line-height: 24px; font-weight: 600">{{f.value}}</span></span></sc-if>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{sc.isEvent}}" hint-placeholder-val="{{false}}">
+<div style="background: #F7F7FA; border-radius: 16px; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 24px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">{{sc.label}}</span>
+<sc-if value="{{sc.hasUrgent}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 600; color: #FFFFFF; background: #C2255C; border-radius: 999px; padding: 4px 12px 4px 8px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #FFFFFF" aria-hidden="true"></span>{{sc.urgent}}</span></sc-if>
+</div>
+<div style="display: flex; align-items: center; gap: 16px">
+<span style="width: 56px; height: 56px; border-radius: 12px; background: #FFFFFF; box-shadow: inset 0 0 0 1px #E6E5EC; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none" aria-hidden="true"><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #A8164C">{{sc.tile.month}}</span><span style="font-size: 24px; line-height: 28px; font-weight: 700">{{sc.tile.day}}</span></span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 4px">
+<sc-if value="{{sc.main.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{sc.main.toggle}}" aria-pressed="{{sc.main.pressed}}" aria-label="{{sc.main.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 20px; line-height: 28px; font-weight: 600; text-decoration: underline dotted {{sc.main.line}} 2px; text-underline-offset: 6px; background: {{sc.main.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{sc.main.value}}</span></button></sc-if>
+<sc-if value="{{sc.main.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 20px; line-height: 28px; font-weight: 600">{{sc.main.value}}</span></span></sc-if>
+<span style="font-size: 14px; line-height: 20px; color: #6A6875">{{sc.title}}</span>
+</span>
+<sc-for list="{{sc.fields}}" as="f" hint-placeholder-count="1">
+<sc-if value="{{f.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{f.toggle}}" aria-pressed="{{f.pressed}}" aria-label="{{f.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 16px; line-height: 24px; font-weight: 600; text-decoration: underline dotted {{f.line}} 2px; text-underline-offset: 6px; background: {{f.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{f.value}}</span></button></sc-if>
+<sc-if value="{{f.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 16px; line-height: 24px; font-weight: 600">{{f.value}}</span></span></sc-if>
+</sc-for>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{sc.isRange}}" hint-placeholder-val="{{false}}">
+<div style="background: #F7F7FA; border-radius: 16px; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 24px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">{{sc.label}}</span>
+<sc-if value="{{sc.hasUrgent}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 600; color: #FFFFFF; background: #C2255C; border-radius: 999px; padding: 4px 12px 4px 8px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #FFFFFF" aria-hidden="true"></span>{{sc.urgent}}</span></sc-if>
+</div>
+<div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap">
+<span style="width: 56px; height: 56px; border-radius: 12px; background: #FFFFFF; box-shadow: inset 0 0 0 1px #E6E5EC; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none" aria-hidden="true"><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #A8164C">{{sc.from.month}}</span><span style="font-size: 24px; line-height: 28px; font-weight: 700">{{sc.from.day}}</span></span>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#8A8796" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+<span style="width: 56px; height: 56px; border-radius: 12px; background: #FFFFFF; box-shadow: inset 0 0 0 1px #E6E5EC; display: flex; flex-direction: column; align-items: center; justify-content: center; flex: none" aria-hidden="true"><span style="font-size: 12px; line-height: 16px; font-weight: 600; color: #A8164C">{{sc.to.month}}</span><span style="font-size: 24px; line-height: 28px; font-weight: 700">{{sc.to.day}}</span></span>
+<span style="margin-left: 8px; display: flex; flex-direction: column; gap: 4px">
+<sc-for list="{{sc.fields}}" as="f" hint-placeholder-count="1">
+<sc-if value="{{f.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{f.toggle}}" aria-pressed="{{f.pressed}}" aria-label="{{f.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 20px; line-height: 28px; font-weight: 600; text-decoration: underline dotted {{f.line}} 2px; text-underline-offset: 6px; background: {{f.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{f.value}}</span></button></sc-if>
+<sc-if value="{{f.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 20px; line-height: 28px; font-weight: 600">{{f.value}}</span></span></sc-if>
+</sc-for>
+</span>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{sc.isChecklist}}" hint-placeholder-val="{{false}}">
+<div style="background: #F7F7FA; border-radius: 16px; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 24px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">{{sc.label}}</span>
+<sc-if value="{{sc.hasUrgent}}" hint-placeholder-val="{{true}}"><span style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; line-height: 16px; font-weight: 600; color: #FFFFFF; background: #C2255C; border-radius: 999px; padding: 4px 12px 4px 8px"><span style="width: 8px; height: 8px; border-radius: 50%; background: #FFFFFF" aria-hidden="true"></span>{{sc.urgent}}</span></sc-if>
+</div>
+<div style="display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{sc.steps}}" as="st" hint-placeholder-count="2">
+<div style="display: flex; align-items: center; gap: 12px; min-height: 40px">
+<button type="button" role="checkbox" aria-checked="{{st.checked}}" aria-label="{{st.aria}}" onClick="{{st.toggle}}" style="width: 40px; height: 40px; margin: 0 -8px; padding: 0; border: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer; flex: none">
+<span style="width: 24px; height: 24px; border-radius: 8px; background: {{st.boxBg}}; box-shadow: inset 0 0 0 {{st.boxRing}}; display: flex; align-items: center; justify-content: center; transition: background-color 160ms ease"><sc-if value="{{st.checked}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if></span>
+</button>
+<span style="display: flex; align-items: baseline; gap: 4px; flex-wrap: wrap"><span style="font-size: 16px; line-height: 24px; color: {{st.fg}}; text-decoration: {{st.strike}}">{{st.pre}}</span>
+<sc-if value="{{st.hasValue}}" hint-placeholder-val="{{false}}"><sc-if value="{{st.f.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{st.f.toggle}}" aria-pressed="{{st.f.pressed}}" aria-label="{{st.f.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 16px; line-height: 24px; font-weight: 600; text-decoration: underline dotted {{st.f.line}} 2px; text-underline-offset: 6px; background: {{st.f.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{st.f.value}}</span></button></sc-if>
+<sc-if value="{{st.f.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; line-height: 24px; font-weight: 600">{{st.f.value}}</span></span></sc-if></sc-if></span>
+</div>
+</sc-for>
+</div>
+<div style="display: flex; gap: 32px; flex-wrap: wrap; padding-top: 4px; border-top: 1px solid #ECECF1">
+<sc-for list="{{sc.fields}}" as="f" hint-placeholder-count="2">
+<span style="padding-top: 12px"><sc-if value="{{f.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{f.toggle}}" aria-pressed="{{f.pressed}}" aria-label="{{f.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 16px; line-height: 24px; font-weight: 600; text-decoration: underline dotted {{f.line}} 2px; text-underline-offset: 6px; background: {{f.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{f.value}}</span></button></sc-if>
+<sc-if value="{{f.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 14px; line-height: 20px; color: #6A6875">{{f.label}}</span><span style="font-size: 16px; line-height: 24px; font-weight: 600">{{f.value}}</span></span></sc-if></span>
+</sc-for>
+</div>
+</div>
+<sc-if value="{{act.allChecked}}" hint-placeholder-val="{{false}}"><p style="margin: 0; font-size: 14px; line-height: 20px; color: #6A6875; animation: glance-in 200ms ease both">{{act.note}}</p></sc-if>
+</sc-if>
+
+<sc-if value="{{sc.isText}}" hint-placeholder-val="{{false}}">
+<ul style="margin: 0; padding: 0 0 0 4px; list-style: none; display: flex; flex-direction: column; gap: 8px">
+<sc-for list="{{sc.lines}}" as="f" hint-placeholder-count="2">
+<li style="display: flex; align-items: center; gap: 12px"><span style="width: 8px; height: 8px; border-radius: 50%; background: {{f.dot}}; flex: none" aria-hidden="true"></span><sc-if value="{{f.hasFact}}" hint-placeholder-val="{{true}}"><button type="button" onClick="{{f.toggle}}" aria-pressed="{{f.pressed}}" aria-label="{{f.aria}}" style="font: inherit; color: #16151C; text-align: left; background: transparent; border: none; padding: 0; cursor: pointer; display: flex; flex-direction: column; align-items: flex-start; gap: 2px"><span style="font-size: 16px; line-height: 24px; font-weight: 600; text-decoration: underline dotted {{f.line}} 2px; text-underline-offset: 6px; background: {{f.bg}}; border-radius: 4px; padding: 0 4px; margin: 0 -4px; transition: background-color 200ms ease">{{f.value}}</span></button></sc-if>
+<sc-if value="{{f.noFact}}" hint-placeholder-val="{{false}}"><span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 16px; line-height: 24px; font-weight: 600">{{f.value}}</span></span></sc-if></li>
+</sc-for>
+</ul>
+</sc-if>
+<sc-for list="{{facts}}" as="p" hint-placeholder-count="1">
+<sc-if value="{{p.open}}" hint-placeholder-val="{{false}}">
+<div style="background: #F7F7FA; border-radius: 16px; padding: 12px 20px 20px; display: flex; flex-direction: column; gap: 4px; animation: glance-in 200ms ease both">
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+<span style="font-size: 14px; line-height: 20px; color: #6A6875">Source · {{cur.from}} · {{cur.when}}</span>
+<span style="display: flex; align-items: center; gap: 4px; margin-right: -12px">
+<button type="button" onClick="{{openEmail}}" style="font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0; background: transparent; border: none; padding: 8px; min-height: 40px; cursor: pointer">Open email</button>
+<button type="button" onClick="{{closeSrc}}" aria-label="Close source" style="width: 40px; height: 40px; border: none; background: transparent; display: flex; align-items: center; justify-content: center; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#6A6875" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+</span>
+</div>
+<p style="margin: 0; font-size: 16px; line-height: 28px; color: #2B2933">{{p.pre}}<span style="--ring: {{p.ringColor}}; background-image: linear-gradient({{p.hlColor}}, {{p.hlColor}}); background-repeat: no-repeat; background-size: 100% 100%; border-radius: 4px; padding: 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone; animation: glance-sweep 480ms cubic-bezier(0.2, 0.7, 0.2, 1) 80ms both, glance-ring 200ms ease 520ms both">{{p.hl}}</span>{{p.post}}</p>
+</div>
+</sc-if>
+</sc-for>
+</div>
+
+<div style="display: flex; flex-direction: column; gap: 12px">
+<button type="button" onClick="{{toggleRead}}" aria-expanded="{{readExpanded}}" style="align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0; background: #FFFFFF; box-shadow: inset 0 0 0 1.5px #5A4FE0; border: none; border-radius: 999px; padding: 8px 16px 8px 12px; min-height: 40px; cursor: pointer; text-align: left">
+<svg width="12" height="12" viewBox="0 0 24 24" fill="#5A4FE0" aria-hidden="true" style="flex: none"><path d="M12 2C12.6 7.5 16.5 11.4 22 12C16.5 12.6 12.6 16.5 12 22C11.4 16.5 7.5 12.6 2 12C7.5 11.4 11.4 7.5 12 2Z"></path></svg>
+<span>Glance’s read: {{cur.readSummary}}</span><span style="color: #6A6875; font-weight: 500">· {{readCta}}</span></button>
+<sc-if value="{{showRead}}" hint-placeholder-val="{{false}}">
+<div style="background: #F7F7FA; border-radius: 16px; padding: 16px 20px 20px; display: flex; flex-direction: column; gap: 12px; animation: glance-in 200ms ease both">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0">Glance’s reasoning <span style="font-weight: 500; color: #6A6875">· not stated in the email</span></span>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #2B2933"><strong style="font-weight: 600; color: #16151C">Why {{cur.ordinal}}:</strong> {{cur.rank}}</p>
+<sc-for list="{{judg}}" as="j" hint-placeholder-count="1">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #2B2933"><strong style="font-weight: 600; color: #16151C">{{j.label}}:</strong> {{j.why}}</p>
+<sc-if value="{{j.hasSrc}}" hint-placeholder-val="{{true}}">
+<div style="background: #FFFFFF; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; line-height: 20px; color: #6A6875">Based on · {{j.from}} · {{j.when}}</span>
+<p style="margin: 0; font-size: 16px; line-height: 28px; color: #2B2933">{{j.pre}}<span style="background-image: linear-gradient(#E3DEFF, #E3DEFF); background-repeat: no-repeat; background-size: 100% 100%; border-radius: 4px; padding: 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone; animation: glance-sweep 480ms cubic-bezier(0.2, 0.7, 0.2, 1) 160ms both">{{j.hl}}</span>{{j.post}}</p>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-top: 1px solid #ECECF1; padding-top: 12px">
+<span style="font-size: 14px; line-height: 20px; color: #6A6875">Not for you? Glance will rank emails like this lower.</span>
+<button type="button" onClick="{{moveAside}}" style="font: inherit; display: inline-flex; align-items: center; gap: 8px; font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D9D8E0; border: none; border-radius: 999px; padding: 8px 16px; min-height: 40px; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A3FD0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 14v4a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-4"></path><path d="M12 4v10M8 10l4 4 4-4"></path></svg>Move to Set aside</button>
+</div>
+</div>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{isEmail}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 16px; animation: glance-in 200ms ease both">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 20px; line-height: 28px; font-weight: 700; letter-spacing: -0.015em">{{email.subject}}</span>
+<span style="font-size: 14px; line-height: 20px; color: #6A6875">From {{email.from}} · to you · {{email.when}} · {{cur.accountName}}</span>
+</div>
+<div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 4px 4px 4px 16px; background: #F7F7FA; border-radius: 12px; flex-wrap: wrap">
+<span style="display: flex; gap: 16px; align-items: center; flex-wrap: wrap; font-size: 12px; line-height: 16px; font-weight: 500; color: #4A4856">
+<span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 12px; height: 8px; border-radius: 2px; background: #FFE49A" aria-hidden="true"></span>Money</span>
+<span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 12px; height: 8px; border-radius: 2px; background: #FFD5E2" aria-hidden="true"></span>Time</span>
+<span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 12px; height: 8px; border-radius: 2px; background: #D6E4FF" aria-hidden="true"></span>People</span>
+<span style="display: inline-flex; align-items: center; gap: 4px"><span style="width: 12px; height: 8px; border-radius: 2px; background: #E3DEFF" aria-hidden="true"></span>Glance’s read</span>
+</span>
+<button type="button" role="switch" aria-checked="{{hlChecked}}" onClick="{{toggleHl}}" style="display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: 14px; line-height: 20px; font-weight: 600; color: #16151C; background: transparent; border: none; padding: 0 12px; min-height: 40px; cursor: pointer">Highlighter
+<span style="width: 36px; height: 20px; border-radius: 999px; background: {{hlTrack}}; position: relative; flex: none; transition: background-color 160ms ease" aria-hidden="true"><span style="position: absolute; top: 2px; left: {{hlKnob}}; width: 16px; height: 16px; border-radius: 50%; background: #FFFFFF; transition: left 160ms ease"></span></span></button>
+</div>
+<div style="display: flex; flex-direction: column; gap: 16px">
+<sc-for list="{{email.paras}}" as="para" hint-placeholder-count="3">
+<p style="margin: 0; font-size: 16px; line-height: 28px; color: #2B2933; white-space: pre-line"><sc-for list="{{para.segs}}" as="seg" hint-placeholder-count="2"><span title="{{seg.tag}}" style="background-image: linear-gradient({{seg.c}}, {{seg.c}}); background-repeat: no-repeat; background-size: {{seg.size}}; border-radius: 4px; padding: {{seg.pad}}; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-size 360ms cubic-bezier(0.2, 0.7, 0.2, 1)">{{seg.t}}</span></sc-for></p>
+</sc-for>
+</div>
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #6A6875">Highlights mark every fact Glance used in your brief. Point at one to see what it was used for.</p>
+</div>
+</sc-if>
+
+<sc-if value="{{isAsk}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 16px; animation: glance-in 200ms ease both">
+<p style="margin: 0; font-size: 14px; line-height: 20px; color: #6A6875">Answers come only from your email. When something isn’t there, Glance says so instead of guessing.</p>
+<sc-for list="{{qa}}" as="x" hint-placeholder-count="1">
+<div style="display: flex; flex-direction: column; gap: 12px">
+<div style="align-self: flex-end; max-width: 80%; background: #F0F0F4; border-radius: 16px 16px 4px 16px; padding: 8px 16px; font-size: 16px; line-height: 24px">{{x.q}}</div>
+<sc-if value="{{x.found}}" hint-placeholder-val="{{true}}">
+<div style="max-width: 90%; display: flex; flex-direction: column; gap: 8px">
+<span style="display: inline-flex; align-items: center; gap: 4px; font-size: 14px; line-height: 20px; font-weight: 600; color: #4A3FD0"><svg width="12" height="12" viewBox="0 0 24 24" fill="#5A4FE0" aria-hidden="true"><path d="M12 2C12.6 7.5 16.5 11.4 22 12C16.5 12.6 12.6 16.5 12 22C11.4 16.5 7.5 12.6 2 12C7.5 11.4 11.4 7.5 12 2Z"></path></svg>Glance</span>
+<p style="margin: 0; font-size: 16px; line-height: 24px">{{x.a}}</p>
+<sc-if value="{{x.hasSrc}}" hint-placeholder-val="{{true}}">
+<div style="background: #F7F7FA; border-radius: 12px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; line-height: 20px; color: #6A6875">Based on · {{x.from}} · {{x.when}}</span>
+<p style="margin: 0; font-size: 16px; line-height: 28px; color: #2B2933">{{x.pre}}<span style="background-image: linear-gradient(#E3DEFF, #E3DEFF); background-repeat: no-repeat; background-size: 100% 100%; border-radius: 4px; padding: 2px; -webkit-box-decoration-break: clone; box-decoration-break: clone; animation: glance-sweep 480ms cubic-bezier(0.2, 0.7, 0.2, 1) 160ms both">{{x.hl}}</span>{{x.post}}</p>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{x.notFound}}" hint-placeholder-val="{{false}}">
+<div style="max-width: 90%; box-shadow: inset 0 0 0 1px #C9C8D3; border-radius: 16px; padding: 12px 16px; display: flex; flex-direction: column; gap: 4px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">Not in your email</span>
+<p style="margin: 0; font-size: 16px; line-height: 24px">{{x.a}}</p>
+</div>
+</sc-if>
+</div>
+</sc-for>
+<sc-if value="{{hasSugg}}" hint-placeholder-val="{{true}}">
+<div style="display: flex; flex-direction: column; gap: 8px">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">Try asking</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{sugg}}" as="g" hint-placeholder-count="2">
+<button type="button" onClick="{{g.go}}" style="font: inherit; font-size: 14px; line-height: 20px; font-weight: 500; color: #16151C; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D9D8E0; border: none; border-radius: 999px; padding: 8px 16px; min-height: 40px; cursor: pointer; text-align: left">{{g.q}}</button>
+</sc-for>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{hasSugg}}" hint-placeholder-val="{{true}}"><p style="margin: 0; border: 1px dashed #D9D8E0; border-radius: 12px; padding: 8px 16px; font-size: 14px; line-height: 20px; color: #6A6875"><strong style="font-weight: 600; color: #4A4856">Demo:</strong> answers are prepared in advance, so pick a question above. In the product you type your own.</p></sc-if>
+<sc-if value="{{noSugg}}" hint-placeholder-val="{{false}}"><p style="margin: 0; border: 1px dashed #D9D8E0; border-radius: 12px; padding: 8px 16px; font-size: 14px; line-height: 20px; color: #6A6875"><strong style="font-weight: 600; color: #4A4856">Demo:</strong> that’s every prepared question for this item. In the product you type your own.</p></sc-if>
+</div>
+</sc-if>
+
+<sc-if value="{{snoozeOpen}}" hint-placeholder-val="{{false}}">
+<div role="group" aria-label="Snooze until" style="background: #F7F7FA; border-radius: 16px; padding: 16px 20px; display: flex; flex-direction: column; gap: 12px; animation: glance-in 200ms ease both">
+<span style="font-size: 14px; line-height: 20px; font-weight: 600; color: #6A6875">Snooze until</span>
+<div style="display: flex; flex-wrap: wrap; gap: 8px">
+<sc-for list="{{snoozeOpts}}" as="o" hint-placeholder-count="3">
+<button type="button" onClick="{{o.go}}" style="font: inherit; font-size: 14px; line-height: 20px; font-weight: 500; color: #16151C; background: #FFFFFF; box-shadow: inset 0 0 0 1px #D9D8E0; border: none; border-radius: 999px; padding: 8px 16px; min-height: 40px; cursor: pointer">{{o.label}}</button>
+</sc-for>
+</div>
+<span style="font-size: 14px; line-height: 20px; color: #6A6875">It comes back to Needs you at that time.</span>
+</div>
+</sc-if>
+
+<div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap; border-top: 1px solid #ECECF1; padding-top: 24px">
+<button type="button" style="display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: 16px; line-height: 24px; font-weight: 600; color: {{act.openFg}}; background: {{act.openBg}}; border: none; border-radius: 999px; padding: 12px 20px; min-height: 48px; cursor: pointer; transition: background-color 160ms ease, color 160ms ease">{{cur.openLabel}}
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{act.openFg}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 5h5v5M19 5l-8 8M18 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4"></path></svg></button>
+<sc-if value="{{notAsk}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{openAsk}}" style="display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: 16px; line-height: 24px; font-weight: 600; color: #4A3FD0; background: #EEECFD; border: none; border-radius: 999px; padding: 12px 16px; min-height: 48px; cursor: pointer">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4A3FD0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 5h14a1 1 0 0 1 1 1v9a1 1 0 0 1-1 1H10l-5 4V6a1 1 0 0 1 1-1z"></path></svg>Ask</button>
+</sc-if>
+<sc-if value="{{act.showSnooze}}" hint-placeholder-val="{{true}}">
+<button type="button" onClick="{{toggleSnooze}}" aria-expanded="{{snoozeExpanded}}" style="margin-left: auto; display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: 16px; line-height: 24px; font-weight: 600; color: #16151C; background: #F0F0F4; border: none; border-radius: 999px; padding: 12px 16px; min-height: 48px; cursor: pointer">
+<sc-if value="{{snoozeClosed}}" hint-placeholder-val="{{true}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#16151C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.5"></circle><path d="M12 7.5V12l3 2"></path></svg></sc-if>{{snoozeLabel}}</button>
+</sc-if>
+<button type="button" onClick="{{markDone}}" style="margin-left: {{act.doneMl}}; display: inline-flex; align-items: center; gap: 8px; font: inherit; font-size: 16px; line-height: 24px; font-weight: 600; color: {{act.doneFg}}; background: {{act.doneBg}}; border: none; border-radius: 999px; padding: 12px 16px; min-height: 48px; cursor: pointer; transition: background-color 160ms ease, color 160ms ease">
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="{{act.doneFg}}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{act.doneLabel}}</button>
+</div>
+</article>
+</sc-if>
+
+<sc-if value="{{allDone}}" hint-placeholder-val="{{false}}">
+<article aria-label="All done" style="background: #FFFFFF; border-radius: 20px; padding: 48px 32px; display: flex; flex-direction: column; align-items: center; gap: 12px; text-align: center; animation: glance-in 240ms ease both">
+<span style="width: 48px; height: 48px; border-radius: 16px; background: #EEECFD; display: flex; align-items: center; justify-content: center" aria-hidden="true">
+<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5A4FE0" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+<h2 style="margin: 4px 0 0; font-size: 24px; line-height: 32px; font-weight: 700; letter-spacing: -0.02em">{{allDoneTitle}}</h2>
+<p style="margin: 0; font-size: 16px; line-height: 24px; color: #4A4856; max-width: 400px">{{allDoneText}}</p>
+<button type="button" onClick="{{openSetAside}}" style="margin-top: 8px; font: inherit; font-size: 16px; line-height: 24px; font-weight: 600; color: #4A3FD0; background: #EEECFD; border: none; border-radius: 999px; padding: 12px 20px; min-height: 48px; cursor: pointer">Review set aside</button>
+</article>
+</sc-if>
+</div>
+</div>
+</sc-if>
+
+</div>
+</div>
+
+</template><div id="root"></div>
+<script>
+class DCLogic { constructor(p){ this.props=p||{}; this.state={}; } setState(p){ Object.assign(this.state, typeof p==='function'?p(this.state):p); window.__render(); } }
+const SRC = "\nclass Component extends DCLogic {\nconstructor(props) {\nsuper(props);\nconst d = this.data();\nthis.state = { sel: d.initial_state.sel, src: d.initial_state.src, read: d.initial_state.read, done: [], auto: {}, tab: 'details', asked: d.initial_state.asked, snoozed: {}, snoozeOpen: false, newAdded: false, view: 'brief', level: 3, hlOn: true, leaving: -1, kept: {}, gtkOpen: -1, gtkSrc: -1, moved: {}, checks: {} };\n}\ndata() {\nreturn {\"id\": \"maya\", \"name\": \"Maya\", \"role\": \"Sales\", \"initial\": \"M\", \"date\": \"Thursday, November 5\", \"greeting\": \"Good morning, Maya\", \"coverage\": {\"emails\": 38, \"text\": \"{n} emails overnight, all in Outlook.\", \"note\": null}, \"accounts\": [{\"id\": \"outlook\", \"app\": \"Outlook\", \"label\": null}], \"initial_state\": {\"sel\": 0, \"src\": 1, \"read\": false, \"asked\": {\"0\": [1]}}, \"doneBefore\": [{\"name\": \"Corvo Retail\", \"note\": \"invite accepted in Outlook, 8:41 AM\"}], \"newMail\": {\"label\": \"2 new since 8:00 AM\", \"added\": \"2 new added: 1 here, 1 set aside\", \"emails\": 2}, \"simulate\": {\"item\": \"fernway\", \"who\": \"Priya\", \"label\": \"Simulate reply to Priya\", \"detected\": \"Reply to Priya detected \u2713\", \"already\": \"Fernway is already done\", \"note\": \"reply detected in Outlook, 9:14 AM\"}, \"items\": [{\"id\": \"fernway\", \"name\": \"Fernway Logistics\", \"account\": \"outlook\", \"person\": {\"name\": \"Priya Shah\", \"role\": \"Ops Director\", \"initial\": \"P\"}, \"request\": {\"type\": \"quote\", \"by\": \"Priya asks\", \"text\": \"\u201cCan you send revised pricing before our review on Friday?\u201d\"}, \"rank\": \"Due tomorrow, the soonest deadline in this brief, and the largest account ($48,000/yr).\", \"from\": \"Priya Shah\", \"when\": \"Wed, Nov 4, 9:12 AM\", \"facts\": [{\"id\": \"f1\", \"kind\": \"time\", \"label\": \"Due Fri \u00b7 tomorrow\", \"urgent\": true, \"source\": {\"pre\": \"Can you send revised pricing \", \"hl\": \"before our review on Friday\", \"post\": \"? Our current contract ($48,000/yr) renews on Nov 15, and we\u2019re evaluating other vendors before we commit.\"}}, {\"id\": \"f2\", \"kind\": \"money\", \"label\": \"$48,000/yr contract\", \"urgent\": false, \"source\": {\"pre\": \"Can you send revised pricing before our review on Friday? Our current contract \", \"hl\": \"($48,000/yr)\", \"post\": \" renews on Nov 15, and we\u2019re evaluating other vendors before we commit.\"}}, {\"id\": \"f3\", \"kind\": \"time\", \"label\": \"Renews Nov 15\", \"urgent\": false, \"source\": {\"pre\": \"\u2026Our current contract ($48,000/yr) \", \"hl\": \"renews on Nov 15\", \"post\": \", and we\u2019re evaluating other vendors before we commit.\"}}], \"scene\": {\"type\": \"deal\", \"label\": \"Renewal\", \"urgent\": \"Due tomorrow\", \"fields\": [{\"label\": \"Contract\", \"value\": \"$48,000/yr\", \"fact\": \"f2\"}, {\"label\": \"Renews\", \"value\": \"Nov 15\", \"fact\": \"f3\"}, {\"label\": \"Review\", \"value\": \"Fri, Nov 6\", \"fact\": \"f1\"}]}, \"judgments\": [{\"label\": \"Renewal risk\", \"why\": \"Priya mentions other vendors in the same email.\", \"source\": {\"from\": \"Priya Shah\", \"when\": \"Wed, Nov 4, 9:12 AM\", \"pre\": \"\u2026renews on Nov 15, and \", \"hl\": \"we\u2019re evaluating other vendors before we commit\", \"post\": \".\"}}], \"email\": {\"subject\": \"Pricing before Friday\u2019s review\", \"from\": \"Priya Shah\", \"paras\": [[\"Hi Maya,\"], [\"Can you send revised pricing \", {\"t\": \"before our review on Friday\", \"kind\": \"time\", \"tag\": \"Time \u00b7 Due Fri\"}, \"? Our current contract \", {\"t\": \"($48,000/yr)\", \"kind\": \"money\", \"tag\": \"Money \u00b7 $48,000/yr contract\"}, \" \", {\"t\": \"renews on Nov 15\", \"kind\": \"time\", \"tag\": \"Time \u00b7 Renews Nov 15\"}, \", and \", {\"t\": \"we\u2019re evaluating other vendors before we commit\", \"kind\": \"judg\", \"tag\": \"Glance\u2019s read \u00b7 Renewal risk\"}, \".\"], [\"Lena mentioned a possible discount on our last call. If that\u2019s still on the table, please include it.\"], [\"Thanks,\\n\", {\"t\": \"Priya\", \"kind\": \"people\", \"tag\": \"People \u00b7 Priya Shah, Ops Director\"}]]}, \"qa\": [{\"q\": \"Which vendors are they looking at?\", \"found\": false, \"a\": \"Priya doesn\u2019t name any vendors, in this email or in earlier ones.\"}, {\"q\": \"What did we agree last year?\", \"found\": true, \"a\": \"Last year\u2019s renewal was $44,000/yr, confirmed by you on Nov 12, 2025.\", \"source\": {\"from\": \"You, to Priya Shah\", \"when\": \"Nov 12, 2025\", \"pre\": \"Confirming the renewal at \", \"hl\": \"$44,000/yr\", \"post\": \" for the next 12 months.\"}}, {\"q\": \"Is the discount approved?\", \"found\": true, \"a\": \"Yes. Lena Ortiz approved 15% for Fernway yesterday, valid until Nov 30.\", \"source\": {\"from\": \"Lena Ortiz\", \"when\": \"Wed, Nov 4, 5:30 PM\", \"pre\": \"Approved: \", \"hl\": \"15% for Fernway on the renewal, valid until Nov 30\", \"post\": \".\"}}]}, {\"id\": \"brightline\", \"name\": \"Brightline Studio\", \"account\": \"outlook\", \"person\": {\"name\": \"Ana Ruiz\", \"role\": \"Head of IT\", \"initial\": \"A\"}, \"request\": {\"type\": \"quote\", \"by\": \"Ana asks\", \"text\": \"\u201cCan you confirm the SSO add-on is included in our plan?\u201d\"}, \"rank\": \"Ana has been waiting 2 days.\", \"from\": \"Ana Ruiz\", \"when\": \"Tue, Nov 3, 4:20 PM\", \"facts\": [{\"id\": \"f1\", \"kind\": \"time\", \"label\": \"Waiting 2 days\", \"urgent\": true, \"source\": {\"pre\": \"Sent: \", \"hl\": \"Tue, Nov 3, 4:20 PM\", \"post\": \"\"}}, {\"id\": \"f2\", \"kind\": \"time\", \"label\": \"IT review next week\", \"urgent\": false, \"source\": {\"pre\": \"Hi Maya, quick one: can you confirm the SSO add-on is included in our plan? \", \"hl\": \"Our IT review is next week.\", \"post\": \"\"}}], \"scene\": {\"type\": \"text\"}, \"judgments\": [{\"label\": \"Quick reply\", \"why\": \"It is a single yes-or-no question with no attachments.\", \"source\": null}], \"email\": {\"subject\": \"SSO add-on?\", \"from\": \"Ana Ruiz\", \"paras\": [[\"Hi Maya, quick one: can you confirm the SSO add-on is included in our plan? \", {\"t\": \"Our IT review is next week.\", \"kind\": \"time\", \"tag\": \"Time \u00b7 IT review next week\"}], [\"Thanks,\\n\", {\"t\": \"Ana\", \"kind\": \"people\", \"tag\": \"People \u00b7 Ana Ruiz, Head of IT\"}]]}, \"qa\": [{\"q\": \"Is SSO in their plan?\", \"found\": true, \"a\": \"Not as signed. Their order form lists SSO as an add-on that is not included.\", \"source\": {\"from\": \"Brightline order form\", \"when\": \"Mar 2, 2026\", \"pre\": \"Plan: Business. Add-ons: \", \"hl\": \"SSO (not included)\", \"post\": \".\"}}, {\"q\": \"Who else is on this thread?\", \"found\": true, \"a\": \"Only Ana Ruiz and you.\"}]}, {\"id\": \"halden\", \"name\": \"Halden Health\", \"account\": \"outlook\", \"person\": {\"name\": \"Marcus Lee\", \"role\": \"IT Manager\", \"initial\": \"M\"}, \"request\": {\"type\": \"quote\", \"by\": \"Marcus asks\", \"text\": \"\u201cCould we see a demo sometime this week?\u201d\"}, \"rank\": \"A new lead asking for a demo this week, with a stated budget.\", \"from\": \"Marcus Lee (website form)\", \"when\": \"Thu, Nov 5, 7:48 AM\", \"facts\": [{\"id\": \"f1\", \"kind\": \"time\", \"label\": \"This week\", \"urgent\": false, \"source\": {\"pre\": \"We\u2019re looking at options for about 120 seats, and our budget is around $30k. Could we see a demo \", \"hl\": \"sometime this week\", \"post\": \"?\"}}, {\"id\": \"f2\", \"kind\": \"people\", \"label\": \"120 seats\", \"urgent\": false, \"source\": {\"pre\": \"We\u2019re looking at options for about \", \"hl\": \"120 seats\", \"post\": \", and our budget is around $30k. Could we see a demo sometime this week?\"}}, {\"id\": \"f3\", \"kind\": \"money\", \"label\": \"Budget \u201caround $30k\u201d\", \"urgent\": false, \"source\": {\"pre\": \"We\u2019re looking at options for about 120 seats, and our budget is \", \"hl\": \"around $30k\", \"post\": \". Could we see a demo sometime this week?\"}}], \"scene\": {\"type\": \"deal\", \"label\": \"New lead\", \"urgent\": null, \"fields\": [{\"label\": \"Seats\", \"value\": \"120\", \"fact\": \"f2\"}, {\"label\": \"Budget\", \"value\": \"around $30k\", \"fact\": \"f3\"}, {\"label\": \"Wants\", \"value\": \"Demo this week\", \"fact\": \"f1\"}]}, \"judgments\": [], \"email\": {\"subject\": \"Demo request (website form)\", \"from\": \"Marcus Lee\", \"paras\": [[\"Name: \", {\"t\": \"Marcus Lee\", \"kind\": \"people\", \"tag\": \"People \u00b7 Marcus Lee, IT Manager\"}, \"\\nCompany: Halden Health\\nRole: IT Manager\"], [\"We\u2019re looking at options for about \", {\"t\": \"120 seats\", \"kind\": \"people\", \"tag\": \"People \u00b7 120 seats\"}, \", and our budget is \", {\"t\": \"around $30k\", \"kind\": \"money\", \"tag\": \"Money \u00b7 Budget around $30k\"}, \". Could we see a demo \", {\"t\": \"sometime this week\", \"kind\": \"time\", \"tag\": \"Time \u00b7 This week\"}, \"?\"]]}, \"qa\": [{\"q\": \"Have we talked to Halden before?\", \"found\": false, \"a\": \"There are no earlier emails with Halden Health in your Outlook.\"}, {\"q\": \"Which plan fits 120 seats?\", \"found\": false, \"a\": \"That isn\u2019t in your email. Glance only answers from your messages.\"}]}, {\"id\": \"okto\", \"name\": \"Okto Freight\", \"account\": \"outlook\", \"isNew\": true, \"person\": {\"name\": \"Jonas Weber\", \"role\": \"Finance Manager\", \"initial\": \"J\"}, \"request\": {\"type\": \"quote\", \"by\": \"Jonas asks\", \"text\": \"\u201cOur invoice shows 52 seats, but we only have 48. Can you check before it auto-pays on the 10th?\u201d\"}, \"rank\": \"New since 8:00 AM. It is due Nov 10, so it ranks after the items above.\", \"from\": \"Jonas Weber\", \"when\": \"Thu, Nov 5, 8:52 AM\", \"facts\": [{\"id\": \"f1\", \"kind\": \"time\", \"label\": \"Auto-pays Nov 10\", \"urgent\": false, \"source\": {\"pre\": \"Our invoice shows 52 seats, but we only have 48. Can you check before it \", \"hl\": \"auto-pays on the 10th\", \"post\": \"?\"}}, {\"id\": \"f2\", \"kind\": \"people\", \"label\": \"52 billed \u00b7 48 used\", \"urgent\": false, \"source\": {\"pre\": \"Our invoice shows \", \"hl\": \"52 seats, but we only have 48\", \"post\": \". Can you check before it auto-pays on the 10th?\"}}], \"scene\": {\"type\": \"mismatch\", \"label\": \"Invoice\", \"urgent\": null, \"compare\": [{\"label\": \"Billed\", \"value\": \"52 seats\", \"fact\": \"f2\"}, {\"label\": \"In use\", \"value\": \"48 seats\", \"fact\": \"f2\"}], \"fields\": [{\"label\": \"Auto-pays\", \"value\": \"Nov 10\", \"fact\": \"f1\"}]}, \"judgments\": [{\"label\": \"Billing error\", \"why\": \"The seat count on the invoice does not match the seat count in the email.\", \"source\": null}], \"email\": {\"subject\": \"Invoice question\", \"from\": \"Jonas Weber\", \"paras\": [[\"Hi Maya,\"], [{\"t\": \"Our invoice shows 52 seats, but we only have 48\", \"kind\": \"people\", \"tag\": \"People \u00b7 52 billed, 48 used\"}, \". Can you check before it \", {\"t\": \"auto-pays on the 10th\", \"kind\": \"time\", \"tag\": \"Time \u00b7 Auto-pays Nov 10\"}, \"?\"], [\"Best,\\n\", {\"t\": \"Jonas\", \"kind\": \"people\", \"tag\": \"People \u00b7 Jonas Weber, Finance Manager\"}]]}, \"qa\": [{\"q\": \"What did we bill last month?\", \"found\": true, \"a\": \"48 seats, $2,880, paid on Oct 10.\", \"source\": {\"from\": \"Billing system\", \"when\": \"Oct 10, 2026\", \"pre\": \"Invoice #1182 \u00b7 \", \"hl\": \"48 seats \u00b7 $2,880\", \"post\": \" \u00b7 paid\"}}]}], \"goodToKnow\": [{\"icon\": \"tag\", \"tone\": \"money\", \"title\": \"Fernway\", \"text\": \": 15% discount approved by Lena Ortiz, Finance\", \"fact\": {\"value\": \"15% discount\", \"kind\": \"money\", \"source\": {\"from\": \"Lena Ortiz\", \"when\": \"Wed, Nov 4, 5:30 PM\", \"pre\": \"Approved: \", \"hl\": \"15%\", \"post\": \" for Fernway on the renewal, valid until Nov 30.\"}}}, {\"icon\": \"clock\", \"tone\": \"time\", \"title\": \"Corvo Retail QBR\", \"text\": \": tomorrow, 10:00 AM \u00b7 agenda attached\", \"fact\": {\"value\": \"tomorrow, 10:00 AM\", \"kind\": \"time\", \"source\": {\"from\": \"Tom Becker\", \"when\": \"Wed, Nov 4, 2:10 PM\", \"pre\": \"Let\u2019s hold the Corvo QBR on \", \"hl\": \"Friday, Nov 6 at 10:00 AM\", \"post\": \". The agenda is attached.\"}}}, {\"icon\": \"people\", \"tone\": \"people\", \"title\": \"Brightline\", \"text\": \": 48 of 50 seats used\", \"fact\": {\"value\": \"48 of 50 seats\", \"kind\": \"people\", \"source\": {\"from\": \"Brightline admin report\", \"when\": \"Wed, Nov 4\", \"pre\": \"Seats in use: \", \"hl\": \"48 of 50\", \"post\": \"\"}}, \"judgment\": {\"label\": \"Upsell signal\", \"read\": \"Brightline is close to its seat limit, so it may need more seats soon.\", \"source\": {\"from\": \"Brightline admin report\", \"when\": \"Wed, Nov 4\", \"pre\": \"Seats in use: \", \"hl\": \"48 of 50\", \"post\": \"\"}}}], \"setAside\": [{\"title\": \"Newsletters\", \"short\": \"newsletters\", \"count\": 18, \"rows\": [{\"id\": \"n0\", \"title\": \"Revenue Ops Digest\", \"sub\": \"This week: pricing pages that convert\", \"isNew\": true}, {\"id\": \"n1\", \"title\": \"SaaS Sales Weekly\", \"sub\": \"Five renewal plays for Q4\"}, {\"id\": \"n2\", \"title\": \"Pipeline Notes\", \"sub\": \"November pricing benchmarks\"}]}, {\"title\": \"You were CC\u2019d\", \"short\": \"CC\u2019d\", \"count\": 9, \"rows\": [{\"id\": \"c1\", \"title\": \"Tom Becker \u2192 Corvo team\", \"sub\": \"Re: QBR agenda, final version\"}, {\"id\": \"c2\", \"title\": \"Sales Ops \u2192 all of Sales\", \"sub\": \"Reminder: update forecasts by month end\"}]}, {\"title\": \"Promotions\", \"short\": \"promotions\", \"count\": 4, \"rows\": [{\"id\": \"p1\", \"title\": \"SaaSConnect 2026\", \"sub\": \"Early-bird tickets end Friday\"}]}], \"l1\": \"Good morning! Here\u2019s a summary of your inbox. Priya Shah from Fernway Logistics asked whether you can send revised pricing before their review on Friday, which is tomorrow. Their current contract is $48,000 per year and renews on November 15, and she mentioned that they are evaluating other vendors before they commit. Ana Ruiz at Brightline Studio asked you to confirm whether the SSO add-on is included in their plan; she sent that two days ago, and their IT review is next week. Marcus Lee from Halden Health filled in the website form asking for a demo sometime this week, for about 120 seats with a budget of around $30k. Corvo Retail accepted your meeting invite. In other news, Lena Ortiz in Finance approved a 15% discount for Fernway, the Corvo Retail QBR is tomorrow at 10:00 AM with the agenda attached, and Brightline is now using 48 of its 50 seats. You also received 31 other emails, mostly newsletters, messages you were CC\u2019d on and promotions.\", \"l2\": {\"needs\": [[\"Fernway Logistics (Priya Shah):\", \" send revised pricing before Friday\u2019s review (tomorrow). The $48,000/yr contract renews Nov 15, and they\u2019re evaluating other vendors.\"], [\"Brightline Studio (Ana Ruiz):\", \" confirm whether the SSO add-on is in their plan. Sent 2 days ago; IT review next week.\"], [\"Halden Health (Marcus Lee):\", \" demo this week, about 120 seats, budget around $30k.\"]], \"know\": [\"Fernway: 15% discount approved by Lena Ortiz, Finance.\", \"Corvo Retail QBR: tomorrow, 10:00 AM, agenda attached.\", \"Brightline: 48 of 50 seats used.\"], \"done\": [\"Corvo Retail accepted your invite.\"], \"setAside\": \"31 other emails set aside.\"}};\n}\npersonas() {\nreturn [{ id: 'maya', label: 'Maya \u00b7 Sales', href: 'maya.html' }, { id: 'daniel', label: 'Daniel \u00b7 Manager', href: 'daniel.html' }, { id: 'sarah', label: 'Sarah \u00b7 Parent', href: 'sarah.html' }];\n}\nfinish(i, patch) {\nif (this.state.leaving >= 0) return;\nthis.setState({ leaving: i, snoozeOpen: false });\nsetTimeout(() => {\nconst next = Object.assign({ leaving: -1, src: -1, read: false, tab: 'details' }, patch(this.state));\nthis.setState(next);\n}, 320);\n}\nrenderVals() {\nconst s = this.state;\nconst D = this.data();\nconst all = D.items;\nconst dot = { time: '#C2255C', money: '#9A7300', people: '#2F64D6', judg: '#5A4FE0' };\nconst ink = { time: '#FFD5E2', money: '#FFE49A', people: '#D6E4FF', judg: '#E3DEFF' };\nconst tileBg = { time: '#FFE3EB', money: '#FFF2C2', people: '#E3ECFF', neutral: '#F0F0F4' };\nconst tileStroke = { time: '#A8164C', money: '#6B5100', people: '#1D4BAE', neutral: '#4A4856' };\nconst ordinals = ['1st', '2nd', '3rd', '4th', '5th', '6th'];\nconst acct = {};\nD.accounts.forEach((a) => { acct[a.id] = a; });\nconst labelOf = (id) => (acct[id] && acct[id].minority ? acct[id].label : '');\nconst isSnoozed = (i) => s.snoozed[i] !== undefined;\nconst visible = (i) => !all[i].isNew || s.newAdded;\nconst open = [];\nconst moved = s.moved || {};\nall.forEach((it, i) => { if (visible(i) && s.done.indexOf(i) < 0 && !isSnoozed(i) && !moved[i]) open.push(i); });\nconst movedIdx = Object.keys(moved).map(Number).filter((i) => visible(i));\nconst showSetAside = s.view === 'setaside';\nconst selIdx = open.indexOf(s.sel) >= 0 ? s.sel : (open.length ? open[0] : -1);\nconst simIdx = all.findIndex((it) => it.id === D.simulate.item);\nconst chip = (f) => ({ label: f.label, bg: f.urgent ? '#C2255C' : '#F0F0F4', fg: f.urgent ? '#FFFFFF' : '#16151C', dot: f.urgent ? '#FFFFFF' : dot[f.kind] });\nlet rankN = 0;\nconst list = open.map((i) => {\nconst it = all[i];\nconst selected = i === selIdx && !showSetAside;\nconst leaving = i === s.leaving;\nif (!leaving) rankN += 1;\nconst acc = labelOf(it.account);\nreturn {\nname: it.name, ask: it.request.text, isNew: !!it.isNew, isSummary: it.request.type === 'summary', rank: String(rankN),\nhasAccount: !!acc, account: acc,\nrowBg: selected ? '#EEECFD' : 'transparent', rankFg: selected ? '#4A3FD0' : '#6A6875',\nchips: it.facts.slice(0, 2).map(chip),\nmaxH: leaving ? '0px' : '240px', op: leaving ? '0' : '1', current: selected ? 'true' : 'false',\npick: () => this.setState({ sel: i, src: -1, read: false, view: 'brief', snoozeOpen: false })\n};\n});\nconst unmove = (i) => { const m = Object.assign({}, this.state.moved); delete m[i]; this.setState({ moved: m }); };\nconst doneRows = s.done.map((i) => ({\nname: all[i].name, isDone: true, isSnoozed: false, isMoved: false,\nnote: s.auto[i] ? D.simulate.note : 'marked done in Glance',\nundo: () => { const auto = Object.assign({}, this.state.auto); delete auto[i]; this.setState({ done: this.state.done.filter((x) => x !== i), auto: auto }); }\n})).concat(Object.keys(s.snoozed).map((k) => ({\nname: all[Number(k)].name, isDone: false, isSnoozed: true, isMoved: false,\nnote: 'snoozed until ' + s.snoozed[k].replace(/^Later today/, 'today').replace(/^Tomorrow/, 'tomorrow'),\nundo: () => { const sn = Object.assign({}, this.state.snoozed); delete sn[k]; this.setState({ snoozed: sn }); }\n}))).concat(movedIdx.map((i) => ({\nname: all[i].name, isDone: false, isSnoozed: false, isMoved: true,\nnote: 'moved to Set aside by you',\nundo: () => unmove(i)\n})));\nconst kept = s.kept || {};\nconst keptRows = [];\nlet setAside = movedIdx.length;\nconst movedGroup = movedIdx.length ? [{ title: 'Moved by you', short: 'moved by you', count: String(movedIdx.length), more: '', hasMore: false,\nrows: movedIdx.map((i) => ({ title: all[i].name, sub: all[i].request.text, isNew: false, kept: false, notKept: false, isMovedRow: true, keep: () => {}, undo: () => {}, back: () => unmove(i) })) }] : [];\nconst saGroups = movedGroup.concat(D.setAside.map((g) => {\nconst rows = g.rows.filter((r) => !r.isNew || s.newAdded);\nconst total = g.count + rows.filter((r) => r.isNew).length;\nconst keptN = rows.filter((r) => kept[r.id]).length;\nsetAside += total - keptN;\nrows.forEach((r) => { if (kept[r.id]) keptRows.push(r); });\nreturn {\ntitle: g.title, short: g.short, count: String(total - keptN), more: '+' + (total - rows.length) + ' more', hasMore: total > rows.length,\nrows: rows.map((r) => ({\ntitle: r.title, sub: r.sub, isNew: !!r.isNew, kept: !!kept[r.id], notKept: !kept[r.id], isMovedRow: false, back: () => {},\nkeep: () => { const k = Object.assign({}, this.state.kept); k[r.id] = true; this.setState({ kept: k }); },\nundo: () => { const k = Object.assign({}, this.state.kept); delete k[r.id]; this.setState({ kept: k }); }\n}))\n};\n}));\nconst gtkSrc = D.goodToKnow.concat(keptRows.map((r) => ({ icon: 'mail', tone: 'neutral', title: r.title, text: ': ' + r.sub, kept: true })));\nconst gtk = gtkSrc.map((g, k) => {\nconst j = g.judgment;\nconst acc = g.account ? labelOf(g.account) : '';\nreturn {\nnotFirst: k > 0, tileBg: tileBg[g.tone], stroke: tileStroke[g.tone],\nisTag: g.icon === 'tag', isClock: g.icon === 'clock', isPeople: g.icon === 'people', isChart: g.icon === 'chart', isPackage: g.icon === 'package', isMail: g.icon === 'mail',\ntitle: g.title, text: g.text, hasAccount: !!acc, account: acc, isKept: !!g.kept,\nhasJudgment: !!j, jLabel: j ? j.label : '', jRead: j ? j.read : '', jFrom: j ? j.source.from : '', jWhen: j ? j.source.when : '', jPre: j ? j.source.pre : '', jHl: j ? j.source.hl : '', jPost: j ? j.source.post : '',\nopen: s.gtkOpen === k, expanded: s.gtkOpen === k ? 'true' : 'false',\ntoggle: () => this.setState({ gtkOpen: this.state.gtkOpen === k ? -1 : k, gtkSrc: -1 }),\n...(() => { const f = g.fact; if (!f) return { hasFact: false, noFact: true, textPre: '', value: '', textPost: '', srcOpen: false, srcPressed: 'false', factLine: 'transparent', factBg: 'transparent', srcAria: '', toggleSrc: () => {}, sFrom: '', sWhen: '', sPre: '', sHl: '', sPost: '', srcInk: 'transparent' };\nconst at = g.text.indexOf(f.value); const isOpen = s.gtkSrc === k;\nreturn { hasFact: true, noFact: false, textPre: g.text.slice(0, at), value: f.value, textPost: g.text.slice(at + f.value.length),\nsrcOpen: isOpen, srcPressed: isOpen ? 'true' : 'false', factLine: dot[f.kind], factBg: isOpen ? ink[f.kind] : 'transparent', srcAria: f.value + '. Show where the email says so',\ntoggleSrc: () => this.setState({ gtkSrc: this.state.gtkSrc === k ? -1 : k, gtkOpen: -1 }),\nsFrom: f.source.from, sWhen: f.source.when, sPre: f.source.pre, sHl: f.source.hl, sPost: f.source.post, srcInk: ink[f.kind] }; })()\n};\n});\nconst visibleCount = all.filter((it, i) => visible(i)).length - movedIdx.length;\nconst total = visibleCount + D.doneBefore.length;\nconst doneCount = D.doneBefore.length + s.done.length;\nconst snoozedCount = Object.keys(s.snoozed).length;\nconst openCount = open.length - (s.leaving >= 0 && open.indexOf(s.leaving) >= 0 ? 1 : 0);\nconst nm = D.newMail;\nconst emails = D.coverage.emails + (nm && s.newAdded ? nm.emails : 0);\nconst apps = [];\nD.accounts.forEach((a) => { if (apps.indexOf(a.app) < 0) apps.push(a.app); });\nconst tabs = [['details', 'Details'], ['email', 'Original email'], ['ask', 'Ask']].map((t) => ({\nlabel: t[1], bg: s.tab === t[0] ? '#FFFFFF' : 'transparent', fg: s.tab === t[0] ? '#16151C' : '#6A6875',\nshadow: s.tab === t[0] ? '0 1px 2px rgba(22,21,28,0.12)' : 'none', selected: s.tab === t[0] ? 'true' : 'false',\ngo: () => this.setState({ tab: t[0], snoozeOpen: false })\n}));\nconst levels = [[1, 'Plain AI text'], [2, 'Formatted'], [3, 'Glance']].map((l) => ({\nnum: String(l[0]), label: l[1], bg: s.level === l[0] ? '#FFFFFF' : 'transparent', fg: s.level === l[0] ? '#16151C' : '#FFFFFF',\nnumFg: s.level === l[0] ? '#6A6875' : '#B9B6C8', pressed: s.level === l[0] ? 'true' : 'false', go: () => this.setState({ level: l[0] })\n}));\nconst base = {\npersonas: this.personas().map((p) => ({ label: p.label, href: p.href, current: p.id === D.id, other: p.id !== D.id })),\nlevels: levels, isL1: s.level === 1, isL2: s.level === 2, isL3: s.level === 3,\npr: { initial: D.initial, date: D.date, greeting: D.greeting, hasNote: !!D.coverage.note, note: D.coverage.note || '' },\ncoverage: D.coverage.text.replace('{n}', String(emails)),\nl1: D.l1,\nl2: { needs: D.l2.needs.map((n) => ({ lead: n[0], text: n[1] })), know: D.l2.know.map((t) => ({ text: t })), done: D.l2.done.map((t) => ({ text: t })), hasDone: D.l2.done.length > 0, setAside: D.l2.setAside },\nnewMail: nm || { label: '', added: '' }, notAdded: !!nm && !s.newAdded, justAdded: !!nm && s.newAdded,\naddNew: () => this.setState({ newAdded: true }),\nlist: list, hasOpen: open.length > 0, hasDoneArea: D.doneBefore.length + doneRows.length > 0, doneBefore: D.doneBefore, doneRows: doneRows,\nopenCount: String(openCount), doneCount: String(doneCount), totalCount: String(total), progressPct: (doneCount / total * 100) + '%',\ngtk: gtk, gtkCount: String(gtk.length),\nsaGroups: saGroups, saSummary: saGroups.map((g) => g.count + ' ' + g.short).join(' \u00b7 '), setAsideCount: String(setAside), appNames: apps.join(' and '),\nshowSetAside: showSetAside, setAsideBg: showSetAside ? '#EEECFD' : '#FFFFFF', setAsidePressed: showSetAside ? 'true' : 'false',\nopenSetAside: () => this.setState({ view: 'setaside', snoozeOpen: false }), backToBrief: () => this.setState({ view: 'brief' }),\nhasSel: selIdx >= 0 && !showSetAside, allDone: selIdx < 0 && !showSetAside, tabs: tabs,\nallDoneTitle: snoozedCount ? 'Nothing else needs you right now' : 'Nothing else needs you today',\nallDoneText: doneCount + ' of ' + total + ' actions done.' + (snoozedCount ? ' ' + snoozedCount + ' snoozed item' + (snoozedCount > 1 ? 's' : '') + ' will come back later.' : '') + ' ' + gtk.length + ' things are good to know, and ' + setAside + ' emails are set aside.',\nisDetails: s.tab === 'details', isEmail: s.tab === 'email', isAsk: s.tab === 'ask', notAsk: s.tab !== 'ask',\nmoveAside: () => { const i = selIdx; if (i < 0) return; this.finish(i, (c) => { const m = Object.assign({}, c.moved); m[i] = true; return { moved: m }; }); },\nopenAsk: () => this.setState({ tab: 'ask', snoozeOpen: false }), openEmail: () => this.setState({ tab: 'email' }),\nhlChecked: s.hlOn ? 'true' : 'false', hlTrack: s.hlOn ? '#5A4FE0' : '#8A8796', hlKnob: s.hlOn ? '18px' : '2px',\ntoggleHl: () => this.setState({ hlOn: !this.state.hlOn }),\nsnoozeOpen: s.snoozeOpen, snoozeClosed: !s.snoozeOpen, snoozeExpanded: s.snoozeOpen ? 'true' : 'false', snoozeLabel: s.snoozeOpen ? 'Cancel' : 'Snooze',\ntoggleSnooze: () => this.setState({ snoozeOpen: !this.state.snoozeOpen }),\nsimLabel: s.auto[simIdx] ? D.simulate.detected : (s.done.indexOf(simIdx) >= 0 ? D.simulate.already : D.simulate.label),\nsimulate: () => {\nconst st = this.state;\nif (st.done.indexOf(simIdx) >= 0) return;\nthis.finish(simIdx, (c) => {\nconst auto = Object.assign({}, c.auto); auto[simIdx] = true;\nconst sn = Object.assign({}, c.snoozed); delete sn[simIdx];\nreturn { done: c.done.concat([simIdx]), auto: auto, snoozed: sn };\n});\n}\n};\nconst emptyField = { label: '', value: '', hasFact: false, noFact: true, line: 'transparent', bg: 'transparent', pressed: 'false', aria: '', toggle: () => {} };\nif (selIdx < 0) {\nreturn Object.assign(base, {\nfacts: [], judg: [], qa: [], sugg: [], snoozeOpts: [], hasSugg: false, noSugg: true, showRead: false, readExpanded: 'false', readCta: 'Why?',\nemail: { subject: '', from: '', when: '', paras: [] },\ncur: { name: '', person: '', initial: '', ask: '', askBy: '', isSummary: false, isQuote: false, rank: '', ordinal: '', readSummary: '', from: '', when: '', rankLabel: '', hasAccount: false, account: '', accountName: '', openLabel: '' },\nsc: { label: '', urgent: '', hasUrgent: false, isDeal: false, isDecision: false, isAmount: false, isMismatch: false, isEvent: false, isRange: false, isChecklist: false, isText: false, fields: [], options: [], compare: [], steps: [], lines: [], amount: emptyField, main: emptyField, tile: { month: '', day: '' }, from: { month: '', day: '' }, to: { month: '', day: '' }, title: '', note: '', hasNote: false },\nact: { openFg: '#FFFFFF', openBg: '#5A4FE0', doneFg: '#16151C', doneBg: '#F0F0F4', doneLabel: 'Done', showSnooze: true, doneMl: '0', allChecked: false, note: '' },\ntoggleRead: () => {}, closeSrc: () => {}, markDone: () => {}\n});\n}\nconst cur = all[selIdx];\nconst pos = Math.max(0, open.filter((i) => i !== s.leaving || i === selIdx).indexOf(selIdx));\nconst fIdx = {};\ncur.facts.forEach((f, j) => { fIdx[f.id] = j; });\nconst fieldOf = (fd) => {\nif (!fd) return emptyField;\nconst j = fd.fact ? fIdx[fd.fact] : undefined;\nconst f = j !== undefined ? cur.facts[j] : null;\nconst isOpen = !!f && s.src === j;\nreturn {\nlabel: fd.label || '', value: fd.value, hasFact: !!f, noFact: !f, dot: f ? dot[f.kind] : '#8A8796',\nline: f ? dot[f.kind] : 'transparent', bg: isOpen ? ink[f.kind] : 'transparent', pressed: isOpen ? 'true' : 'false',\naria: (fd.label ? fd.label + ': ' : '') + fd.value + (f ? '. Show where the email says so' : ''),\ntoggle: () => { if (f) this.setState({ src: this.state.src === j ? -1 : j }); }\n};\n};\nconst S = cur.scene;\nconst checks = s.checks[cur.id] || {};\nconst sc = {\nlabel: S.label || '', urgent: S.urgent || '', hasUrgent: !!S.urgent,\nisDeal: S.type === 'deal', isDecision: S.type === 'decision', isAmount: S.type === 'approval' || S.type === 'payment', isMismatch: S.type === 'mismatch',\nisEvent: S.type === 'event', isRange: S.type === 'range', isChecklist: S.type === 'checklist', isText: S.type === 'text',\nfields: (S.fields || []).map(fieldOf),\noptions: (S.options || []).map((o) => ({ key: o.key, title: o.title, f: fieldOf({ value: o.value, fact: o.fact }) })),\ncompare: (S.compare || []).map((c, k) => Object.assign(fieldOf(c), { notFirst: k > 0 })),\nsteps: (S.steps || []).map((st, k) => {\nconst on = !!checks[k];\nreturn {\npre: st.pre, hasValue: !!st.value, f: st.value ? fieldOf({ value: st.value, fact: st.fact }) : emptyField,\nchecked: on, aria: st.pre + (st.value || ''), boxBg: on ? '#5A4FE0' : '#FFFFFF', boxRing: on ? '0 #5A4FE0' : '1.5px #8A8796',\nfg: on ? '#6A6875' : '#16151C', strike: on ? 'line-through' : 'none',\ntoggle: () => { const c = Object.assign({}, this.state.checks); const m = Object.assign({}, c[cur.id] || {}); m[k] = !m[k]; c[cur.id] = m; this.setState({ checks: c }); }\n};\n}),\nlines: S.type === 'text' ? cur.facts.map((f) => fieldOf({ value: f.label, fact: f.id })) : [],\namount: fieldOf(S.amount), main: fieldOf(S.main),\ntile: S.tile || { month: '', day: '' }, from: S.from || { month: '', day: '' }, to: S.to || { month: '', day: '' },\ntitle: S.title || '', note: S.note || '', hasNote: !!S.note\n};\nconst allChecked = S.type === 'checklist' && (S.steps || []).length > 0 && (S.steps || []).every((st, k) => !!checks[k]);\nconst act = allChecked\n? { openFg: '#16151C', openBg: '#F0F0F4', doneFg: '#FFFFFF', doneBg: '#5A4FE0', doneLabel: 'Mark done', showSnooze: false, doneMl: 'auto', allChecked: true, note: S.doneNote || 'Every step is ticked. Mark it done when you\u2019re ready.' }\n: { openFg: '#FFFFFF', openBg: '#5A4FE0', doneFg: '#16151C', doneBg: '#F0F0F4', doneLabel: 'Done', showSnooze: true, doneMl: '0', allChecked: false, note: '' };\nconst facts = cur.facts.map((f, j) => ({\nopen: s.src === j, pre: f.source.pre, hl: f.source.hl, post: f.source.post, hlColor: ink[f.kind], ringColor: dot[f.kind]\n}));\nconst judg = cur.judgments.map((j) => ({\nlabel: j.label, why: j.why, hasSrc: !!j.source,\nfrom: j.source ? j.source.from : '', when: j.source ? j.source.when : '', pre: j.source ? j.source.pre : '', hl: j.source ? j.source.hl : '', post: j.source ? j.source.post : ''\n}));\nconst labels = ['Ranked ' + ordinals[pos]].concat(cur.judgments.map((j) => j.label));\nconst mapSeg = (seg) => {\nif (typeof seg === 'string') return { t: seg, c: 'transparent', size: '100% 100%', pad: '0', tag: '' };\nreturn { t: seg.t, c: ink[seg.kind], size: s.hlOn ? '100% 100%' : '0% 100%', pad: '2px', tag: seg.tag };\n};\nconst asked = s.asked[selIdx] || [];\nconst qa = asked.map((k) => {\nconst a = cur.qa[k];\nreturn { q: a.q, a: a.a, found: a.found, notFound: !a.found, hasSrc: !!a.source,\nfrom: a.source ? a.source.from : '', when: a.source ? a.source.when : '', pre: a.source ? a.source.pre : '', hl: a.source ? a.source.hl : '', post: a.source ? a.source.post : '' };\n});\nconst sugg = [];\ncur.qa.forEach((a, k) => {\nif (asked.indexOf(k) < 0) sugg.push({ q: a.q, go: () => { const next = Object.assign({}, this.state.asked); next[selIdx] = (next[selIdx] || []).concat([k]); this.setState({ asked: next, tab: 'ask' }); } });\n});\nconst snoozeOpts = ['Later today, 3:00 PM', 'Tomorrow, 8:00 AM', 'Monday, 8:00 AM'].map((label) => ({\nlabel: label, go: () => this.finish(selIdx, (st) => { const sn = Object.assign({}, st.snoozed); sn[selIdx] = label; return { snoozed: sn }; })\n}));\nconst a = acct[cur.account];\nconst acc = labelOf(cur.account);\nreturn Object.assign(base, {\nfacts: facts, judg: judg, qa: qa, sugg: sugg, snoozeOpts: snoozeOpts, hasSugg: sugg.length > 0, noSugg: sugg.length === 0, sc: sc, act: act,\nemail: { subject: cur.email.subject, from: cur.email.from, when: cur.when, paras: cur.email.paras.map((p) => ({ segs: p.map(mapSeg) })) },\ncur: {\nname: cur.name, person: cur.person.name + (cur.person.role ? ', ' + cur.person.role : ''), initial: cur.person.initial,\nask: cur.request.text, askBy: cur.request.by, isSummary: cur.request.type === 'summary', isQuote: cur.request.type !== 'summary',\nrank: cur.rank, ordinal: ordinals[pos], readSummary: labels.join(' \u00b7 '), from: cur.from, when: cur.when,\nrankLabel: (pos + 1) + ' of ' + openCount, hasAccount: !!acc, account: acc,\naccountName: a.app + (a.label && D.accounts.length > 1 ? ', ' + a.label : ''), openLabel: 'Open in ' + a.app\n},\nshowRead: s.read, readExpanded: s.read ? 'true' : 'false', readCta: s.read ? 'Hide' : 'Why?',\ntoggleRead: () => this.setState({ read: !this.state.read }),\ncloseSrc: () => this.setState({ src: -1 }),\nmarkDone: () => this.finish(selIdx, (st) => ({ done: st.done.concat([selIdx]) }))\n});\n}\n}\n";
+const Component = (new Function('DCLogic', SRC + '; return Component;'))(DCLogic);
+const comp = new Component({});
+const tpl = document.getElementById('tpl');
+const look = (path, sc) => path.trim().split('.').reduce((o,k)=> (o==null?undefined:o[k]), sc);
+const interp = (s, sc) => s.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (m,p)=>{ const v=look(p,sc); return v==null?'':String(v); });
+function render(node, sc, out){
+  if (node.nodeType===3){ out.push(document.createTextNode(interp(node.nodeValue, sc))); return; }
+  if (node.nodeType!==1) return;
+  const tag=node.tagName.toLowerCase();
+  if (tag==='sc-for'){ const list=look(node.getAttribute('list').replace(/[{}]/g,''), sc)||[]; const as=node.getAttribute('as');
+    list.forEach(it=>{ const s2=Object.assign({},sc,{[as]:it}); node.childNodes.forEach(c=>render(c,s2,out)); }); return; }
+  if (tag==='sc-if'){ const v=look(node.getAttribute('value').replace(/[{}]/g,''), sc); if (v) node.childNodes.forEach(c=>render(c,sc,out)); return; }
+  const el=(node.namespaceURI==='http://www.w3.org/1999/xhtml')?document.createElement(node.localName):document.createElementNS(node.namespaceURI, node.localName);
+  for (const a of node.attributes){
+    if (a.name.startsWith('hint-')) continue;
+    if (a.name.startsWith('on')){ const fn=look(a.value.replace(/[{}]/g,''), sc); if (typeof fn==='function') el.addEventListener(a.name.slice(2).toLowerCase(), fn); continue; }
+    el.setAttribute(a.name, interp(a.value, sc));
+  }
+  const kids=[]; (node.content||node).childNodes.forEach(c=>render(c,sc,kids)); kids.forEach(k=>el.appendChild(k)); out.push(el);
+}
+window.__render = () => { const vals=comp.renderVals(); const out=[]; tpl.content.childNodes.forEach(c=>render(c,vals,out)); const root=document.getElementById('root'); root.innerHTML=''; out.forEach(n=>root.appendChild(n)); };
+window.__comp = comp;
+window.__render();
+</script></body></html>

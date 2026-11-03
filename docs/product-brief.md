@@ -1,10 +1,28 @@
 # Glance — Product Brief
 
-**Status:** Draft v0.2
+**Status:** v0.4 (design handoff)
 **Owner:** Shuhao Shang (Design)
-**Last updated:** November 1, 2026
+**Last updated:** November 3, 2026
+**Related:** [User flows](user-flows.md) · [Design rules](design-rules.md) · [Design system](design-system.md) · [Decision log](decisions.md) · [Data model](data-model.md) · [Handoff](handoff/README.md)
 
 > Diagrams in this document are written in Mermaid and render automatically on GitHub.
+
+### What changed in v0.4
+
+- **User flows:** each persona's story is walked end to end on the real screens in [User flows](user-flows.md), with acceptance criteria for every step. §5 and §6 now match the final design.
+- **New states found by the walk:** a checklist with every step ticked makes **Mark done** the primary (§9), the phone brief after items are done, and an evening view for quiet hours (§10, §14).
+- **Final review:** “Move to Set aside” lets the user correct a false alarm (§9, §11); every Good to know fact opens its source (§8); the demo’s Ask tab offers prepared questions only; list requests get two lines on desktop. Decisions D37–D40.
+
+### What changed in v0.3
+
+Ten rounds of design are now reflected here; the reasoning for each change is in the [decision log](decisions.md).
+
+- **Tier names:** Act / Know / Ignore are shown to users as **Needs you / Good to know / Set aside** (code keeps the short names).
+- **Sources open on click or tap,** not hover; on desktop they open inside the item, on phone in a bottom sheet. Source words are highlighted like a highlighter, by type.
+- **Lists are uniform, details are specific:** one row for every item; the detail view uses one of 8 scene cards, or a text fallback (§16).
+- **Account labels mark only the less common inbox.**
+- **Edge states are designed** (§14), and the open question on L1/L2/L3 is answered: it is a demo control (§18).
+- **Visual language is defined:** white and grey surfaces, Inter, purple for Glance, pastel ink for facts, light and dark tokens.
 
 ---
 
@@ -66,7 +84,7 @@ Glance is an **AI briefing layer** on top of the user's existing inboxes. It is 
 
 - Each inbox is connected once through the provider's official authorization (OAuth): Gmail, Outlook, Yahoo Mail; other providers through IMAP.
 - Glance never sees the user's password. Access is **read-only** by default and can be revoked at any time from the provider's account settings.
-- Multiple inboxes are combined into one brief. Every item shows which account it came from.
+- Multiple inboxes are combined into one brief. The coverage line shows the split (“Work 64 · Personal 8”), and only items from the less common inbox carry an account label: mark the exception, not the rule.
 - *Production note:* reading Gmail requires passing Google's security review for restricted scopes. This is out of scope for the demo but a real cost for a shipped product.
 
 ## 4. Personas
@@ -113,13 +131,16 @@ Glance is an **AI briefing layer** on top of the user's existing inboxes. It is 
 
 | Job | Glance feature |
 |---|---|
-| Check that a fact is right without rereading the email | Source on hover / tap |
-| Understand why something is ranked as important | Reason on request |
-| Know what is left to do | Coverage header with progress |
-| Ignore noise without fear of missing something | Collapsed Ignore tier with counts |
-| Get a specific question answered | Ask panel with sourced answers |
+| Check that a fact is right without rereading the email | Select a value: the source sentence opens with the words highlighted |
+| Understand why something is ranked as important | Glance’s read: the ranking reason and judgments, each with evidence |
+| Know what is left to do | Progress (“2 of 4 done”) and done rows with Undo |
+| Ignore noise without fear of missing something | Set aside, collapsed with counts; “Show in brief” brings an email back |
+| Get a specific question answered | Ask: answers only from email, with sources, or “Not in your email” |
+| Keep work out of the evening | Per-account quiet hours that say what is waiting |
 
 ## 6. User journeys
+
+The full flows, with a screen for every step and Given / When / Then acceptance criteria, are in **[User flows](user-flows.md)**. This section is the summary.
 
 ### Today, without Glance
 
@@ -143,67 +164,73 @@ journey
 
 | Stage | User is doing | User is thinking | Glance's role |
 |---|---|---|---|
-| **1. Trigger** | Starts the day / sits at desk / wakes up | "What's waiting for me?" | Brief is already generated |
-| **2. Scan** | Reads the coverage header and Act tier | "How much is there? What's urgent?" | One screen, components, ~30 seconds |
-| **3. Verify** | Hovers or taps a fact they doubt | "Is that amount really right?" | Source excerpt, original sentence highlighted |
-| **4. Understand** | Asks why, or asks a follow-up | "Why is this marked urgent?" | Reason on request, Ask panel with sources |
-| **5. Act** | Opens the email in their email app and handles it | "Let me just reply to this." | Deep link straight to the exact email |
-| **6. Close** | Returns to Glance | "What's left?" | Item auto-marked done, progress updates |
-| **7. Return** | Checks again later | "Did anything new come in?" | Update banner instead of a reshuffled brief |
+| **1. Open and scan** | Starts the day / sits at desk / wakes up | “What can’t wait?” | The brief is ready: one screen, ranked by urgency then value, done items already shown as done |
+| **2. Verify** | Selects a value they doubt | “Is that amount really right?” | Opens the exact sentence, the words highlighted by type |
+| **3. Understand** | Opens Glance’s read | “Why is this here?” | The ranking reason and judgments, each with its evidence |
+| **4. Ask** | Asks a follow-up | “Is the discount approved?” | Answers only from email, with the source, or says “Not in your email” |
+| **5. Act** | Reads the original, then handles it in the email app or another tool | “Let me just reply.” | Highlights every fact it used; one primary action hands off |
+| **6. Close** | Comes back to Glance | “What’s left?” | Reply detected or marked done; progress moves; Undo is always there |
+| **7. Return** | Checks again later | “Did anything new come in?” | “2 new · Add to brief” waits; nothing reshuffles |
+| **Tidy** | Opens Set aside | “Did Glance hide anything I want?” | “Show in brief” moves an email to Good to know and teaches Glance |
+| **After hours** | Looks at the phone in the evening | “Do I have to deal with anything tonight?” | Shows only what the account rules allow, and says what is waiting |
 
 ### Maya
 
 ```mermaid
 journey
-  title Maya, a morning of customer follow-ups
-  section Start the day on laptop
-    Open the brief: 4: Maya
-    Scan Act tier sorted by deal value: 5: Maya
-  section Verify
-    Hover the renewal amount to check its source: 5: Maya
-  section Act
-    Open the customer email in Outlook and reply: 4: Maya
-    Item marked done automatically: 5: Maya
-  section Between meetings on phone
-    See 2 new items in the update banner: 4: Maya
+  title Maya, protecting a renewal before Friday
+  section Start the day on her laptop
+    Scan Needs you, Fernway first: 5: Maya
+    Check $48,000/yr against Priya's sentence: 5: Maya
+  section Understand
+    See why it is a renewal risk: 4: Maya
+    Ask whether the 15% discount is approved: 5: Maya
+  section Act and close
+    Reply from Outlook with the discount: 4: Maya
+    Glance detects the reply, 2 of 4 done: 5: Maya
+  section Later
+    Add 2 new emails, Okto joins at the end: 4: Maya
+    Keep one newsletter from Set aside: 4: Maya
 ```
 
 ### Daniel
 
 ```mermaid
 journey
-  title Daniel, clearing the way for his team
-  section Arrive at the office
-    Open the brief on desktop: 4: Daniel
-    See 3 approvals and 1 escalation: 4: Daniel
-  section Decide
-    Ask why a project is marked at risk: 4: Daniel
-    Check the source of a budget figure: 5: Daniel
-  section Act
-    Approve the expense in Gmail: 4: Daniel
-  section After hours
-    Work items hidden from the brief: 5: Daniel
+  title Daniel, unblocking his team and keeping his evening
+  section At his desk
+    Scan 4 work items waiting on him: 4: Daniel
+    Compare option A and B side by side: 5: Daniel
+    Ask how long saved cards would take: 5: Daniel
+  section Act and close
+    Reply to Sam in Gmail, Glance closes it: 5: Daniel
+    Approve the $1,840 in the expense tool, then Done: 4: Daniel
+    Catch Lea's dates overlapping Omar's: 5: Daniel
+  section Evening on his phone
+    Quiet hours show personal email only: 5: Daniel
 ```
 
 ### Sarah
 
 ```mermaid
 journey
-  title Sarah, keeping the family on track
-  section Wake up on phone
-    Open the brief in bed: 4: Sarah
-    See a permission slip due tomorrow: 4: Sarah
-  section Verify
-    Tap the fee to see the school email: 5: Sarah
-  section Weekend batch on laptop
-    Pay and sign through the original emails: 3: Sarah
-    Carried-over items remind her what is left: 5: Sarah
+  title Sarah, clearing the family's to-dos before getting up
+  section In bed on her phone
+    See the school form due tomorrow: 4: Sarah
+    Tap $12 to see the teacher's sentence: 5: Sarah
+    Read how to pay in the original email: 4: Sarah
+  section Act and close
+    Pay, sign, tick both steps, Mark done: 5: Sarah
+    Reply C to the clinic, Glance notices: 5: Sarah
+  section When things go wrong
+    Yahoo disconnected, the brief says so: 4: Sarah
+    After a week away, still one screen: 4: Sarah
 ```
 
 ## 7. Design principles
 
 1. **Small enough to be worth it.** The brief fits on one screen and can be read in about 30 seconds. Even if it turns out to be unnecessary, reading it should feel like no real cost.
-2. **Quiet by default, sources on demand.** Sources are not displayed up front, because visible citations make the screen busy. Verifiable information carries a subtle visual hint; the source appears on hover (desktop) or tap (mobile, as a bottom sheet), with the original sentence highlighted. The faster a doubt is resolved, the more the user comes back.
+2. **Quiet by default, sources on demand.** Sources are not displayed up front, because visible citations make the screen busy. Verifiable values carry a subtle hint (a dotted underline in their type colour); the source appears on click or tap (inside the item on desktop, in a bottom sheet on mobile), with the original words highlighted. Hover was tried and dropped: the popover covered the next items. The faster a doubt is resolved, the more the user comes back.
 3. **Extract, don't paraphrase.** Amounts, dates, names and explicit requests are taken from the email as written. Rewording is where trust is lost.
 4. **Complete, not just correct.** Users must be able to see that nothing was missed: how many emails the brief covers, from which accounts, and what was filed under Ignore. Nothing disappears silently.
 5. **Explain on request.** Any item can answer "why is this here?" (e.g. "due today, from your manager"), but only when asked.
@@ -229,9 +256,9 @@ Always visible at the top: what the brief covers and how far the user has got.
 
 ### Three tiers
 
-1. **Act** — things that need the user to do something (reply, approve, sign, pay)
-2. **Know** — things worth being aware of (status, schedules, progress)
-3. **Ignore** — noise, collapsed by default with a count (promotions, CC'd notifications, newsletters)
+1. **Needs you** (Act) — things that need the user to do something (reply, approve, sign, pay)
+2. **Good to know** (Know) — things worth being aware of (status, schedules, progress). Each row has one underlined value that opens its source, like every other fact.
+3. **Set aside** (Ignore) — noise, collapsed by default with a count (promotions, CC'd notifications, newsletters). “Show in brief” moves one back and teaches Glance.
 
 This layout is a design-system pattern shared by all personas.
 
@@ -239,10 +266,11 @@ This layout is a design-system pattern shared by all personas.
 
 | Part | Visibility |
 |---|---|
-| Scene card (the content, built from primitives) | Always |
-| Account indicator | Always, subtle |
-| Primary action (e.g. Open in Gmail) | Always |
-| Source excerpt | On hover / tap |
+| List row: name, one-line request (quote or ✦ summary), up to 2 fact chips | Always, identical for every item |
+| Scene card (the facts, laid out by the email’s structure) | In the detail view |
+| Account label | Only for the less common inbox |
+| Primary action (e.g. Open in Gmail) | In the detail view |
+| Source excerpt | On click / tap of an underlined value |
 | Reason ("why is this here?") | On request |
 | Ask a follow-up | On request |
 
@@ -254,10 +282,11 @@ stateDiagram-v2
   New --> Done: handled in email app (auto) or marked done
   New --> Snoozed: user snoozes
   Snoozed --> New: snooze time reached
-  New --> Dismissed: user says no action needed
+  New --> MovedAside: user moves it to Set aside (not for them)
   New --> CarriedOver: unfinished when the next brief is generated
   CarriedOver --> Done: handled
-  Dismissed --> [*]
+  MovedAside --> New: Back to Needs you, or Undo
+  MovedAside --> [*]
   Done --> [*]
 ```
 
@@ -267,16 +296,18 @@ stateDiagram-v2
 | **Done (auto)** | Glance detects the user replied, paid or accepted in their email app |
 | **Done (manual)** | User marks it done in Glance |
 | **Snoozed** | User hides it until a chosen time; it returns to Act |
-| **Dismissed** | User decides it does not need action; moves to Ignore |
+| **Moved to Set aside** | User says it doesn’t need them (“Move to Set aside”, at the end of Glance’s read). It leaves Needs you, is not counted as an action or as done, shows under “Moved by you” in Set aside, and teaches Glance. Undo or “Back to Needs you” restores it ([D37](decisions.md)) |
 | **Carried over** | An unfinished Act item from a previous brief appears in today's brief, marked as carried over |
 
 Unfinished actions never fall out of the brief silently.
+
+**Checklist items** (more than one step, such as “sign and pay”): ticks are local progress. When every step is ticked, **Mark done** becomes the one primary action, but the item stays in Needs you until the user marks it done or a reply is detected. The user may want to keep it until the other side confirms ([D34](decisions.md)).
 
 ## 10. Brief cadence and updates
 
 - A brief is generated on a schedule (e.g. every morning) and can be refreshed on demand.
 - Emails that arrive after the brief was generated appear as an update ("4 new since 8:00"), not as a reshuffled brief.
-- Per-account time rules: e.g. a work account's items are hidden after working hours (Daniel).
+- Per-account time rules: e.g. a work account's items are hidden after working hours (Daniel). In the evening the phone shows personal email only, says how many work emails are waiting for tomorrow's brief, and offers “Show work email anyway” ([D35](decisions.md)).
 
 ## 11. Prioritization and personalization
 
@@ -284,7 +315,7 @@ Unfinished actions never fall out of the brief silently.
 
 **User controls:**
 - Mark senders as important (always surface) or noise (always Ignore)
-- "Not important" and "Show me less like this" on any item
+- “Move to Set aside” on a Needs you item, and “Show in brief” on a Set aside email: the two directions of the same correction
 - Exclude senders or labels from AI processing entirely (e.g. medical or banking emails)
 
 ## 12. Trust and accuracy
@@ -307,12 +338,13 @@ Unfinished actions never fall out of the brief silently.
 
 | State | Behavior |
 |---|---|
-| **Nothing to act on** | A calm, positive empty state ("Nothing needs you today"), still showing coverage |
-| **Overload day** | Act shows the top items that fit one screen, then "+6 more"; the one-screen rule holds |
-| **First brief** | Short explanation of the three tiers and how to check sources |
-| **Syncing** | Coverage header shows progress; partial results are clearly labeled |
-| **Account disconnected / expired** | Inline banner on affected items with a reconnect action; other accounts keep working |
-| **Mixed languages** | The brief uses the user's chosen language; extracted quotes stay in the original language |
+| **Nothing to act on** | A calm, positive empty state (“Nothing else needs you today”), still showing what is in Good to know and Set aside |
+| **Overload day** | Needs you shows what fits one screen (phone: the top 4), then “Show 8 more, ranked the same way”; Good to know and Set aside collapse into single rows |
+| **First brief** | Connected inboxes, real progress (“312 of 480 emails”), a skeleton of the brief, and “Read-only. Glance never sends or deletes email.” A short guide to sources is still open (design rules §15) |
+| **New mail while reading** | The brief never reshuffles; “2 new since 7:12 AM · Add to brief” waits at the top of Needs you, and the coverage line shows when it updated |
+| **Account disconnected / expired** | Say what is missing in three places: the coverage line (“from 1 of your 2 inboxes”), a notice with one primary action (Reconnect), and the section header (“From Gmail only”). A partial brief must never look complete |
+| **Quiet hours** | Only the accounts the rules allow. A calm card says what is waiting (“12 work emails arrived after 7:00 PM. They’ll be in tomorrow’s brief at 8:00 AM.”), with “Show work email anyway” |
+| **Mixed languages** | The brief uses the user's chosen language; extracted quotes stay in the original language (not designed yet) |
 
 ## 15. Information architecture
 
@@ -325,20 +357,20 @@ flowchart TD
   G --> O["Connect inboxes (Phase 2)"]
   G --> D["Demo controls"]
 
-  B --> CH["Coverage header"]
-  B --> UB["Update banner"]
-  B --> ACT["Act tier"]
-  B --> KNOW["Know tier"]
-  B --> IGN["Ignore tier (collapsed groups)"]
+  B --> CH["Coverage line and account rules"]
+  B --> UB["New mail row (Add to brief)"]
+  B --> ACT["Needs you (Act)"]
+  B --> KNOW["Good to know (Know)"]
+  B --> IGN["Set aside (Ignore): collapsed row, then the Set aside view"]
 
   ACT --> IT["Item"]
   KNOW --> IT
-  IT --> SRC["Source popover / bottom sheet"]
-  IT --> WHY["Reason"]
+  IT --> SRC["Source panel (desktop) / bottom sheet (phone)"]
+  IT --> WHY["Glance’s read"]
   IT --> ASK["Ask panel"]
   IT --> EM["Original email view"]
   IT --> EXT["Open in email app (external)"]
-  IT --> ST["Item states: done, snooze, dismiss"]
+  IT --> ST["Done, Snooze, Undo"]
 
   S --> S1["Accounts"]
   S --> S2["Brief schedule and working hours"]
@@ -347,18 +379,21 @@ flowchart TD
   S --> S5["Language and theme"]
 
   D --> D1["Persona switcher"]
-  D --> D2["Time simulator"]
+  D --> D2["Level switch 1 · 2 · 3"]
+  D --> D3["Simulate a reply"]
 ```
 
 The design system documentation (Storybook) is a separate site: tokens, primitives, scene cards and patterns.
 
 ### Key flow: verify, then act
 
+The shared core of every persona flow ([User flows](user-flows.md)).
+
 ```mermaid
 flowchart LR
   A["Scan brief"] --> B{"Doubt about a fact?"}
   B -- "No" --> E["Open in email app"]
-  B -- "Yes" --> C["Hover / tap to see source"]
+  B -- "Yes" --> C["Select an underlined value to see its source"]
   C --> D{"Resolved?"}
   D -- "Yes" --> E
   D -- "No" --> F["Ask panel or original email view"]
@@ -392,28 +427,40 @@ Color, typography, spacing, radius, shadow and motion, with **light and dark the
 
 ### Scene cards (compositions of primitives)
 
-| Persona | Scene cards |
-|---|---|
-| **Maya** | New lead · Customer reply summary · Renewal risk · Meeting booking · Discount approval status |
-| **Daniel** | Approval request · Project status summary · Escalation alert · Decision needed · Candidate feedback |
-| **Sarah** | School notice (date, sign or pay) · Appointment reminder · Bill / fee · Family schedule · Delivery tracking |
+The list uses one uniform row for every item. The **detail view** swaps in a scene card chosen by the email’s structure. Cards hold only facts; Glance’s judgments stay in “Glance’s read”. Full specs: [design-system.md §5](design-system.md).
+
+| Scene card | Use when the email… | Used by |
+|---|---|---|
+| Deal | is about an account with a value, a date and a status | Maya: renewal, new lead |
+| Decision | offers named options and asks you to choose | Daniel: checkout redesign |
+| Approval | asks you to approve an amount | Daniel: expense report |
+| Payment | is a bill or fee | Sarah: water bill |
+| Mismatch | contains two numbers that should agree and don’t | Maya: invoice seats |
+| Event | sets one date and time | Sarah: appointment |
+| Range | spans dates | Daniel: time off |
+| Checklist | asks for more than one step | Sarah: sign and pay |
+| Text fallback | has no stable structure (no card) | Maya: yes/no question; Daniel: feedback request |
 
 ### Patterns
 
 - Brief layout (coverage header + Act / Know / Ignore)
-- Item states (new, done, snoozed, dismissed, carried over)
+- Item states (new, done, snoozed, moved to Set aside, carried over)
 - Empty, overload, syncing and error states
-- Source popover (desktop) and source bottom sheet (mobile)
+- Source panel inside the item (desktop) and source bottom sheet (mobile)
 
 ## 17. Screens
 
 ### MVP
 
-1. **Today's brief** — the core screen
-2. **Source popover / bottom sheet** — original excerpt with highlighting
-3. **Ask panel** — follow-up questions on a specific item; answers include sources (pre-written mock data)
-4. **Original email view** — the full email with the sentences the AI used highlighted
-5. **Design system** — Storybook documentation of tokens, primitives, scene cards and patterns
+All MVP screens are designed; references are in `docs/screens/` and `docs/prototype/`.
+
+1. **Today's brief** — the core screen, desktop and phone, for three personas
+2. **Detail with scene card and source** — panel on desktop, bottom sheet on phone
+3. **Ask panel** — follow-up questions on a specific item; answers include sources or say “Not in your email” (pre-written mock data)
+4. **Original email view** — the full email with every fact Glance used highlighted by type, with a highlighter switch
+5. **Set aside view** — groups with counts and “Show in brief”
+6. **Edge states** — first brief, new mail, disconnected inbox, overload, quiet hours, all done
+7. **Design system** — Storybook documentation of tokens (light and dark), primitives, scene cards and patterns
 
 ### Phase 2
 
@@ -425,7 +472,10 @@ Color, typography, spacing, radius, shadow and motion, with **light and dark the
 These exist to show the work, not as product features.
 
 - **Persona switcher:** switch between Maya, Daniel and Sarah to see one design system adapt to three contexts
-- **Time simulator:** move the clock forward to see new emails arrive as an update, items complete, and after-hours rules apply
+- **Level switch (1 · 2 · 3):** the same brief as plain AI text, formatted text and Glance’s components, so the thesis can be judged in seconds
+- **Simulate a reply:** pretend the user answered in their email app, so the item is marked done by detection
+- **New mail:** “2 new · Add to brief” (Maya) shows an update arriving without reshuffling
+- *Later:* a full time simulator (after-hours rules, carried-over items)
 
 ## 19. Accessibility and internationalization
 
@@ -453,10 +503,11 @@ If Glance were a real product:
 
 ## 22. Open questions
 
-- Should the brief include a toggle that shows the same content at L1, L2 and L3, to demonstrate the thesis directly?
+- ~~Should the brief include a toggle that shows L1, L2 and L3?~~ **Yes**, as a demo control (§18).
 - Should the demo include a "designer notes" mode that annotates the live interface with the reasoning behind design decisions?
-- One combined brief for all accounts, or a switch between accounts? How do per-account time rules appear in the interface?
+- ~~One combined brief or a switch between accounts? How do per-account time rules appear?~~ **One combined brief**; minority account labels; rules under the coverage line (“Quiet hours: work email hides after 7:00 PM”).
 - Should some one-tap actions (accept meeting, approve expense) happen inside Glance in a later phase?
+- How does Glance tell the user the brief is ready (the morning notification), and how do quiet hours apply to it?
 - How visible should uncertainty flags be without breaking principle 2?
 - Default brief language when emails arrive in several languages?
-- Visual language: to be defined after reference research.
+- ~~Visual language~~ **Defined:** see [design-system.md](design-system.md).

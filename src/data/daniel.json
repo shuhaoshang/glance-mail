@@ -1,0 +1,659 @@
+{
+  "$schema": "../../docs/data-model.md",
+  "version": 1,
+  "id": "daniel",
+  "name": "Daniel",
+  "role": "Manager",
+  "initial": "D",
+  "date": "Thursday, November 5",
+  "greeting": "Good morning, Daniel",
+  "coverage": {
+    "emails": 72,
+    "text": "{n} emails overnight from 2 inboxes: Work 64, Personal 8.",
+    "note": "Quiet hours: work email hides after 7:00 PM"
+  },
+  "accounts": [
+    {
+      "id": "work",
+      "app": "Gmail",
+      "label": "Work"
+    },
+    {
+      "id": "personal",
+      "app": "Gmail",
+      "label": "Personal",
+      "minority": true
+    }
+  ],
+  "doneBefore": [
+    {
+      "name": "Design hiring plan",
+      "note": "reply detected in Gmail, 8:05 AM"
+    }
+  ],
+  "newMail": null,
+  "items": [
+    {
+      "id": "checkout",
+      "name": "Checkout redesign",
+      "account": "work",
+      "person": {
+        "name": "Sam Patel",
+        "role": "Engineering Lead",
+        "initial": "S"
+      },
+      "request": {
+        "type": "quote",
+        "by": "Sam asks",
+        "text": "“Can you decide by tomorrow whether we cut saved cards to keep the Dec 1 launch?”"
+      },
+      "rank": "A decision only you can make, due tomorrow.",
+      "from": "Sam Patel",
+      "when": "Wed, Nov 4, 6:40 PM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "time",
+          "label": "Decide by tomorrow",
+          "urgent": true,
+          "source": {
+            "pre": "Can you decide ",
+            "hl": "by tomorrow",
+            "post": " whether we cut saved cards to keep the Dec 1 launch? We can’t start the next sprint until this is decided."
+          }
+        },
+        {
+          "id": "f2",
+          "kind": "time",
+          "label": "Launch Dec 1",
+          "urgent": false,
+          "source": {
+            "pre": "Can you decide by tomorrow whether we cut saved cards to keep the ",
+            "hl": "Dec 1 launch",
+            "post": "? We can’t start the next sprint until this is decided."
+          }
+        },
+        {
+          "id": "f3",
+          "kind": "time",
+          "label": "Option A",
+          "urgent": false,
+          "source": {
+            "pre": "Option A: ",
+            "hl": "ship Dec 1 without saved cards",
+            "post": "."
+          }
+        },
+        {
+          "id": "f4",
+          "kind": "time",
+          "label": "Option B",
+          "urgent": false,
+          "source": {
+            "pre": "Option B: ",
+            "hl": "keep saved cards and move the launch to Dec 15",
+            "post": "."
+          }
+        }
+      ],
+      "scene": {
+        "type": "decision",
+        "label": "Decision",
+        "urgent": "Decide by tomorrow",
+        "options": [
+          {
+            "key": "A",
+            "title": "Cut saved cards",
+            "value": "Launch Dec 1",
+            "fact": "f3"
+          },
+          {
+            "key": "B",
+            "title": "Keep saved cards",
+            "value": "Launch Dec 15",
+            "fact": "f4"
+          }
+        ]
+      },
+      "judgments": [
+        {
+          "label": "Blocks your team",
+          "why": "Sam says the next sprint waits on this decision.",
+          "source": {
+            "from": "Sam Patel",
+            "when": "Wed, Nov 4, 6:40 PM",
+            "pre": "…Dec 1 launch? ",
+            "hl": "We can’t start the next sprint until this is decided",
+            "post": "."
+          }
+        }
+      ],
+      "email": {
+        "subject": "Decision needed: saved cards vs. Dec 1",
+        "from": "Sam Patel",
+        "paras": [
+          [
+            "Hi Daniel,"
+          ],
+          [
+            "Can you decide ",
+            {
+              "t": "by tomorrow",
+              "kind": "time",
+              "tag": "Time · Decide by tomorrow"
+            },
+            " whether we cut saved cards to keep the ",
+            {
+              "t": "Dec 1 launch",
+              "kind": "time",
+              "tag": "Time · Launch Dec 1"
+            },
+            "? ",
+            {
+              "t": "We can’t start the next sprint until this is decided",
+              "kind": "judg",
+              "tag": "Glance’s read · Blocks your team"
+            },
+            "."
+          ],
+          [
+            "Option A: ",
+            {
+              "t": "ship Dec 1 without saved cards",
+              "kind": "time",
+              "tag": "Time · Option A"
+            },
+            ".\nOption B: ",
+            {
+              "t": "keep saved cards and move the launch to Dec 15",
+              "kind": "time",
+              "tag": "Time · Option B"
+            },
+            "."
+          ],
+          [
+            {
+              "t": "Sam",
+              "kind": "people",
+              "tag": "People · Sam Patel, Engineering Lead"
+            }
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "What does design think?",
+          "found": false,
+          "a": "No one from design has replied on this thread yet."
+        },
+        {
+          "q": "How long would saved cards take?",
+          "found": true,
+          "a": "Sam estimated two more weeks in last Friday’s update.",
+          "source": {
+            "from": "Sam Patel",
+            "when": "Fri, Oct 30, 4:10 PM",
+            "pre": "Saved cards: ",
+            "hl": "about two more weeks",
+            "post": " of work."
+          }
+        }
+      ]
+    },
+    {
+      "id": "riya",
+      "name": "Candidate: Riya Sen",
+      "account": "work",
+      "person": {
+        "name": "Hiring team",
+        "role": "",
+        "initial": "H"
+      },
+      "request": {
+        "type": "quote",
+        "by": "The hiring team writes",
+        "text": "“Your feedback is the last one missing before Friday’s debrief.”"
+      },
+      "rank": "The debrief is tomorrow, and the panel is waiting on you.",
+      "from": "Hiring team",
+      "when": "Thu, Nov 5, 8:15 AM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "time",
+          "label": "Debrief Fri · tomorrow",
+          "urgent": true,
+          "source": {
+            "pre": "Your feedback is the last one missing ",
+            "hl": "before Friday’s debrief",
+            "post": ". Please submit it in the hiring tool."
+          }
+        },
+        {
+          "id": "f2",
+          "kind": "people",
+          "label": "Last feedback missing",
+          "urgent": false,
+          "source": {
+            "pre": "",
+            "hl": "Your feedback is the last one missing",
+            "post": " before Friday’s debrief. Please submit it in the hiring tool."
+          }
+        }
+      ],
+      "scene": {
+        "type": "text"
+      },
+      "judgments": [],
+      "email": {
+        "subject": "Feedback needed: Riya Sen",
+        "from": "Hiring team",
+        "paras": [
+          [
+            "Hi Daniel,"
+          ],
+          [
+            {
+              "t": "Your feedback is the last one missing",
+              "kind": "people",
+              "tag": "People · Last feedback missing"
+            },
+            " ",
+            {
+              "t": "before Friday’s debrief",
+              "kind": "time",
+              "tag": "Time · Debrief Fri"
+            },
+            ". Please submit it in the hiring tool."
+          ],
+          [
+            "Thanks,\nThe hiring team"
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "How did the others rate her?",
+          "found": false,
+          "a": "The scores are in the hiring tool, not in your email."
+        }
+      ]
+    },
+    {
+      "id": "expense",
+      "name": "Expense report: Jordan Kim",
+      "account": "work",
+      "person": {
+        "name": "Jordan Kim",
+        "role": "via expense tool",
+        "initial": "J"
+      },
+      "request": {
+        "type": "summary",
+        "by": "",
+        "text": "Approve Jordan’s conference travel before prices go up on Monday."
+      },
+      "rank": "Jordan is waiting on you, and prices rise on Monday.",
+      "from": "Expense tool",
+      "when": "Wed, Nov 4, 11:02 AM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "money",
+          "label": "$1,840",
+          "urgent": false,
+          "source": {
+            "pre": "Total: ",
+            "hl": "$1,840",
+            "post": ""
+          }
+        },
+        {
+          "id": "f2",
+          "kind": "time",
+          "label": "Prices rise Monday",
+          "urgent": false,
+          "source": {
+            "pre": "Note from Jordan: “",
+            "hl": "Booking before prices go up on Monday",
+            "post": ".”"
+          }
+        }
+      ],
+      "scene": {
+        "type": "approval",
+        "label": "Approval",
+        "urgent": null,
+        "amount": {
+          "label": "Total",
+          "value": "$1,840",
+          "fact": "f1"
+        },
+        "fields": [
+          {
+            "label": "For",
+            "value": "Conference travel"
+          },
+          {
+            "label": "Requested by",
+            "value": "Jordan Kim"
+          },
+          {
+            "label": "Prices rise",
+            "value": "Monday",
+            "fact": "f2"
+          }
+        ],
+        "note": "You approve it in the expense tool."
+      },
+      "judgments": [],
+      "email": {
+        "subject": "Expense report awaiting your approval",
+        "from": "Expense tool",
+        "paras": [
+          [
+            "Jordan Kim submitted an expense report for your approval."
+          ],
+          [
+            "Total: ",
+            {
+              "t": "$1,840",
+              "kind": "money",
+              "tag": "Money · $1,840"
+            },
+            "\nCategory: Conference travel"
+          ],
+          [
+            "Note from ",
+            {
+              "t": "Jordan",
+              "kind": "people",
+              "tag": "People · Jordan Kim"
+            },
+            ": “",
+            {
+              "t": "Booking before prices go up on Monday",
+              "kind": "time",
+              "tag": "Time · Prices rise Monday"
+            },
+            ".”"
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "Is this within the travel budget?",
+          "found": true,
+          "a": "Yes. The design team has $6,200 left in its travel budget this quarter.",
+          "source": {
+            "from": "Finance",
+            "when": "Mon, Nov 2, 9:00 AM",
+            "pre": "Design team travel, Q4: ",
+            "hl": "$6,200 remaining",
+            "post": "."
+          }
+        }
+      ]
+    },
+    {
+      "id": "lea",
+      "name": "Time off: Lea Novak",
+      "account": "work",
+      "person": {
+        "name": "Lea Novak",
+        "role": "Product Designer",
+        "initial": "L"
+      },
+      "request": {
+        "type": "quote",
+        "by": "Lea asks",
+        "text": "“I’d like to take Dec 22 to Jan 2 off. Does that work for the team?”"
+      },
+      "rank": "No deadline is stated, but holiday plans are easier to settle early.",
+      "from": "Lea Novak",
+      "when": "Tue, Nov 3, 2:30 PM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "time",
+          "label": "Dec 22 – Jan 2",
+          "urgent": false,
+          "source": {
+            "pre": "I’d like to take ",
+            "hl": "Dec 22 to Jan 2",
+            "post": " off. Does that work for the team?"
+          }
+        }
+      ],
+      "scene": {
+        "type": "range",
+        "label": "Time off",
+        "urgent": null,
+        "from": {
+          "month": "Dec",
+          "day": "22",
+          "weekday": "Tue"
+        },
+        "to": {
+          "month": "Jan",
+          "day": "2",
+          "weekday": "Sat"
+        },
+        "fields": [
+          {
+            "label": "Dates",
+            "value": "Dec 22 – Jan 2",
+            "fact": "f1"
+          }
+        ]
+      },
+      "judgments": [
+        {
+          "label": "Overlaps another request",
+          "why": "Omar asked for nearly the same days in a different email.",
+          "source": {
+            "from": "Omar Haddad",
+            "when": "Thu, Oct 29, 10:05 AM",
+            "pre": "Hi Daniel, I’d like to request ",
+            "hl": "Dec 23 to Jan 2",
+            "post": " off to visit family."
+          }
+        }
+      ],
+      "email": {
+        "subject": "Time off over the holidays",
+        "from": "Lea Novak",
+        "paras": [
+          [
+            "Hi Daniel,"
+          ],
+          [
+            "I’d like to take ",
+            {
+              "t": "Dec 22 to Jan 2",
+              "kind": "time",
+              "tag": "Time · Dec 22 – Jan 2"
+            },
+            " off. Does that work for the team?"
+          ],
+          [
+            "Thanks,\n",
+            {
+              "t": "Lea",
+              "kind": "people",
+              "tag": "People · Lea Novak, Product Designer"
+            }
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "Who else is off then?",
+          "found": true,
+          "a": "Omar Haddad asked for Dec 23 to Jan 2. No one else has asked yet.",
+          "source": {
+            "from": "Omar Haddad",
+            "when": "Thu, Oct 29, 10:05 AM",
+            "pre": "Hi Daniel, I’d like to request ",
+            "hl": "Dec 23 to Jan 2",
+            "post": " off to visit family."
+          }
+        }
+      ]
+    }
+  ],
+  "goodToKnow": [
+    {
+      "icon": "chart",
+      "tone": "neutral",
+      "title": "Weekly report",
+      "text": ": 3 of 5 projects on track; Search moves to Dec 8",
+      "fact": {
+        "value": "Dec 8",
+        "kind": "time",
+        "source": {
+          "from": "Mei Tan",
+          "when": "Wed, Nov 4, 5:00 PM",
+          "pre": "3 of 5 projects are on track. Search moves to ",
+          "hl": "Dec 8",
+          "post": " while we finish the index migration."
+        }
+      }
+    },
+    {
+      "icon": "clock",
+      "tone": "time",
+      "title": "Design review",
+      "text": " moved to Mon, 2:00 PM",
+      "fact": {
+        "value": "Mon, 2:00 PM",
+        "kind": "time",
+        "source": {
+          "from": "Kofi Mensah",
+          "when": "Wed, Nov 4, 11:20 AM",
+          "pre": "I’m moving our design review to ",
+          "hl": "Monday at 2:00 PM",
+          "post": " so the checkout decision lands first."
+        }
+      }
+    },
+    {
+      "icon": "clock",
+      "tone": "time",
+      "title": "Car service",
+      "text": " booked for Sat, 9:00 AM",
+      "account": "personal",
+      "fact": {
+        "value": "Sat, 9:00 AM",
+        "kind": "time",
+        "source": {
+          "from": "Hillside Auto",
+          "when": "Wed, Nov 4, 4:45 PM",
+          "pre": "Your car service is booked for ",
+          "hl": "Saturday, Nov 7 at 9:00 AM",
+          "post": "."
+        }
+      }
+    }
+  ],
+  "setAside": [
+    {
+      "title": "You were CC’d",
+      "short": "CC’d",
+      "count": 47,
+      "rows": [
+        {
+          "id": "c1",
+          "title": "Sam Patel → Payments team",
+          "sub": "Re: saved cards scope"
+        },
+        {
+          "id": "c2",
+          "title": "Priya Raman → Design",
+          "sub": "Accessibility audit, round 2"
+        }
+      ]
+    },
+    {
+      "title": "Newsletters",
+      "short": "newsletters",
+      "count": 11,
+      "rows": [
+        {
+          "id": "n1",
+          "title": "Design Systems Digest",
+          "sub": "Five ways teams name their tokens"
+        },
+        {
+          "id": "n2",
+          "title": "Product Ops Notes",
+          "sub": "Running a calm planning week"
+        }
+      ]
+    },
+    {
+      "title": "Calendar updates",
+      "short": "calendar updates",
+      "count": 6,
+      "rows": [
+        {
+          "id": "k1",
+          "title": "Sprint planning",
+          "sub": "Room changed to 4B"
+        },
+        {
+          "id": "k2",
+          "title": "1:1 with Sam",
+          "sub": "Accepted by Sam"
+        }
+      ]
+    }
+  ],
+  "demo": {
+    "simulate": {
+      "item": "checkout",
+      "who": "Sam",
+      "label": "Simulate reply to Sam",
+      "detected": "Reply to Sam detected ✓",
+      "already": "Checkout redesign is already done",
+      "note": "reply detected in Gmail, 9:40 AM"
+    },
+    "levels": {
+      "l1": "Good morning! Here’s a summary of your two inboxes. In your work email, Sam Patel asked whether you can decide by tomorrow if the team should cut saved cards to keep the December 1 launch; the other option is to keep saved cards and move the launch to December 15, and the next sprint can’t start until you decide. The hiring team said your feedback on Riya Sen is the last one missing before Friday’s debrief. Jordan Kim submitted a $1,840 expense report for conference travel and noted that prices go up on Monday. Lea Novak asked to take December 22 to January 2 off. You already replied about the design hiring plan. In other news, the weekly report shows 3 of 5 projects on track with Search moving to December 8, the design review moved to Monday at 2:00 PM, and in your personal email, your car service is booked for Saturday at 9:00 AM. You also received 64 other emails, mostly messages you were CC’d on, newsletters and calendar updates.",
+      "l2": {
+        "needs": [
+          [
+            "Checkout redesign (Sam Patel):",
+            " decide by tomorrow whether to cut saved cards to keep the Dec 1 launch, or keep them and launch Dec 15."
+          ],
+          [
+            "Riya Sen (hiring team):",
+            " your feedback is the last one missing before Friday’s debrief."
+          ],
+          [
+            "Expense report (Jordan Kim):",
+            " approve $1,840 for conference travel; prices go up Monday."
+          ],
+          [
+            "Lea Novak:",
+            " time off Dec 22 – Jan 2."
+          ]
+        ],
+        "know": [
+          "Weekly report: 3 of 5 projects on track; Search moves to Dec 8.",
+          "Design review moved to Mon, 2:00 PM.",
+          "Car service booked for Sat, 9:00 AM (Personal)."
+        ],
+        "done": [
+          "Design hiring plan: you replied."
+        ],
+        "setAside": "64 other emails set aside."
+      }
+    },
+    "initialSelection": {
+      "itemIndex": 0,
+      "openFactIndex": -1,
+      "reasonOpen": true
+    }
+  }
+}

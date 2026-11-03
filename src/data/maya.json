@@ -1,0 +1,698 @@
+{
+  "$schema": "../../docs/data-model.md",
+  "version": 1,
+  "id": "maya",
+  "name": "Maya",
+  "role": "Sales",
+  "initial": "M",
+  "date": "Thursday, November 5",
+  "greeting": "Good morning, Maya",
+  "coverage": {
+    "emails": 38,
+    "text": "{n} emails overnight, all in Outlook.",
+    "note": null
+  },
+  "accounts": [
+    {
+      "id": "outlook",
+      "app": "Outlook",
+      "label": null
+    }
+  ],
+  "doneBefore": [
+    {
+      "name": "Corvo Retail",
+      "note": "invite accepted in Outlook, 8:41 AM"
+    }
+  ],
+  "newMail": {
+    "label": "2 new since 8:00 AM",
+    "added": "2 new added: 1 here, 1 set aside",
+    "emails": 2
+  },
+  "items": [
+    {
+      "id": "fernway",
+      "name": "Fernway Logistics",
+      "account": "outlook",
+      "person": {
+        "name": "Priya Shah",
+        "role": "Ops Director",
+        "initial": "P"
+      },
+      "request": {
+        "type": "quote",
+        "by": "Priya asks",
+        "text": "“Can you send revised pricing before our review on Friday?”"
+      },
+      "rank": "Due tomorrow, the soonest deadline in this brief, and the largest account ($48,000/yr).",
+      "from": "Priya Shah",
+      "when": "Wed, Nov 4, 9:12 AM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "time",
+          "label": "Due Fri · tomorrow",
+          "urgent": true,
+          "source": {
+            "pre": "Can you send revised pricing ",
+            "hl": "before our review on Friday",
+            "post": "? Our current contract ($48,000/yr) renews on Nov 15, and we’re evaluating other vendors before we commit."
+          }
+        },
+        {
+          "id": "f2",
+          "kind": "money",
+          "label": "$48,000/yr contract",
+          "urgent": false,
+          "source": {
+            "pre": "Can you send revised pricing before our review on Friday? Our current contract ",
+            "hl": "($48,000/yr)",
+            "post": " renews on Nov 15, and we’re evaluating other vendors before we commit."
+          }
+        },
+        {
+          "id": "f3",
+          "kind": "time",
+          "label": "Renews Nov 15",
+          "urgent": false,
+          "source": {
+            "pre": "…Our current contract ($48,000/yr) ",
+            "hl": "renews on Nov 15",
+            "post": ", and we’re evaluating other vendors before we commit."
+          }
+        }
+      ],
+      "scene": {
+        "type": "deal",
+        "label": "Renewal",
+        "urgent": "Due tomorrow",
+        "fields": [
+          {
+            "label": "Contract",
+            "value": "$48,000/yr",
+            "fact": "f2"
+          },
+          {
+            "label": "Renews",
+            "value": "Nov 15",
+            "fact": "f3"
+          },
+          {
+            "label": "Review",
+            "value": "Fri, Nov 6",
+            "fact": "f1"
+          }
+        ]
+      },
+      "judgments": [
+        {
+          "label": "Renewal risk",
+          "why": "Priya mentions other vendors in the same email.",
+          "source": {
+            "from": "Priya Shah",
+            "when": "Wed, Nov 4, 9:12 AM",
+            "pre": "…renews on Nov 15, and ",
+            "hl": "we’re evaluating other vendors before we commit",
+            "post": "."
+          }
+        }
+      ],
+      "email": {
+        "subject": "Pricing before Friday’s review",
+        "from": "Priya Shah",
+        "paras": [
+          [
+            "Hi Maya,"
+          ],
+          [
+            "Can you send revised pricing ",
+            {
+              "t": "before our review on Friday",
+              "kind": "time",
+              "tag": "Time · Due Fri"
+            },
+            "? Our current contract ",
+            {
+              "t": "($48,000/yr)",
+              "kind": "money",
+              "tag": "Money · $48,000/yr contract"
+            },
+            " ",
+            {
+              "t": "renews on Nov 15",
+              "kind": "time",
+              "tag": "Time · Renews Nov 15"
+            },
+            ", and ",
+            {
+              "t": "we’re evaluating other vendors before we commit",
+              "kind": "judg",
+              "tag": "Glance’s read · Renewal risk"
+            },
+            "."
+          ],
+          [
+            "Lena mentioned a possible discount on our last call. If that’s still on the table, please include it."
+          ],
+          [
+            "Thanks,\n",
+            {
+              "t": "Priya",
+              "kind": "people",
+              "tag": "People · Priya Shah, Ops Director"
+            }
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "Which vendors are they looking at?",
+          "found": false,
+          "a": "Priya doesn’t name any vendors, in this email or in earlier ones."
+        },
+        {
+          "q": "What did we agree last year?",
+          "found": true,
+          "a": "Last year’s renewal was $44,000/yr, confirmed by you on Nov 12, 2025.",
+          "source": {
+            "from": "You, to Priya Shah",
+            "when": "Nov 12, 2025",
+            "pre": "Confirming the renewal at ",
+            "hl": "$44,000/yr",
+            "post": " for the next 12 months."
+          }
+        },
+        {
+          "q": "Is the discount approved?",
+          "found": true,
+          "a": "Yes. Lena Ortiz approved 15% for Fernway yesterday, valid until Nov 30.",
+          "source": {
+            "from": "Lena Ortiz",
+            "when": "Wed, Nov 4, 5:30 PM",
+            "pre": "Approved: ",
+            "hl": "15% for Fernway on the renewal, valid until Nov 30",
+            "post": "."
+          }
+        }
+      ]
+    },
+    {
+      "id": "brightline",
+      "name": "Brightline Studio",
+      "account": "outlook",
+      "person": {
+        "name": "Ana Ruiz",
+        "role": "Head of IT",
+        "initial": "A"
+      },
+      "request": {
+        "type": "quote",
+        "by": "Ana asks",
+        "text": "“Can you confirm the SSO add-on is included in our plan?”"
+      },
+      "rank": "Ana has been waiting 2 days.",
+      "from": "Ana Ruiz",
+      "when": "Tue, Nov 3, 4:20 PM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "time",
+          "label": "Waiting 2 days",
+          "urgent": true,
+          "source": {
+            "pre": "Sent: ",
+            "hl": "Tue, Nov 3, 4:20 PM",
+            "post": ""
+          }
+        },
+        {
+          "id": "f2",
+          "kind": "time",
+          "label": "IT review next week",
+          "urgent": false,
+          "source": {
+            "pre": "Hi Maya, quick one: can you confirm the SSO add-on is included in our plan? ",
+            "hl": "Our IT review is next week.",
+            "post": ""
+          }
+        }
+      ],
+      "scene": {
+        "type": "text"
+      },
+      "judgments": [
+        {
+          "label": "Quick reply",
+          "why": "It is a single yes-or-no question with no attachments.",
+          "source": null
+        }
+      ],
+      "email": {
+        "subject": "SSO add-on?",
+        "from": "Ana Ruiz",
+        "paras": [
+          [
+            "Hi Maya, quick one: can you confirm the SSO add-on is included in our plan? ",
+            {
+              "t": "Our IT review is next week.",
+              "kind": "time",
+              "tag": "Time · IT review next week"
+            }
+          ],
+          [
+            "Thanks,\n",
+            {
+              "t": "Ana",
+              "kind": "people",
+              "tag": "People · Ana Ruiz, Head of IT"
+            }
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "Is SSO in their plan?",
+          "found": true,
+          "a": "Not as signed. Their order form lists SSO as an add-on that is not included.",
+          "source": {
+            "from": "Brightline order form",
+            "when": "Mar 2, 2026",
+            "pre": "Plan: Business. Add-ons: ",
+            "hl": "SSO (not included)",
+            "post": "."
+          }
+        },
+        {
+          "q": "Who else is on this thread?",
+          "found": true,
+          "a": "Only Ana Ruiz and you."
+        }
+      ]
+    },
+    {
+      "id": "halden",
+      "name": "Halden Health",
+      "account": "outlook",
+      "person": {
+        "name": "Marcus Lee",
+        "role": "IT Manager",
+        "initial": "M"
+      },
+      "request": {
+        "type": "quote",
+        "by": "Marcus asks",
+        "text": "“Could we see a demo sometime this week?”"
+      },
+      "rank": "A new lead asking for a demo this week, with a stated budget.",
+      "from": "Marcus Lee (website form)",
+      "when": "Thu, Nov 5, 7:48 AM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "time",
+          "label": "This week",
+          "urgent": false,
+          "source": {
+            "pre": "We’re looking at options for about 120 seats, and our budget is around $30k. Could we see a demo ",
+            "hl": "sometime this week",
+            "post": "?"
+          }
+        },
+        {
+          "id": "f2",
+          "kind": "people",
+          "label": "120 seats",
+          "urgent": false,
+          "source": {
+            "pre": "We’re looking at options for about ",
+            "hl": "120 seats",
+            "post": ", and our budget is around $30k. Could we see a demo sometime this week?"
+          }
+        },
+        {
+          "id": "f3",
+          "kind": "money",
+          "label": "Budget “around $30k”",
+          "urgent": false,
+          "source": {
+            "pre": "We’re looking at options for about 120 seats, and our budget is ",
+            "hl": "around $30k",
+            "post": ". Could we see a demo sometime this week?"
+          }
+        }
+      ],
+      "scene": {
+        "type": "deal",
+        "label": "New lead",
+        "urgent": null,
+        "fields": [
+          {
+            "label": "Seats",
+            "value": "120",
+            "fact": "f2"
+          },
+          {
+            "label": "Budget",
+            "value": "around $30k",
+            "fact": "f3"
+          },
+          {
+            "label": "Wants",
+            "value": "Demo this week",
+            "fact": "f1"
+          }
+        ]
+      },
+      "judgments": [],
+      "email": {
+        "subject": "Demo request (website form)",
+        "from": "Marcus Lee",
+        "paras": [
+          [
+            "Name: ",
+            {
+              "t": "Marcus Lee",
+              "kind": "people",
+              "tag": "People · Marcus Lee, IT Manager"
+            },
+            "\nCompany: Halden Health\nRole: IT Manager"
+          ],
+          [
+            "We’re looking at options for about ",
+            {
+              "t": "120 seats",
+              "kind": "people",
+              "tag": "People · 120 seats"
+            },
+            ", and our budget is ",
+            {
+              "t": "around $30k",
+              "kind": "money",
+              "tag": "Money · Budget around $30k"
+            },
+            ". Could we see a demo ",
+            {
+              "t": "sometime this week",
+              "kind": "time",
+              "tag": "Time · This week"
+            },
+            "?"
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "Have we talked to Halden before?",
+          "found": false,
+          "a": "There are no earlier emails with Halden Health in your Outlook."
+        },
+        {
+          "q": "Which plan fits 120 seats?",
+          "found": false,
+          "a": "That isn’t in your email. Glance only answers from your messages."
+        }
+      ]
+    },
+    {
+      "id": "okto",
+      "name": "Okto Freight",
+      "account": "outlook",
+      "isNew": true,
+      "person": {
+        "name": "Jonas Weber",
+        "role": "Finance Manager",
+        "initial": "J"
+      },
+      "request": {
+        "type": "quote",
+        "by": "Jonas asks",
+        "text": "“Our invoice shows 52 seats, but we only have 48. Can you check before it auto-pays on the 10th?”"
+      },
+      "rank": "New since 8:00 AM. It is due Nov 10, so it ranks after the items above.",
+      "from": "Jonas Weber",
+      "when": "Thu, Nov 5, 8:52 AM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "time",
+          "label": "Auto-pays Nov 10",
+          "urgent": false,
+          "source": {
+            "pre": "Our invoice shows 52 seats, but we only have 48. Can you check before it ",
+            "hl": "auto-pays on the 10th",
+            "post": "?"
+          }
+        },
+        {
+          "id": "f2",
+          "kind": "people",
+          "label": "52 billed · 48 used",
+          "urgent": false,
+          "source": {
+            "pre": "Our invoice shows ",
+            "hl": "52 seats, but we only have 48",
+            "post": ". Can you check before it auto-pays on the 10th?"
+          }
+        }
+      ],
+      "scene": {
+        "type": "mismatch",
+        "label": "Invoice",
+        "urgent": null,
+        "compare": [
+          {
+            "label": "Billed",
+            "value": "52 seats",
+            "fact": "f2"
+          },
+          {
+            "label": "In use",
+            "value": "48 seats",
+            "fact": "f2"
+          }
+        ],
+        "fields": [
+          {
+            "label": "Auto-pays",
+            "value": "Nov 10",
+            "fact": "f1"
+          }
+        ]
+      },
+      "judgments": [
+        {
+          "label": "Billing error",
+          "why": "The seat count on the invoice does not match the seat count in the email.",
+          "source": null
+        }
+      ],
+      "email": {
+        "subject": "Invoice question",
+        "from": "Jonas Weber",
+        "paras": [
+          [
+            "Hi Maya,"
+          ],
+          [
+            {
+              "t": "Our invoice shows 52 seats, but we only have 48",
+              "kind": "people",
+              "tag": "People · 52 billed, 48 used"
+            },
+            ". Can you check before it ",
+            {
+              "t": "auto-pays on the 10th",
+              "kind": "time",
+              "tag": "Time · Auto-pays Nov 10"
+            },
+            "?"
+          ],
+          [
+            "Best,\n",
+            {
+              "t": "Jonas",
+              "kind": "people",
+              "tag": "People · Jonas Weber, Finance Manager"
+            }
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "What did we bill last month?",
+          "found": true,
+          "a": "48 seats, $2,880, paid on Oct 10.",
+          "source": {
+            "from": "Billing system",
+            "when": "Oct 10, 2026",
+            "pre": "Invoice #1182 · ",
+            "hl": "48 seats · $2,880",
+            "post": " · paid"
+          }
+        }
+      ]
+    }
+  ],
+  "goodToKnow": [
+    {
+      "icon": "tag",
+      "tone": "money",
+      "title": "Fernway",
+      "text": ": 15% discount approved by Lena Ortiz, Finance",
+      "fact": {
+        "value": "15% discount",
+        "kind": "money",
+        "source": {
+          "from": "Lena Ortiz",
+          "when": "Wed, Nov 4, 5:30 PM",
+          "pre": "Approved: ",
+          "hl": "15%",
+          "post": " for Fernway on the renewal, valid until Nov 30."
+        }
+      }
+    },
+    {
+      "icon": "clock",
+      "tone": "time",
+      "title": "Corvo Retail QBR",
+      "text": ": tomorrow, 10:00 AM · agenda attached",
+      "fact": {
+        "value": "tomorrow, 10:00 AM",
+        "kind": "time",
+        "source": {
+          "from": "Tom Becker",
+          "when": "Wed, Nov 4, 2:10 PM",
+          "pre": "Let’s hold the Corvo QBR on ",
+          "hl": "Friday, Nov 6 at 10:00 AM",
+          "post": ". The agenda is attached."
+        }
+      }
+    },
+    {
+      "icon": "people",
+      "tone": "people",
+      "title": "Brightline",
+      "text": ": 48 of 50 seats used",
+      "fact": {
+        "value": "48 of 50 seats",
+        "kind": "people",
+        "source": {
+          "from": "Brightline admin report",
+          "when": "Wed, Nov 4",
+          "pre": "Seats in use: ",
+          "hl": "48 of 50",
+          "post": ""
+        }
+      },
+      "judgment": {
+        "label": "Upsell signal",
+        "read": "Brightline is close to its seat limit, so it may need more seats soon.",
+        "source": {
+          "from": "Brightline admin report",
+          "when": "Wed, Nov 4",
+          "pre": "Seats in use: ",
+          "hl": "48 of 50",
+          "post": ""
+        }
+      }
+    }
+  ],
+  "setAside": [
+    {
+      "title": "Newsletters",
+      "short": "newsletters",
+      "count": 18,
+      "rows": [
+        {
+          "id": "n0",
+          "title": "Revenue Ops Digest",
+          "sub": "This week: pricing pages that convert",
+          "isNew": true
+        },
+        {
+          "id": "n1",
+          "title": "SaaS Sales Weekly",
+          "sub": "Five renewal plays for Q4"
+        },
+        {
+          "id": "n2",
+          "title": "Pipeline Notes",
+          "sub": "November pricing benchmarks"
+        }
+      ]
+    },
+    {
+      "title": "You were CC’d",
+      "short": "CC’d",
+      "count": 9,
+      "rows": [
+        {
+          "id": "c1",
+          "title": "Tom Becker → Corvo team",
+          "sub": "Re: QBR agenda, final version"
+        },
+        {
+          "id": "c2",
+          "title": "Sales Ops → all of Sales",
+          "sub": "Reminder: update forecasts by month end"
+        }
+      ]
+    },
+    {
+      "title": "Promotions",
+      "short": "promotions",
+      "count": 4,
+      "rows": [
+        {
+          "id": "p1",
+          "title": "SaaSConnect 2026",
+          "sub": "Early-bird tickets end Friday"
+        }
+      ]
+    }
+  ],
+  "demo": {
+    "simulate": {
+      "item": "fernway",
+      "who": "Priya",
+      "label": "Simulate reply to Priya",
+      "detected": "Reply to Priya detected ✓",
+      "already": "Fernway is already done",
+      "note": "reply detected in Outlook, 9:14 AM"
+    },
+    "levels": {
+      "l1": "Good morning! Here’s a summary of your inbox. Priya Shah from Fernway Logistics asked whether you can send revised pricing before their review on Friday, which is tomorrow. Their current contract is $48,000 per year and renews on November 15, and she mentioned that they are evaluating other vendors before they commit. Ana Ruiz at Brightline Studio asked you to confirm whether the SSO add-on is included in their plan; she sent that two days ago, and their IT review is next week. Marcus Lee from Halden Health filled in the website form asking for a demo sometime this week, for about 120 seats with a budget of around $30k. Corvo Retail accepted your meeting invite. In other news, Lena Ortiz in Finance approved a 15% discount for Fernway, the Corvo Retail QBR is tomorrow at 10:00 AM with the agenda attached, and Brightline is now using 48 of its 50 seats. You also received 31 other emails, mostly newsletters, messages you were CC’d on and promotions.",
+      "l2": {
+        "needs": [
+          [
+            "Fernway Logistics (Priya Shah):",
+            " send revised pricing before Friday’s review (tomorrow). The $48,000/yr contract renews Nov 15, and they’re evaluating other vendors."
+          ],
+          [
+            "Brightline Studio (Ana Ruiz):",
+            " confirm whether the SSO add-on is in their plan. Sent 2 days ago; IT review next week."
+          ],
+          [
+            "Halden Health (Marcus Lee):",
+            " demo this week, about 120 seats, budget around $30k."
+          ]
+        ],
+        "know": [
+          "Fernway: 15% discount approved by Lena Ortiz, Finance.",
+          "Corvo Retail QBR: tomorrow, 10:00 AM, agenda attached.",
+          "Brightline: 48 of 50 seats used."
+        ],
+        "done": [
+          "Corvo Retail accepted your invite."
+        ],
+        "setAside": "31 other emails set aside."
+      }
+    },
+    "initialSelection": {
+      "itemIndex": 0,
+      "openFactIndex": 1,
+      "reasonOpen": false
+    }
+  }
+}
