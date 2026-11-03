@@ -5,18 +5,30 @@ Read this file fully before starting any task.
 
 ## Project overview
 
-**Glance** is a front-end demo of an AI-powered email client.
+**Glance** is a front-end demo of an **AI briefing layer on top of email**. It is not an email client: Glance reads the user's inboxes and briefs them; replying and composing stay in Gmail, Outlook or Yahoo Mail.
 
-Most AI products answer with long blocks of text, and people spend more time reading the AI's output than they saved by using it. Glance explores a different approach: AI output is presented through **design-system components** chosen by explicit rules, so people can understand it at a glance.
+Most AI summaries are a block of text people can't verify, so they read the original anyway. Glance's thesis is **“Components make it fast. Sources make it trustworthy.”**: facts are shown through design-system components chosen by explicit rules, and every fact can show the exact sentence it came from.
 
 The project has two equal goals:
 
-1. **The product**: an email client UI with AI features.
+1. **The product**: a responsive web app (desktop and phone) showing a morning brief for three personas.
 2. **The process**: a visible, real-world workflow where AI agents open pull requests and a human Design Engineer reviews them against a code-based design system.
 
 ## Product decisions belong to the designer
 
-The product brief lives in `docs/product-brief.md`. Read it before any task that touches product screens, data, components or copy. It is a living document and may change.
+Read these before any task that touches screens, data, components or copy. They are living documents and may change:
+
+| Document | What it answers |
+|---|---|
+| `docs/product-brief.md` | What Glance is, for whom, and what is in scope |
+| `docs/user-flows.md` | Each persona’s story, step by step, with Given / When / Then acceptance criteria |
+| `docs/design-rules.md` | The rules: colour meaning, the 4 px grid, sourcing, accounts, edge states |
+| `docs/design-system.md` | Every component, its props and states, and which scene card to use when |
+| `docs/data-model.md` | The shape of the mock data in `src/data/` |
+| `docs/decisions.md` | Why things are the way they are (read it before proposing to change one) |
+| `docs/screens/`, `docs/prototype/` | What the result should look like; prototypes open in a browser and are clickable |
+
+If the screens and the documents disagree, the documents win. Note the difference under **Open questions** in the PR.
 
 - Do not make product decisions on your own: features, screens, user flows, content or AI behavior.
 - If a task requires a product decision that is not documented, do not guess. List it under **Open questions** in the PR description.
@@ -24,7 +36,7 @@ The product brief lives in `docs/product-brief.md`. Read it before any task that
 ## Scope
 
 - **Front-end only.** No backend, no database, no authentication.
-- **Mock data only.** All data lives in static files in `src/data/`.
+- **Mock data only.** All data lives in `src/data/*.json` (one file per persona). It is designer-owned content: do not reword copy, especially quotes, which are the sender's exact words. Add TypeScript types in `src/data/types.ts` that follow `docs/data-model.md`.
 - **No real AI calls.** Any "AI output" is pre-written mock data. Do not add API keys or network requests.
 
 ## Tech stack
@@ -43,15 +55,20 @@ Do not add other libraries (UI kits, CSS frameworks, state libraries) without st
 ```
 src/
   design-system/
-    tokens/          # tokens.css: colors, spacing, type, radius, shadow, motion
+    tokens/          # tokens.css (provided by design): colours light and dark, type, spacing, radius, motion
     components/      # one folder per component: Component.tsx, Component.module.css, Component.stories.tsx
   app/               # product screens, built only from design-system components
-  data/              # mock data
-docs/                # product and design documentation
+  data/              # maya.json, daniel.json, sarah.json (provided by design) + types.ts
+docs/
+  product-brief.md, design-rules.md, design-system.md, data-model.md, decisions.md
+  screens/           # reference screenshots
+  prototype/         # clickable HTML prototypes (open in a browser)
+  handoff/           # work order and issue texts
 ```
 
 ## Design system rules (strict)
 
+0. **Tokens are provided by design** in `src/design-system/tokens/tokens.css`, with light and dark values. Do not change existing values. If you need a new token, propose it in a separate `ds/` PR and explain why.
 1. **Use tokens for every design value.** No raw hex colors, no raw px values for spacing, font size, radius or shadow. Use `var(--token-name)`. If a needed token does not exist, stop and say so in the PR; do not invent one inline.
 2. **Product screens use only design-system components.** Code in `src/app/` must not define its own buttons, cards, inputs, etc.
 3. **Missing component? Separate PR first.** If a feature needs a component the design system does not have:
@@ -60,6 +77,21 @@ docs/                # product and design documentation
    - The feature PR waits until the component PR is reviewed and merged.
 4. **Every component has stories** for all meaningful states: default, hover, focus, disabled, loading, empty, error (as applicable).
 5. **Accessibility is part of done**: semantic HTML, visible focus states, keyboard support, WCAG AA color contrast, labels for icon-only buttons.
+
+## Product rules that are easy to get wrong
+
+- **Two kinds of content.** Quotes (in “ ”) are the sender's words. Anything Glance wrote is marked with ✦ and never put in quotes.
+- **Lists are uniform, details are specific.** Every item in a list uses `BriefRow`. The detail view uses the scene card named in `item.scene.type`; never infer the type yourself. No scene → text fallback.
+- **Render items in data order.** They are already ranked; do not re-sort.
+- **One primary button per view.**
+- **No dead controls.** If something can't act yet, render plain text, not a button.
+- **Nothing reshuffles while the user reads.** New mail waits in a “2 new · Add to brief” row.
+
+## Language
+
+- **English only, everywhere public.** Code, comments, docs, data, commit messages, branch names, and the titles, descriptions and comments of pull requests and issues are all in English.
+- **Not a single Chinese character** (or any other CJK character) may appear in the repository or on GitHub. CI checks the files (issue 01); check PR and issue text yourself before posting.
+- Background notes you may be given outside the repository stay outside it. Never commit them or quote them.
 
 ## Git workflow
 
@@ -76,6 +108,10 @@ docs/                # product and design documentation
   - **Open questions**: anything you were unsure about, including any product decision you needed
 
 The human reviewer is a designer. Write PR descriptions for a designer, not only for an engineer.
+
+## Where to start
+
+Work through `docs/handoff/issues/` in numbered order. Each file is one GitHub issue with acceptance criteria. Do one issue per PR unless the issue says otherwise.
 
 ## Definition of done
 

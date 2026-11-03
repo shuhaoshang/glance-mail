@@ -1,0 +1,241 @@
+/*
+ * Glance design tokens. Source of truth for every design value.
+ * Owned by design: change values here through a pull request, never inline in components.
+ *
+ * Rules (see docs/design-rules.md and docs/design-system.md):
+ * - Spacing and sizes are multiples of 4; 2 is the only half step.
+ * - Font sizes are even; every line height is a multiple of 4.
+ * - Exempt from the grid: line widths (1px, 1.5px) and letter-spacing.
+ * - Names describe meaning, not appearance: --color-money-ink, not --yellow-200.
+ */
+
+:root {
+  color-scheme: light;
+
+  /* ---------- Color: surfaces and text ---------- */
+  --color-bg: #F4F4F7;              /* page */
+  --color-surface: #FFFFFF;         /* cards, sheets */
+  --color-surface-muted: #F7F7FA;   /* panels inside cards: sources, scene cards, reasoning */
+  --color-surface-sunken: #F0F0F4;  /* fact chips, segmented controls, neutral buttons */
+  --color-border: #ECECF1;          /* dividers */
+  --color-border-strong: #D9D8E0;   /* account labels, outlined buttons */
+  --color-border-card: #E6E5EC;     /* option tiles, date tiles */
+  --color-text: #16151C;
+  --color-text-body: #2B2933;       /* reading text: email, sources */
+  --color-text-secondary: #4A4856;
+  --color-text-muted: #6A6875;      /* meta; 4.5:1 on every surface */
+  --color-icon-muted: #8A8796;      /* chevrons, switch off; 3:1 non-text */
+  --color-scrim: rgba(22, 21, 28, 0.32);
+
+  /* ---------- Color: Glance (brand) ---------- */
+  --color-brand: #5A4FE0;           /* primary button, selection, AI marks; the only large colour area */
+  --color-brand-text: #4A3FD0;      /* links, Glance labels */
+  --color-brand-tint: #EEECFD;      /* selected row, tint buttons, New badge */
+  --color-on-brand: #FFFFFF;
+
+  /* ---------- Color: urgency (independent of type) ---------- */
+  --color-urgent: #C2255C;          /* solid chip = urgent */
+  --color-on-urgent: #FFFFFF;
+
+  /* ---------- Color: fact types. dot = chip dot and underline; text = text on tint; tint = icon tile; ink = highlighter ---------- */
+  --color-money: #9A7300;
+  --color-money-text: #6B5100;
+  --color-money-tint: #FFF2C2;
+  --color-money-ink: #FFE49A;
+  --color-money-selected: #FFF6D6;
+
+  --color-time: #C2255C;
+  --color-time-text: #A8164C;
+  --color-time-tint: #FFE3EB;
+  --color-time-ink: #FFD5E2;
+  --color-time-selected: #FFEFF4;
+
+  --color-people: #2F64D6;
+  --color-people-text: #1D4BAE;
+  --color-people-tint: #E3ECFF;
+  --color-people-ink: #D6E4FF;
+  --color-people-selected: #EEF3FF;
+
+  --color-judgment-ink: #E3DEFF;    /* evidence behind Glance’s read */
+
+  /* ---------- Demo chrome (not part of the product) ---------- */
+  --color-demo-bg: #16151C;
+  --color-demo-control: #2A2833;
+  --color-demo-text: #FFFFFF;
+  --color-demo-muted: #B9B6C8;
+
+  /* ---------- Typography ---------- */
+  --font-family: "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-size-12: 12px;  --line-height-12: 16px;   /* chip, account label, legend */
+  --font-size-14: 14px;  --line-height-14: 20px;   /* meta, secondary buttons, tabs */
+  --font-size-16: 16px;  --line-height-16: 24px;   /* body, primary button */
+  --line-height-reading: 28px;                     /* 16px reading text with highlights */
+  --font-size-18: 18px;  --line-height-18: 24px;   /* phone section heading, wordmark */
+  --font-size-20: 20px;  --line-height-20: 28px;   /* phone request, desktop section and item name */
+  --font-size-24: 24px;  --line-height-24: 32px;   /* desktop request */
+  --font-size-28: 28px;  --line-height-28: 32px;   /* phone greeting */
+  --font-size-32: 32px;  --line-height-32: 40px;   /* desktop greeting, scene card amount */
+
+  --letter-spacing-tight: -0.03em;  /* greeting, wordmark */
+  --letter-spacing-snug: -0.015em;  /* request, item name */
+
+  /* ---------- Spacing ---------- */
+  --space-2: 2px;
+  --space-4: 4px;
+  --space-8: 8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-20: 20px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+
+  /* ---------- Sizes ---------- */
+  --size-touch: 44px;
+  --size-touch-compact: 40px;       /* inside toolbars and tab groups */
+  --size-button: 48px;
+  --size-avatar: 32px;
+  --size-avatar-small: 24px;
+  --size-tile: 32px;                /* icon tile in Good to know */
+  --size-date-tile: 56px;
+  --size-dot: 8px;
+  --size-icon-small: 12px;
+  --size-icon: 16px;
+  --size-icon-large: 20px;
+  --size-status-bar: 48px;          /* phone frames only */
+
+  /* ---------- Radius ---------- */
+  --radius-highlight: 4px;
+  --radius-tile: 8px;
+  --radius-panel-small: 12px;
+  --radius-panel: 16px;
+  --radius-card: 20px;
+  --radius-sheet: 24px;
+  --radius-pill: 999px;
+
+  /* ---------- Borders (exempt from the grid) ---------- */
+  --border-hairline: 1px;
+  --border-selected: 1.5px;         /* drawn as an inset ring so selection never changes size */
+
+  /* ---------- Shadow ---------- */
+  --shadow-tab: 0 1px 2px rgba(22, 21, 28, 0.12);
+
+  /* ---------- Motion ---------- */
+  --duration-fast: 160ms;           /* hover, selection, tabs */
+  --duration-reveal: 200ms;         /* panels appear */
+  --duration-collapse: 320ms;       /* done and snooze rows */
+  --duration-highlight: 360ms;      /* highlighter switch */
+  --duration-sweep: 480ms;          /* highlighter sweep on a source */
+  --ease-standard: ease;
+  --ease-sweep: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* ---------- Layout ---------- */
+  --gutter: 16px;                   /* phone */
+  --content-max: 1120px;
+  --column-list: 416px;             /* desktop list column */
+  --gap-section: 20px;              /* phone */
+  --gap-column: 32px;
+}
+
+/* One scale, two densities: desktop picks larger steps, never new numbers. */
+@media (min-width: 960px) {
+  :root {
+    --gutter: 32px;
+    --gap-section: 32px;
+  }
+}
+
+/* Dark theme. Same names, new values. Follows the system unless the user picks a theme. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-bg: #0F0F14;
+    --color-surface: #1A1A21;
+    --color-surface-muted: #22222B;
+    --color-surface-sunken: #2A2A34;
+    --color-border: #2E2E39;
+    --color-border-strong: #3B3A47;
+    --color-border-card: #34333F;
+    --color-text: #F2F1F7;
+    --color-text-body: #DEDCE6;
+    --color-text-secondary: #C2C0CC;
+    --color-text-muted: #A09EAD;
+    --color-icon-muted: #86849A;
+    --color-scrim: rgba(0, 0, 0, 0.56);
+    --color-brand: #6559EE;
+    --color-brand-text: #B0AAFF;
+    --color-brand-tint: #28244D;
+    --color-urgent: #C2255C;
+    --color-money: #E0B341;
+    --color-money-text: #F0CB6B;
+    --color-money-tint: #3A2F0D;
+    --color-money-ink: #5A4712;
+    --color-money-selected: #2E2610;
+    --color-time: #F0709A;
+    --color-time-text: #F7A1BD;
+    --color-time-tint: #3D1625;
+    --color-time-ink: #5C2339;
+    --color-time-selected: #321520;
+    --color-people: #7AA2FF;
+    --color-people-text: #ADC5FF;
+    --color-people-tint: #18264A;
+    --color-people-ink: #243C6E;
+    --color-people-selected: #172240;
+    --color-judgment-ink: #3B356F;
+    --shadow-tab: 0 1px 2px rgba(0, 0, 0, 0.48);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-bg: #0F0F14;
+  --color-surface: #1A1A21;
+  --color-surface-muted: #22222B;
+  --color-surface-sunken: #2A2A34;
+  --color-border: #2E2E39;
+  --color-border-strong: #3B3A47;
+  --color-border-card: #34333F;
+  --color-text: #F2F1F7;
+  --color-text-body: #DEDCE6;
+  --color-text-secondary: #C2C0CC;
+  --color-text-muted: #A09EAD;
+  --color-icon-muted: #86849A;
+  --color-scrim: rgba(0, 0, 0, 0.56);
+  --color-brand: #6559EE;
+  --color-brand-text: #B0AAFF;
+  --color-brand-tint: #28244D;
+  --color-urgent: #C2255C;
+  --color-money: #E0B341;
+  --color-money-text: #F0CB6B;
+  --color-money-tint: #3A2F0D;
+  --color-money-ink: #5A4712;
+  --color-money-selected: #2E2610;
+  --color-time: #F0709A;
+  --color-time-text: #F7A1BD;
+  --color-time-tint: #3D1625;
+  --color-time-ink: #5C2339;
+  --color-time-selected: #321520;
+  --color-people: #7AA2FF;
+  --color-people-text: #ADC5FF;
+  --color-people-tint: #18264A;
+  --color-people-ink: #243C6E;
+  --color-people-selected: #172240;
+  --color-judgment-ink: #3B356F;
+  --shadow-tab: 0 1px 2px rgba(0, 0, 0, 0.48);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-fast: 1ms;
+    --duration-reveal: 1ms;
+    --duration-collapse: 1ms;
+    --duration-highlight: 1ms;
+    --duration-sweep: 1ms;
+  }
+}
