@@ -5,9 +5,17 @@ import { iconNames } from './glyphs';
 import styles from './Icon.stories.module.css';
 
 const meta = {
-  title: 'Foundations/Icons',
+  title: 'Primitives/Icons',
   component: Icon,
   args: { name: 'mail', size: 'default' },
+  parameters: {
+    docs: {
+      description: {
+        component:
+          '[Icon specification](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#icons)',
+      },
+    },
+  },
   argTypes: {
     name: { control: 'select', options: iconNames },
     size: { control: 'inline-radio', options: ['small', 'default', 'large'] },
@@ -16,6 +24,14 @@ const meta = {
 
 export default meta;
 type Story = StoryObj<typeof meta>;
+
+export const Standalone: Story = {
+  parameters: {
+    layout: 'centered',
+    controls: { include: ['name', 'size', 'label', 'className'] },
+  },
+  args: { label: 'Email' },
+};
 
 export const Gallery: Story = {
   parameters: { layout: 'fullscreen', controls: { include: ['size'] } },
@@ -34,12 +50,4 @@ export const Gallery: Story = {
       </ul>
     </FoundationPage>
   ),
-};
-
-export const Standalone: Story = {
-  parameters: {
-    layout: 'centered',
-    controls: { include: ['name', 'size', 'label'] },
-  },
-  args: { label: 'Email' },
 };

@@ -90,6 +90,7 @@ function TypePage() {
 
 const meta = {
   title: 'Foundations/Type',
+  tags: ['!autodocs'],
   component: TypePage,
   parameters: { layout: 'fullscreen' },
 } satisfies Meta<typeof TypePage>;

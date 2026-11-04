@@ -1,0 +1,49 @@
+<script>
+  // Preserve bookmarks from the original Foundations icon gallery.
+  {
+    const url = new URL(window.location.href);
+    const path = url.searchParams.get('path');
+    if (
+      path &&
+      /^\/(?:story|docs)\/foundations-icons--(?:gallery|standalone|docs)$/.test(
+        path,
+      )
+    ) {
+      url.searchParams.set(
+        'path',
+        path.replace('foundations-icons--', 'primitives-icons--'),
+      );
+      window.history.replaceState(window.history.state, '', url);
+    }
+  }
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+  rel="stylesheet"
+/>
+<style>
+  #storybook-explorer-tree .sidebar-item[data-selected='true'] {
+    background: var(--color-brand);
+    color: var(--color-on-brand);
+  }
+
+  .glance-wordmark {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-4);
+    color: var(--color-text);
+    font-family: var(--font-family);
+    font-size: var(--font-size-18);
+    line-height: var(--line-height-18);
+    font-weight: var(--font-weight-bold);
+    letter-spacing: var(--letter-spacing-tight);
+  }
+
+  .glance-wordmark svg {
+    width: var(--size-icon);
+    height: var(--size-icon);
+    fill: var(--color-brand);
+  }
+</style>

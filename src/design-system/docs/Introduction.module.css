@@ -1,0 +1,91 @@
+.hero,
+.categories {
+  color: var(--color-text);
+  font-family: var(--font-family);
+}
+
+.hero {
+  display: grid;
+  gap: var(--space-12);
+}
+.hero h1,
+.hero p,
+.hero blockquote,
+.categories h2,
+.categories ul {
+  margin: 0;
+}
+.brand {
+  color: var(--color-brand-text);
+  font-weight: var(--font-weight-semibold);
+}
+.hero h1 {
+  font-size: var(--font-size-32);
+  line-height: var(--line-height-32);
+  letter-spacing: var(--letter-spacing-tight);
+}
+.lead {
+  font-size: var(--font-size-20);
+  line-height: var(--line-height-20);
+}
+.hero blockquote {
+  padding-inline-start: var(--space-16);
+  border-inline-start: var(--border-selected) solid var(--color-brand);
+  font-weight: var(--font-weight-semibold);
+}
+.hero p,
+.hero blockquote {
+  line-height: var(--line-height-reading);
+}
+.links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8) var(--space-20);
+}
+.links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--size-touch);
+  color: var(--color-brand-text);
+}
+.categories {
+  margin-block: var(--space-32);
+}
+.categories h2 {
+  font-size: var(--font-size-20);
+  line-height: var(--line-height-20);
+}
+.categories ul {
+  padding: 0;
+  margin-block-start: var(--space-12);
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--column-list)), 1fr)
+  );
+  gap: var(--space-8);
+}
+.categories a {
+  display: grid;
+  gap: var(--space-4);
+  min-height: var(--size-touch);
+  padding: var(--space-12) var(--space-16);
+  color: var(--color-brand-text);
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-panel-small);
+  text-decoration: none;
+}
+.categories a:hover {
+  background: var(--color-brand-tint);
+}
+.categories a span {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
+.links a:focus-visible,
+.categories a:focus-visible {
+  outline: var(--space-2) solid var(--color-brand);
+  outline-offset: var(--space-2);
+}

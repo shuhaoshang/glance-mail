@@ -1,0 +1,23 @@
+import { Markdown, Meta } from '@storybook/addon-docs/blocks';
+import rules from '../../../docs/design-rules.md?raw';
+import { section } from './section';
+
+<Meta title="Foundations/Overview" />
+
+# Foundations
+
+[Design rules](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-rules.md)
+
+[Colours](?path=/story/foundations-colours--default) · [Type](?path=/story/foundations-type--default) · [Spacing](?path=/story/foundations-spacing--default) · [Radius](?path=/story/foundations-radius--default) · [Motion](?path=/story/foundations-motion--default)
+
+## Colour
+
+<Markdown>{section(rules, '3. Color')}</Markdown>
+
+## Typography
+
+<Markdown>{section(rules, '10. Typography')}</Markdown>
+
+## Shape and spacing
+
+<Markdown>{section(rules, '11. Shape and spacing')}</Markdown>

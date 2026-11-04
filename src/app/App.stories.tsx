@@ -3,6 +3,7 @@ import { App } from './App';
 
 const meta = {
   title: 'Scaffold/Placeholder',
+  tags: ['!dev', '!autodocs'],
   component: App,
   parameters: { layout: 'fullscreen' },
   args: { personaId: 'maya' },

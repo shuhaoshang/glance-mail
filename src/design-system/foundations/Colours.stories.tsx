@@ -90,6 +90,7 @@ function Colours({ dark }: { dark: boolean }) {
 
 const meta = {
   title: 'Foundations/Colours',
+  tags: ['!autodocs'],
   parameters: { layout: 'fullscreen' },
 } satisfies Meta;
 export default meta;

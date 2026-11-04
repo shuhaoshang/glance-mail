@@ -3,6 +3,6 @@ dist
 storybook-static
 package-lock.json
 AGENTS.md
-docs
+/docs
 src/data/*.json
 src/design-system/tokens/tokens.css
