@@ -1,0 +1,20 @@
+.icon {
+  display: inline-block;
+  vertical-align: middle;
+  flex: none;
+}
+
+.small {
+  inline-size: var(--size-icon-small);
+  block-size: var(--size-icon-small);
+}
+
+.default {
+  inline-size: var(--size-icon);
+  block-size: var(--size-icon);
+}
+
+.large {
+  inline-size: var(--size-icon-large);
+  block-size: var(--size-icon-large);
+}
