@@ -5,6 +5,7 @@ import styles from './Scales.module.css';
 
 const meta = {
   title: 'Foundations/Radius',
+  tags: ['!autodocs'],
   parameters: { layout: 'fullscreen' },
 } satisfies Meta;
 

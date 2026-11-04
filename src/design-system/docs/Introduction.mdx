@@ -1,0 +1,87 @@
+import {
+  AnchorMdx,
+  Markdown,
+  Meta,
+  Unstyled,
+} from '@storybook/addon-docs/blocks';
+import system from '../../../docs/design-system.md?raw';
+import { section } from './section';
+import styles from './Introduction.module.css';
+
+<Meta title="Introduction" />
+
+<Unstyled>
+  <header className={styles.hero}>
+    <p className={styles.brand}>Glance design system</p>
+    <h1>Introduction</h1>
+    <p className={styles.lead}>An AI briefing layer for email.</p>
+    <blockquote>
+      Components make it fast. Sources make it trustworthy.
+    </blockquote>
+    <p>
+      Every amount, date and name is a component you can scan, and one click on
+      it shows the exact sentence it came from.
+    </p>
+    <nav aria-label="Project links" className={styles.links}>
+      <a href="https://shuhaoshang.github.io/glance-mail/" target="_top">
+        Glance app
+      </a>
+      <a
+        href="https://shuhaoshang.github.io/glance-mail/prototype/"
+        target="_top"
+      >
+        Prototypes
+      </a>
+      <a href="https://github.com/shuhaoshang/glance-mail" target="_top">
+        Repository
+      </a>
+      <a
+        href="https://github.com/shuhaoshang/glance-mail/tree/main/docs"
+        target="_top"
+      >
+        Project docs
+      </a>
+    </nav>
+  </header>
+  <nav aria-label="Design system categories" className={styles.categories}>
+    <h2>Explore the design system</h2>
+    <ul>
+      <li>
+        <AnchorMdx href="?path=/docs/foundations-overview--docs">
+          <strong>Foundations</strong>
+          <span>Colours, type, spacing, radius, motion</span>
+        </AnchorMdx>
+      </li>
+      <li>
+        <AnchorMdx href="?path=/docs/primitives-overview--docs">
+          <strong>Primitives</strong>
+          <span>Text, Button, FactChip, SourcePanel</span>
+        </AnchorMdx>
+      </li>
+      <li>
+        <AnchorMdx href="?path=/docs/composites-overview--docs">
+          <strong>Composites</strong>
+          <span>BriefRow, SectionCard, DetailPanel</span>
+        </AnchorMdx>
+      </li>
+      <li>
+        <AnchorMdx href="?path=/docs/scene-cards-overview--docs">
+          <strong>Scene cards</strong>
+          <span>Deal, Decision, Approval, Payment</span>
+        </AnchorMdx>
+      </li>
+      <li>
+        <AnchorMdx href="?path=/docs/patterns-overview--docs">
+          <strong>Patterns</strong>
+          <span>Brief layout, edge states, levels</span>
+        </AnchorMdx>
+      </li>
+    </ul>
+  </nav>
+</Unstyled>
+
+## Principles the components enforce
+
+<Markdown>{section(system, '1. Principles the components enforce')}</Markdown>
+
+[Design system specification](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#1-principles-the-components-enforce)
