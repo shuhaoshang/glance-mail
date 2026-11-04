@@ -22,7 +22,7 @@ Ten rounds of design are now reflected here; the reasoning for each change is in
 - **Lists are uniform, details are specific:** one row for every item; the detail view uses one of 8 scene cards, or a text fallback (§16).
 - **Account labels mark only the less common inbox.**
 - **Edge states are designed** (§14), and the open question on L1/L2/L3 is answered: it is a demo control (§18).
-- **Visual language is defined:** white and grey surfaces, Inter, purple for Glance, pastel ink for facts, light and dark tokens.
+- **Visual language is defined:** white and gray surfaces, Inter, purple for Glance, pastel ink for facts, light and dark tokens.
 
 ---
 
@@ -230,7 +230,7 @@ journey
 ## 7. Design principles
 
 1. **Small enough to be worth it.** The brief fits on one screen and can be read in about 30 seconds. Even if it turns out to be unnecessary, reading it should feel like no real cost.
-2. **Quiet by default, sources on demand.** Sources are not displayed up front, because visible citations make the screen busy. Verifiable values carry a subtle hint (a dotted underline in their type colour); the source appears on click or tap (inside the item on desktop, in a bottom sheet on mobile), with the original words highlighted. Hover was tried and dropped: the popover covered the next items. The faster a doubt is resolved, the more the user comes back.
+2. **Quiet by default, sources on demand.** Sources are not displayed up front, because visible citations make the screen busy. Verifiable values carry a subtle hint (a dotted underline in their type color); the source appears on click or tap (inside the item on desktop, in a bottom sheet on mobile), with the original words highlighted. Hover was tried and dropped: the popover covered the next items. The faster a doubt is resolved, the more the user comes back.
 3. **Extract, don't paraphrase.** Amounts, dates, names and explicit requests are taken from the email as written. Rewording is where trust is lost.
 4. **Complete, not just correct.** Users must be able to see that nothing was missed: how many emails the brief covers, from which accounts, and what was filed under Ignore. Nothing disappears silently.
 5. **Explain on request.** Any item can answer "why is this here?" (e.g. "due today, from your manager"), but only when asked.

@@ -1,8 +1,17 @@
 <script>
-  // Preserve bookmarks from the original Foundations icon gallery.
+  // Keep bookmarks to the original Foundations galleries working.
   {
     const url = new URL(window.location.href);
     const path = url.searchParams.get('path');
+    if (
+      /^\/(?:story|docs)\/foundations-colours--(?:default|docs)$/.test(path)
+    ) {
+      url.searchParams.set(
+        'path',
+        path.replace('foundations-colours--', 'foundations-colors--'),
+      );
+      window.history.replaceState(window.history.state, '', url);
+    }
     if (
       path &&
       /^\/(?:story|docs)\/foundations-icons--(?:gallery|standalone|docs)$/.test(

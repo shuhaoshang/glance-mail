@@ -45,7 +45,7 @@ interface Account {
 
 interface Item {
   id: string;
-  name: string;              // sender organisation or topic, e.g. "Fernway Logistics"
+  name: string;              // sender organization or topic, e.g. "Fernway Logistics"
   account: string;           // Account.id
   isNew?: boolean;           // arrives with newMail; hidden until "Add to brief"
   person: { name: string; role: string; initial: string };

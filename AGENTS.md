@@ -22,7 +22,7 @@ Read these before any task that touches screens, data, components or copy. They 
 | ---------------------------------- | -------------------------------------------------------------------------------- |
 | `docs/product-brief.md`            | What Glance is, for whom, and what is in scope                                   |
 | `docs/user-flows.md`               | Each persona’s story, step by step, with Given / When / Then acceptance criteria |
-| `docs/design-rules.md`             | The rules: colour meaning, the 4 px grid, sourcing, accounts, edge states        |
+| `docs/design-rules.md`             | The rules: color meaning, the 4 px grid, sourcing, accounts, edge states        |
 | `docs/design-system.md`            | Every component, its props and states, and which scene card to use when          |
 | `docs/data-model.md`               | The shape of the mock data in `src/data/`                                        |
 | `docs/decisions.md`                | Why things are the way they are (read it before proposing to change one)         |
@@ -55,7 +55,7 @@ Do not add other libraries (UI kits, CSS frameworks, state libraries) without st
 ```
 src/
   design-system/
-    tokens/          # tokens.css (provided by design): colours light and dark, type, spacing, radius, motion
+    tokens/          # tokens.css (provided by design): colors light and dark, type, spacing, radius, motion
     components/      # one folder per component: Component.tsx, Component.module.css, Component.stories.tsx
   app/               # product screens, built only from design-system components
   data/              # maya.json, daniel.json, sarah.json (provided by design) + types.ts
@@ -89,13 +89,13 @@ docs/
 
 ## Language
 
-- **English only, everywhere public.** Code, comments, docs, data, commit messages, branch names, and the titles, descriptions and comments of pull requests and issues are all in English.
-- **Not a single Chinese character** (or any other CJK character) may appear in the repository or on GitHub. CI checks the files (issue 01); check PR and issue text yourself before posting.
+- **American English only, everywhere public.** Code, comments, docs, data, commit messages, branch names, and the titles, descriptions and comments of pull requests and issues use US spelling and vocabulary. This includes the product brief, prototypes, Storybook, the design system, screenshots, and review replies. Use forms such as “color,” “gray,” “behavior,” “labeled,” and “organization.” Preserve standard API names and verbatim source quotations.
+- **Not a single Chinese character** (or any other CJK character) may appear in the repository or on GitHub. CI checks the files (issue 01); check PR and issue text (including comments) before posting. Run `npm run check:english` for tracked files or pipe a draft into `npm run --silent check:english -- --stdin`.
 - Background notes you may be given outside the repository stay outside it. Never commit them or quote them.
 
 ## Authorship labels
 
-The pull requests and comments Codex writes are published from the designer's GitHub account, so they must be recognisable as Codex's own.
+The pull requests and comments Codex writes are published from the designer's GitHub account, so they must be recognizable as Codex's own.
 
 - Start every pull request title and every comment, review reply and issue comment you write with `[Codex]`, for example `[Codex] feat(ds): add Storybook foundations`.
 - This applies to new work and to existing open and closed pull requests: add the prefix to their titles and to your own earlier comments.
