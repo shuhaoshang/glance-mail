@@ -15,10 +15,7 @@ const specimens = [
   {
     variant: 'request',
     usage: 'Request',
-    sample:
-      renewal.request.type === 'quote'
-        ? `“${renewal.request.text}”`
-        : `✦ ${renewal.request.text}`,
+    sample: renewal.request.text,
   },
   { variant: 'title', usage: 'Selected item', sample: renewal.name },
   { variant: 'section', usage: 'Section heading', sample: 'Needs you' },
