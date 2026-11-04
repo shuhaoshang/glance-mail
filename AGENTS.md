@@ -18,14 +18,14 @@ The project has two equal goals:
 
 Read these before any task that touches screens, data, components or copy. They are living documents and may change:
 
-| Document | What it answers |
-|---|---|
-| `docs/product-brief.md` | What Glance is, for whom, and what is in scope |
-| `docs/user-flows.md` | Each persona’s story, step by step, with Given / When / Then acceptance criteria |
-| `docs/design-rules.md` | The rules: colour meaning, the 4 px grid, sourcing, accounts, edge states |
-| `docs/design-system.md` | Every component, its props and states, and which scene card to use when |
-| `docs/data-model.md` | The shape of the mock data in `src/data/` |
-| `docs/decisions.md` | Why things are the way they are (read it before proposing to change one) |
+| Document                           | What it answers                                                                  |
+| ---------------------------------- | -------------------------------------------------------------------------------- |
+| `docs/product-brief.md`            | What Glance is, for whom, and what is in scope                                   |
+| `docs/user-flows.md`               | Each persona’s story, step by step, with Given / When / Then acceptance criteria |
+| `docs/design-rules.md`             | The rules: colour meaning, the 4 px grid, sourcing, accounts, edge states        |
+| `docs/design-system.md`            | Every component, its props and states, and which scene card to use when          |
+| `docs/data-model.md`               | The shape of the mock data in `src/data/`                                        |
+| `docs/decisions.md`                | Why things are the way they are (read it before proposing to change one)         |
 | `docs/screens/`, `docs/prototype/` | What the result should look like; prototypes open in a browser and are clickable |
 
 If the screens and the documents disagree, the documents win. Note the difference under **Open questions** in the PR.
@@ -119,7 +119,7 @@ The human reviewer is a designer. Write PR descriptions for a designer, not only
 
 ## Where to start
 
-Work through `docs/handoff/issues/` in numbered order. Each file is one GitHub issue with acceptance criteria. Do one issue per PR unless the issue says otherwise.
+Work through `docs/handoff/issues/` in the order given in `docs/handoff/README.md`: 01, 02, 17, then 03 to 16. Each file is one GitHub issue with acceptance criteria. Do one issue per PR unless the issue says otherwise.
 
 ## Definition of done
 

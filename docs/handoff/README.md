@@ -4,26 +4,26 @@ This folder is the work order for AI agents (Codex) and the checklist for the hu
 
 ## What design has delivered
 
-| Deliverable | Where |
-|---|---|
-| Product brief v0.4 | `docs/product-brief.md` |
-| User flows: three persona stories, step by step, with acceptance criteria | `docs/user-flows.md` |
-| Design rules | `docs/design-rules.md` |
-| Design system spec (components, scene cards, patterns) | `docs/design-system.md` |
-| Tokens, light and dark | `src/design-system/tokens/tokens.css` |
-| Mock data for three personas | `src/data/*.json` + `docs/data-model.md` |
-| Decision log (D1–D40) | `docs/decisions.md` |
-| Reference screens | `docs/screens/` (every flow step in `docs/screens/flows/`) |
-| Clickable prototypes | `docs/prototype/` (open `index.html` in a browser) |
-| Issues, in order | `docs/handoff/issues.md` and `issues/` |
-| Prompt to start an agent | `docs/handoff/codex-kickoff.md` |
+| Deliverable                                                               | Where                                                      |
+| ------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| Product brief v0.4                                                        | `docs/product-brief.md`                                    |
+| User flows: three persona stories, step by step, with acceptance criteria | `docs/user-flows.md`                                       |
+| Design rules                                                              | `docs/design-rules.md`                                     |
+| Design system spec (components, scene cards, patterns)                    | `docs/design-system.md`                                    |
+| Tokens, light and dark                                                    | `src/design-system/tokens/tokens.css`                      |
+| Mock data for three personas                                              | `src/data/*.json` + `docs/data-model.md`                   |
+| Decision log (D1–D41)                                                     | `docs/decisions.md`                                        |
+| Reference screens                                                         | `docs/screens/` (every flow step in `docs/screens/flows/`) |
+| Clickable prototypes                                                      | `docs/prototype/` (open `index.html` in a browser)         |
+| Issues, in order                                                          | `docs/handoff/issues.md` and `issues/`                     |
+| Prompt to start an agent                                                  | `docs/handoff/codex-kickoff.md`                            |
 
 ## Order of work
 
-Issues 01 → 16, one PR each. 02–05 and 07 build the design system before any screen uses it (`AGENTS.md`: missing component → separate PR first).
+Issues 01 → 17, one PR each, in this order: 01, 02, **17**, then 03 → 16. 02–05 and 07 build the design system before any screen uses it (`AGENTS.md`: missing component → separate PR first); 17 turns Storybook into the system's documentation site as soon as the foundations exist.
 
 ```
-01 scaffold ─┬─ 02 foundations ─ 03 primitives ─ 04 fact primitives ─┬─ 05 list composites ─ 06 brief page ─┬─ 08 detail ─┬─ 09 lifecycle
+01 scaffold ─┬─ 02 foundations ─ 17 storybook docs ─ 03 primitives ─ 04 fact primitives ─┬─ 05 list composites ─ 06 brief page ─┬─ 08 detail ─┬─ 09 lifecycle
              │                                                       └─ 07 scene cards ──────────────────────┘             ├─ 10 ask
              │                                                                                     06 ─┬─ 11 demo bar      │
              │                                                                                         ├─ 12 set aside     │

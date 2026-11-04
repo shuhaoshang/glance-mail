@@ -266,3 +266,9 @@ Each entry records one decision: what was decided, what else was considered, and
 - **Decision:** In list rows, the request shows up to two lines on desktop as well as phone.
 - **Considered:** One line with an ellipsis on desktop.
 - **Why:** D27 made the request the most important text in the row, yet desktop cut it after a few words while the narrower phone showed it whole. The list still scans: rows stay uniform, and two lines is the cap.
+
+### D41 · Storybook doubles as the documentation site
+
+- **Decision:** Storybook is themed as Glance, opens on an Introduction page, has a docs page for each category, and an autodocs page for every component. It is the one place to browse the design system.
+- **Considered:** A separate documentation website, like Material 3 or shadcn/ui; Storybook with its default look.
+- **Why:** Public design systems are browsed as documentation sites, and the default Storybook reads as a developer tool. A separate site would double the work and the content. A themed Storybook gives the same structure for about one issue of work, and engineers recognise it. A standalone site stays possible once the app is done, with the content already written.
