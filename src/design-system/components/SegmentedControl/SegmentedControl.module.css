@@ -12,18 +12,21 @@
   padding: var(--space-8) var(--space-16);
   border: 0;
   border-radius: var(--radius-pill);
-  color: var(--color-text-muted);
-  background: transparent;
+  --control-ink: var(--color-text-muted);
+  --hover-ink: light-dark(var(--color-text-secondary), var(--color-text-muted));
+  --pressed-ink: light-dark(var(--color-text-body), var(--color-text-muted));
+  --hover-fill: light-dark(transparent, var(--color-surface-muted));
+  --pressed-fill: light-dark(transparent, var(--color-surface));
   line-height: var(--line-height-14);
   font-size: var(--font-size-14);
   overflow-wrap: anywhere;
 }
 .tab[aria-selected='true'] {
-  --control-shadow: var(--shadow-tab);
-  background: var(--color-surface);
-  color: var(--color-text);
-  box-shadow: var(--control-shadow);
-}
-.tab:disabled {
-  color: var(--color-icon-muted);
+  --control-fill: var(--color-surface);
+  --control-ink: var(--color-text);
+  --hover-fill: light-dark(var(--color-surface-muted), var(--color-surface));
+  --pressed-fill: light-dark(var(--color-surface-sunken), var(--color-surface));
+  --hover-ink: light-dark(var(--color-text), var(--color-text-body));
+  --pressed-ink: light-dark(var(--color-text), var(--color-text-secondary));
+  box-shadow: var(--shadow-tab);
 }

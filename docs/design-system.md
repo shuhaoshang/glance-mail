@@ -64,12 +64,12 @@ Text styles are utility components or CSS classes, not one-off font sizes:
 
 ### Button
 
-| Prop       | Values                                                                                                         |
-| ---------- | -------------------------------------------------------------------------------------------------------------- |
-| `variant`  | `primary` (brand fill, one per view) · `tint` (brand tint) · `neutral` (sunken) · `text` (brand text, no fill) |
-| `size`     | `default` (48) · `compact` (40, toolbars and tab groups)                                                       |
-| `icon`     | optional leading or trailing icon (16)                                                                         |
-| `external` | shows the external-link icon (for "Open in Gmail")                                                             |
+| Prop       | Values                                                                                                                   |
+| ---------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `variant`  | `primary` (brand fill, one per view) · `tint` (brand tint) · `neutral` (sunken) · `text` (brand text, no fill)           |
+| `size`     | `default` (48) · `touch` (44, selected by phone layouts for secondary buttons) · `compact` (40, toolbars and tab groups) |
+| `icon`     | optional leading or trailing icon (16)                                                                                   |
+| `external` | shows the external-link icon (for "Open in Gmail")                                                                       |
 
 **States:** default, hover, focus-visible (2 px brand outline, 2 px offset), pressed, disabled.
 

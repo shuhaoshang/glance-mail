@@ -91,6 +91,13 @@ export const Overview: StoryObj<typeof meta> = { render: () => <Gallery /> };
 
 const states = ['Default', 'Hover', 'Focus', 'Pressed', 'Disabled'] as const;
 
+const stateButtons = [
+  { variant: 'primary', label: 'Open in Gmail' },
+  { variant: 'tint', label: 'Ask' },
+  { variant: 'neutral', label: 'Done' },
+  { variant: 'text', label: 'Undo' },
+] as const;
+
 function InteractionStates() {
   const [action, setAction] = useState('');
   return (
@@ -102,14 +109,17 @@ function InteractionStates() {
         {states.map((state) => (
           <section key={state} className={styles.state}>
             <h2>{state}</h2>
-            <Button
-              data-specimen={state}
-              variant="tint"
-              disabled={state === 'Disabled'}
-              onClick={() => setAction(state + ' Ask')}
-            >
-              Ask
-            </Button>
+            {stateButtons.map(({ variant, label }) => (
+              <Button
+                key={variant}
+                data-specimen={state}
+                variant={variant}
+                disabled={state === 'Disabled'}
+                onClick={() => setAction(state + ' ' + label)}
+              >
+                {label}
+              </Button>
+            ))}
             <IconButton
               data-specimen={state}
               icon="close"

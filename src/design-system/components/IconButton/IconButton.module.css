@@ -7,8 +7,9 @@
   padding: 0;
   border: 0;
   border-radius: var(--radius-pill);
-  background: transparent;
-  color: var(--color-text-secondary);
+  --control-ink: var(--color-text-secondary);
+  --hover-ink: light-dark(var(--color-text-body), var(--color-text-muted));
+  --pressed-ink: light-dark(var(--color-text), var(--color-icon-muted));
 }
 .compact {
   inline-size: var(--size-touch-compact);

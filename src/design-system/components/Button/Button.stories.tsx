@@ -20,7 +20,7 @@ const meta = {
       control: 'inline-radio',
       options: ['primary', 'tint', 'neutral', 'text'],
     },
-    size: { control: 'inline-radio', options: ['default', 'compact'] },
+    size: { control: 'inline-radio', options: ['default', 'touch', 'compact'] },
   },
 } satisfies Meta<typeof Button>;
 export default meta;
@@ -34,6 +34,9 @@ export const Neutral: Story = {
 };
 export const Text: Story = {
   args: { variant: 'text', size: 'compact', children: 'Undo' },
+};
+export const Touch: Story = {
+  args: { size: 'touch', variant: 'neutral', children: 'Done' },
 };
 export const ExternalLink: Story = {
   args: {

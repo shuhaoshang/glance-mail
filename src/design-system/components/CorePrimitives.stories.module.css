@@ -19,7 +19,7 @@
   justify-items: start;
   gap: var(--space-16);
   background: var(--color-surface);
-  padding: var(--space-16);
+  padding: var(--space-16) var(--space-12);
   border-radius: var(--radius-panel);
 }
 .group {

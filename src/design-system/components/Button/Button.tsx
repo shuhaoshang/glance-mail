@@ -10,7 +10,7 @@ import styles from './Button.module.css';
 interface Appearance {
   children: ReactNode;
   variant?: 'primary' | 'tint' | 'neutral' | 'text';
-  size?: 'default' | 'compact';
+  size?: 'default' | 'touch' | 'compact';
   leadingIcon?: IconName;
   trailingIcon?: IconName;
   disabled?: boolean;
@@ -42,7 +42,7 @@ export function Button({
     control.control,
     styles.button,
     styles[variant],
-    size === 'compact' && styles.compact,
+    size !== 'default' && styles[size],
     className,
   ]
     .filter(Boolean)

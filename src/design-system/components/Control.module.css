@@ -3,20 +3,22 @@
   font-family: var(--font-family);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
+  color: var(--control-ink);
+  background-color: var(--control-fill, transparent);
   transition:
     background-color var(--duration-fast) var(--ease-standard),
-    color var(--duration-fast) var(--ease-standard),
-    box-shadow var(--duration-fast) var(--ease-standard);
+    color var(--duration-fast) var(--ease-standard);
 }
 .control:not(:disabled, [aria-disabled='true']):hover {
-  box-shadow:
-    inset 0 0 0 var(--border-hairline) currentColor,
-    var(--control-shadow, 0 0 transparent);
+  color: var(--hover-ink, var(--control-ink));
+  background-color: var(--hover-fill, var(--control-fill, transparent));
 }
 .control:not(:disabled, [aria-disabled='true']):active {
-  box-shadow:
-    inset 0 0 0 var(--border-selected) currentColor,
-    var(--control-shadow, 0 0 transparent);
+  color: var(--pressed-ink, var(--hover-ink, var(--control-ink)));
+  background-color: var(
+    --pressed-fill,
+    var(--hover-fill, var(--control-fill, transparent))
+  );
 }
 .control:focus-visible {
   outline: var(--space-2) solid var(--color-brand);
@@ -26,6 +28,8 @@
 .control[aria-disabled='true'] {
   cursor: not-allowed;
   color: var(--color-text-muted);
-  background: var(--color-surface-sunken);
-  box-shadow: none;
+}
+.control:disabled svg,
+.control[aria-disabled='true'] svg {
+  color: var(--color-icon-muted);
 }
