@@ -12,11 +12,11 @@ These rules turn the product principles into decisions that designers, engineers
 
 Everything in a brief is one of two things, and the user must always be able to tell which.
 
-| | Facts | Glance’s words |
-|---|---|---|
-| What | Taken from the email as written: amounts, dates, names, requests | Written by Glance: summaries, judgments, ranking reasons |
-| Marker | Quotation marks for sentences; fact pills for values | ✦ icon in purple |
-| On tap | Shows the source sentence, highlighted | Shows the reasoning, and its source if it has one |
+|          | Facts                                                                      | Glance’s words                                                  |
+| -------- | -------------------------------------------------------------------------- | --------------------------------------------------------------- |
+| What     | Taken from the email as written: amounts, dates, names, requests           | Written by Glance: summaries, judgments, ranking reasons        |
+| Marker   | Quotation marks for sentences; fact pills for values                       | ✦ icon in purple                                                |
+| On tap   | Shows the source sentence, highlighted                                     | Shows the reasoning, and its source if it has one               |
 | Examples | “Can you send revised pricing before our review on Friday?” · `$48,000/yr` | ✦ Renewal risk · ✦ Sign Ella’s museum trip slip and pay the fee |
 
 Rules:
@@ -40,26 +40,27 @@ Within the same urgency, larger amounts and explicit requests to the user rank h
 
 Color carries meaning. Hue says **what kind** of information something is; a solid fill says it is **urgent**.
 
-| Role | Token | Value | Used for |
-|---|---|---|---|
-| Glance | `color.brand` | `#5A4FE0` | Primary action, selection, progress, sources, Glance’s words |
-| | `color.brand.text` | `#4A3FD0` | Text and links on white or tint |
-| | `color.brand.tint` | `#EEECFD` | Selected rows, secondary buttons, source highlight |
-| Money | `color.money.dot` | `#9A7300` | Type dot on fact pills |
-| | `color.money.tint` | `#FFF2C2` | Icon tiles |
-| | `color.money.text` | `#6B5100` | Text on money tint |
-| Time | `color.time.solid` | `#C2255C` | Urgent fact pills (white text) |
-| | `color.time.tint` | `#FFE3EB` | Icon tiles |
-| | `color.time.text` | `#A8164C` | Text and icons on time tint |
-| People | `color.people.dot` | `#2F64D6` | Type dot on fact pills |
-| | `color.people.tint` | `#E3ECFF` | Avatars, icon tiles |
-| | `color.people.text` | `#1D4BAE` | Text on people tint |
-| Neutral | `color.bg` | `#F4F4F7` | Page background |
-| | `color.surface` | `#FFFFFF` | Cards |
-| | `color.surface.muted` | `#F0F0F4` | Fact pills, secondary surfaces |
-| | `color.text` | `#16151C` | Primary text |
-| | `color.text.muted` | `#6A6875` | Secondary text |
-| | `color.border` | `#ECECF1` | Dividers |
+| Role    | Token                  | Value     | Used for                                                     |
+| ------- | ---------------------- | --------- | ------------------------------------------------------------ |
+| Glance  | `color.brand`          | `#5A4FE0` | Primary action, selection, progress, sources, Glance’s words |
+|         | `color.brand.text`     | `#4A3FD0` | Text and links on white or tint                              |
+|         | `color.brand.tint`     | `#EEECFD` | Selected rows, secondary buttons, source highlight           |
+| Money   | `color.money.dot`      | `#9A7300` | Type dot on fact pills                                       |
+|         | `color.money.tint`     | `#FFF2C2` | Icon tiles                                                   |
+|         | `color.money.text`     | `#6B5100` | Text on money tint                                           |
+| Time    | `color.time.solid`     | `#C2255C` | Urgent fact pills (white text)                               |
+|         | `color.time.tint`      | `#FFE3EB` | Icon tiles                                                   |
+|         | `color.time.text`      | `#A8164C` | Text and icons on time tint                                  |
+| People  | `color.people.dot`     | `#2F64D6` | Type dot on fact pills                                       |
+|         | `color.people.tint`    | `#E3ECFF` | Avatars, icon tiles                                          |
+|         | `color.people.text`    | `#1D4BAE` | Text on people tint                                          |
+| Neutral | `color.bg`             | `#F4F4F7` | Page background                                              |
+|         | `color.surface`        | `#FFFFFF` | Cards                                                        |
+|         | `color.surface.muted`  | `#F7F7FA` | Panels inside cards: sources, scene cards, reasoning         |
+|         | `color.surface.sunken` | `#F0F0F4` | Fact chips, segmented controls, neutral buttons              |
+|         | `color.text`           | `#16151C` | Primary text                                                 |
+|         | `color.text.muted`     | `#6A6875` | Secondary text                                               |
+|         | `color.border`         | `#ECECF1` | Dividers                                                     |
 
 Rules:
 
@@ -94,11 +95,11 @@ Rules:
 
 ## 7. Tiers and naming
 
-| In code | On screen | Behaviour |
-|---|---|---|
-| Act | **Needs you** | Ranked list; one item selected |
-| Know | **Good to know** | Short list; facts and ✦ judgments as in section 1 |
-| Ignore | **Set aside** | Collapsed with counts; always openable |
+| In code | On screen        | Behaviour                                         |
+| ------- | ---------------- | ------------------------------------------------- |
+| Act     | **Needs you**    | Ranked list; one item selected                    |
+| Know    | **Good to know** | Short list; facts and ✦ judgments as in section 1 |
+| Ignore  | **Set aside**    | Collapsed with counts; always openable            |
 
 Nothing disappears silently: every count on screen can be opened.
 
@@ -130,16 +131,16 @@ Nothing disappears silently: every count on screen can be opened.
 
 Inter, with proportional figures. Tabular figures only where numbers must line up in a column; Inter’s tabular setting also widens hyphens, so “add-on” reads as “add - on” in prose. Every size and line height is an even number, and every line height is a multiple of 4, so text sits on the same 4 px grid as the layout. Line heights are written in px, never as ratios like 1.45.
 
-| Style | Size / line height / weight | Use |
-|---|---|---|
-| Display | 28 / 32 / 700, −0.025em (desktop 32 / 40) | Page greeting |
-| Request | 20 / 28 / 600, −0.015em | The ✦ summary or quoted request in detail view |
-| Title | 18 / 24 (phone), 20 / 28 (desktop) / 700 | Item name in detail view; always smaller than the request |
-| Section | 18 / 24 / 700 | Section headings, wordmark |
-| Body | 16 / 24 / 400–600 | Default text, row titles (16 / 20), primary button |
-| Reading | 16 / 28 / 400 | Email and source text, where words get highlighted |
-| Meta | 14 / 20 / 400–600 | Dates, secondary lines, tabs, secondary buttons, detail pills |
-| Chip | 12 / 16 / 500–600 | List-row pills, account labels, legends |
+| Style   | Size / line height / weight              | Use                                                           |
+| ------- | ---------------------------------------- | ------------------------------------------------------------- |
+| Display | 28 / 32 / 700, −0.03em (desktop 32 / 40) | Page greeting                                                 |
+| Request | 20 / 28 / 600, −0.015em                  | The ✦ summary or quoted request in detail view                |
+| Title   | 18 / 24 (phone), 20 / 28 (desktop) / 700 | Item name in detail view; always smaller than the request     |
+| Section | 18 / 24 / 700                            | Section headings, wordmark                                    |
+| Body    | 16 / 24 / 400–600                        | Default text, row titles (16 / 20), primary button            |
+| Reading | 16 / 28 / 400                            | Email and source text, where words get highlighted            |
+| Meta    | 14 / 20 / 400–600                        | Dates, secondary lines, tabs, secondary buttons, detail pills |
+| Chip    | 12 / 16 / 500–600                        | List-row pills, account labels, legends                       |
 
 - Text people type is never below 16 px, so iOS does not zoom the page.
 - Font sizes only need to be even; they are never halved in a layout. What takes up space is the line height, and every line height is a multiple of 4.
@@ -152,17 +153,17 @@ Inter, with proportional figures. Tabular figures only where numbers must line u
 - **Radius:** sheets 24, cards 20, inner panels 16, small panels 12, icon tiles 8, highlights 4, pills, switches and buttons 999.
 - **One scale, two densities.** Phone and desktop use the same scale; desktop picks larger steps instead of new numbers.
 
-| | Phone | Desktop |
-|---|---|---|
-| Page gutter | 16 | 32 |
-| Card padding | 16 (lists 4 0, rows 12) | 20–24 (lists 8, rows 12) |
-| Reading panel padding | 20 (sheets) | 24 top, 32 sides |
-| Gap between sections | 20 | 32 |
-| Column gap | — | 32 |
-| Greeting | 28 / 32 | 32 / 40 |
-| Request (quote or ✦ summary) | 20 / 28 | 24 / 32 |
-| Item name in detail | 18 / 24 | 20 / 28 |
-| Buttons | 48 primary, 44 secondary | 48 for all |
+|                              | Phone                    | Desktop                  |
+| ---------------------------- | ------------------------ | ------------------------ |
+| Page gutter                  | 16                       | 32                       |
+| Card padding                 | 16 (lists 4 0, rows 12)  | 20–24 (lists 8, rows 12) |
+| Reading panel padding        | 20 (sheets)              | 24 top, 32 sides         |
+| Gap between sections         | 20                       | 32                       |
+| Column gap                   | —                        | 32                       |
+| Greeting                     | 28 / 32                  | 32 / 40                  |
+| Request (quote or ✦ summary) | 20 / 28                  | 24 / 32                  |
+| Item name in detail          | 18 / 24                  | 20 / 28                  |
+| Buttons                      | 48 primary, 44 secondary | 48 for all               |
 
 - **Phone exceptions.** On the phone, what looks right wins over the scale when they conflict. Each exception is written down here with its reason; an unwritten off-scale value is a bug. (None so far.)
 - **Exempt from the even rule:** line widths (1 px dividers, 1.5 px selected outlines and focus rings), letter-spacing, and documented optical nudges. Prefer layout over nudges: an icon button lines its icon up with the text edge by aligning it inside its 44 px hit area, not with a negative margin.
