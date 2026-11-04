@@ -6,7 +6,6 @@ import styles from './Icon.stories.module.css';
 
 const meta = {
   title: 'Primitives/Icons',
-  id: 'foundations-icons',
   component: Icon,
   args: { name: 'mail', size: 'default' },
   parameters: {

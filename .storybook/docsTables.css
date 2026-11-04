@@ -1,0 +1,18 @@
+/* Style documentation tables without changing tables rendered inside example canvases. */
+#storybook-docs
+  .sbdocs-content
+  :where(
+    table:not(.sb-unstyled, .sb-unstyled table),
+    table.docblock-argstable
+  ) {
+  & > :is(thead, tbody) > tr {
+    background-color: var(--color-surface);
+    border: 0;
+  }
+
+  & > :is(thead, tbody) > tr > :is(th, td) {
+    background-color: var(--color-surface);
+    border: 0;
+    border-block-end: var(--border-hairline) solid var(--color-border);
+  }
+}

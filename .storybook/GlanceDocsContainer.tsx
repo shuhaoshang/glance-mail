@@ -3,6 +3,7 @@ import { DocsContainer } from '@storybook/addon-docs/blocks';
 import { addons } from 'storybook/preview-api';
 import { GLOBALS_UPDATED } from 'storybook/internal/core-events';
 import { getGlanceTheme, resolveGlanceMode } from './glanceTheme';
+import './docsTables.css';
 
 function subscribe(update: () => void) {
   const channel = addons.getChannel();
