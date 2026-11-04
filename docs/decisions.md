@@ -39,7 +39,7 @@ Each entry records one decision: what was decided, what else was considered, and
 ### D5 · Facts and Glance’s words look different
 
 - **Decision:** Content is either a fact taken from the email as written, or Glance’s words (summaries, judgments, ranking reasons). Quotation marks mean verbatim; ✦ marks Glance’s words.
-- **Considered:** Treating all AI output the same way; labelling only the summary.
+- **Considered:** Treating all AI output the same way; labeling only the summary.
 - **Why:** In early versions, “Renewal risk” looked like a fact even though the word never appeared in the email. Trust depends on users knowing what the sender said and what the AI concluded.
 
 ### D6 · Sources on demand
@@ -66,7 +66,7 @@ Each entry records one decision: what was decided, what else was considered, and
 
 ### D9 · White and pastel, Inter, iOS-like surfaces
 
-- **Decision:** Light grey background, white cards, purple as the brand color, yellow, pink and blue as category colors, Inter with tabular numbers.
+- **Decision:** Light gray background, white cards, purple as the brand color, yellow, pink and blue as category colors, Inter with tabular numbers.
 - **Considered:** Three directions in round 1: Boarding pass, Quiet journal, Morning edition.
 - **Why:** The boarding pass taught the “small label, big value” pattern, which stayed; the ticket shape was decoration and was dropped. The editorial direction was the most restrained but felt distant for a daily tool. The final direction keeps type neutral so color and components carry meaning.
 
@@ -97,7 +97,7 @@ Each entry records one decision: what was decided, what else was considered, and
 ### D14 · Account labels mark the exception
 
 - **Decision:** With several accounts, only items from the less common account carry a label. The coverage line shows the split.
-- **Considered:** Labelling every item with its account.
+- **Considered:** Labeling every item with its account.
 - **Why:** Found in the Daniel stress test: “Work” on every row was noise.
 
 ## Lifecycle
@@ -130,7 +130,7 @@ Each entry records one decision: what was decided, what else was considered, and
 
 ### D19 · Demo controls are separate from the product
 
-- **Decision:** The persona switcher and simulations live in a dark bar labelled “Demo controls · Not part of the product”.
+- **Decision:** The persona switcher and simulations live in a dark bar labeled “Demo controls · Not part of the product”.
 - **Considered:** A persona switcher styled as part of the app.
 - **Why:** Reviewers mistook it for an account switcher.
 
@@ -138,7 +138,7 @@ Each entry records one decision: what was decided, what else was considered, and
 
 ### D20 · Pastels are highlighter ink
 
-- **Decision:** Pastel tints mark words, the way a highlighter does: yellow for money, pink for time, blue for people, purple for the evidence behind Glance’s judgments. Main surfaces stay white and grey. Sources and the original email view use these highlights instead of a purple dashed outline, and the original email has a highlighter switch.
+- **Decision:** Pastel tints mark words, the way a highlighter does: yellow for money, pink for time, blue for people, purple for the evidence behind Glance’s judgments. Main surfaces stay white and gray. Sources and the original email view use these highlights instead of a purple dashed outline, and the original email has a highlighter switch.
 - **Considered:** Large pastel backgrounds per section; one purple dashed outline for every source.
 - **Why:** Everyone already knows what a highlighter means. It keeps color restrained, ties each fact pill’s dot to the color of its words in the email, and made the inline type labels in the email unnecessary, so the email reads without interruptions.
 
@@ -168,7 +168,7 @@ Each entry records one decision: what was decided, what else was considered, and
 
 ### D25 · Motion explains where things came from
 
-- **Decision:** The signature motion is a highlighter sweep across the exact source words, followed by a ring in the fact’s colour. Done and snooze collapse the row and move it to the done list with Undo. Nothing else animates beyond short colour changes, and reduced motion turns it all off.
+- **Decision:** The signature motion is a highlighter sweep across the exact source words, followed by a ring in the fact’s color. Done and snooze collapse the row and move it to the done list with Undo. Nothing else animates beyond short color changes, and reduced motion turns it all off.
 - **Considered:** No motion; page-level transitions between views.
 - **Why:** The sweep makes verification feel physical: you watch Glance point at the words. The collapse confirms an action without a toast. Decorative transitions would slow down a product whose promise is speed.
 
@@ -212,7 +212,7 @@ Each entry records one decision: what was decided, what else was considered, and
 
 ### D32 · Dark theme lives in the tokens from day one
 
-- **Decision:** Every colour token has a light and a dark value; components never choose colours themselves. A dark hero frame proves the values work.
+- **Decision:** Every color token has a light and a dark value; components never choose colors themselves. A dark hero frame proves the values work.
 - **Considered:** Adding dark mode later.
 - **Why:** The product brief asked for both themes from the start, and retrofitting dark mode is where raw hex values get exposed. With semantic tokens it is a values change, which also makes it a good first AI pull request to review.
 
@@ -271,4 +271,4 @@ Each entry records one decision: what was decided, what else was considered, and
 
 - **Decision:** Storybook is themed as Glance, opens on an Introduction page, has a docs page for each category, and an autodocs page for every component. It is the one place to browse the design system.
 - **Considered:** A separate documentation website, like Material 3 or shadcn/ui; Storybook with its default look.
-- **Why:** Public design systems are browsed as documentation sites, and the default Storybook reads as a developer tool. A separate site would double the work and the content. A themed Storybook gives the same structure for about one issue of work, and engineers recognise it. A standalone site stays possible once the app is done, with the content already written.
+- **Why:** Public design systems are browsed as documentation sites, and the default Storybook reads as a developer tool. A separate site would double the work and the content. A themed Storybook gives the same structure for about one issue of work, and engineers recognize it. A standalone site stays possible once the app is done, with the content already written.

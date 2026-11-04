@@ -17,7 +17,7 @@ const preview: Preview = {
         order: [
           'Introduction',
           'Foundations',
-          ['Overview', 'Colours', 'Type', 'Spacing', 'Radius', 'Motion'],
+          ['Overview', 'Colors', 'Type', 'Spacing', 'Radius', 'Motion'],
           'Primitives',
           ['Overview', '*'],
           'Composites',

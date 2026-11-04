@@ -7,7 +7,7 @@ These carry the thesis: facts you can scan and check in one click.
 
 ## What to build
 - `FactChip` (money, time, people; urgent = solid pink with white dot).
-- `Field` (label, value, size small/default/large, optional `fact`; dotted underline in the type colour when it has a source; inked when selected; plain text and not focusable without a source).
+- `Field` (label, value, size small/default/large, optional `fact`; dotted underline in the type color when it has a source; inked when selected; plain text and not focusable without a source).
 - `Highlight` (money, time, people, judgment ink; selected ring; sweep animation; ink continues across wrapped lines).
 - `SourcePanel` (header with sender and date, Open email, close; the sentence with the highlighted words; entrance: fade, sweep, ring).
 

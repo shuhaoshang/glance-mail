@@ -28,7 +28,7 @@
   --color-scrim: rgba(22, 21, 28, 0.32);
 
   /* ---------- Color: Glance (brand) ---------- */
-  --color-brand: #5A4FE0;           /* primary button, selection, AI marks; the only large colour area */
+  --color-brand: #5A4FE0;           /* primary button, selection, AI marks; the only large color area */
   --color-brand-text: #4A3FD0;      /* links, Glance labels */
   --color-brand-tint: #EEECFD;      /* selected row, tint buttons, New badge */
   --color-on-brand: #FFFFFF;

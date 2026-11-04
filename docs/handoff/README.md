@@ -43,13 +43,14 @@ sh docs/handoff/create-issues.sh
 ## Reviewing a pull request (designer checklist)
 
 1. **Does it match the screen?** Open the matching file in `docs/screens/` or the prototype side by side.
-2. **Tokens only.** Search the diff for `#` colours and `px` values outside `tokens.css`.
+2. **Tokens only.** Search the diff for `#` colors and `px` values outside `tokens.css`.
 3. **Right component?** Lists use `BriefRow`; details use the scene card named in the data; nothing new is built inside a feature PR.
 4. **Content classes.** Quotes are verbatim; Glance’s words have ✦; urgent is a solid chip; one primary button.
 5. **States.** Stories for default, hover, focus, selected, empty, dark theme, reduced motion.
 6. **Accessibility.** Keyboard path works; focus is visible; labels read sensibly.
 7. **Does the story still work?** Walk the matching steps in `docs/user-flows.md`; issue 16 automates this.
 8. **Comment with the rule.** For example: “design-rules §4: scene cards hold only facts; move ‘Renewal risk’ to Glance’s read.”
+9. **American English.** Check the copy, screenshots, PR, issues, and comments against the language rule in `AGENTS.md`.
 
 ## Done means
 

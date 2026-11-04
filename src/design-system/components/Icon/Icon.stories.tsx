@@ -38,7 +38,7 @@ export const Gallery: Story = {
   render: ({ size }) => (
     <FoundationPage
       title="Icons"
-      description="Each icon inherits the text colour. Use the size control to compare the three token sizes."
+      description="Each icon inherits the text color. Use the size control to compare the three token sizes."
     >
       <ul className={styles.gallery}>
         {iconNames.map((name) => (

@@ -281,7 +281,7 @@ flowchart LR
 
 - **Daniel does:** Sits down at 9:05 and scans four items.
 - **Daniel thinks:** “Who is blocked by me?”
-- **Glance does:** 72 emails from 2 inboxes. Only the Personal item is labelled. The hiring-plan reply was already detected.
+- **Glance does:** 72 emails from 2 inboxes. Only the Personal item is labeled. The hiring-plan reply was already detected.
 - **Rule:** Account labels mark the exception, not the rule.
 
 ```gherkin
@@ -291,7 +291,7 @@ Scenario: Daniel sees who is waiting on him
   And under it: "Quiet hours: work email hides after 7:00 PM"
   And "Needs you" shows 4 items in this order: "Checkout redesign", "Candidate: Riya Sen", "Expense report: Jordan Kim", "Time off: Lea Novak"
   And no Needs you row shows an account label (all four are Work)
-  And "Car service booked for Sat, 9:00 AM" in Good to know is labelled "Personal"
+  And "Car service booked for Sat, 9:00 AM" in Good to know is labeled "Personal"
   And a done row reads "Design hiring plan · reply detected in Gmail, 8:05 AM"
 ```
 
