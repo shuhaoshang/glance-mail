@@ -39,6 +39,8 @@ This repository is a **Design Engineer project**. It has two equal goals:
 
 Front-end only, with mock data: no real email access and no real AI calls.
 
+Use American English for all project writing, including GitHub titles, descriptions, and comments. See the [language guidelines](AGENTS.md#language).
+
 ## Run locally
 
 Use Node.js 24 (see `.nvmrc`) and npm.

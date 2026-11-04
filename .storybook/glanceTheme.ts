@@ -10,7 +10,7 @@ export function resolveGlanceMode(value: unknown): GlanceMode {
 
 const wordmark = `<span class="glance-wordmark"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2C12.6 7.5 16.5 11.4 22 12C16.5 12.6 12.6 16.5 12 22C11.4 16.5 7.5 12.6 2 12C7.5 11.4 11.4 7.5 12 2Z"/></svg>glance</span>`;
 
-// Storybook needs resolved colours for its colour calculations and numeric radii.
+// Storybook needs resolved colors for its color calculations and numeric radii.
 export function getGlanceTheme(mode: GlanceMode) {
   const root = document.documentElement;
   if (root.dataset.theme !== mode) root.dataset.theme = mode;

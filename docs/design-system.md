@@ -6,7 +6,7 @@ This document is the build spec for `src/design-system/`. It lists every compone
 
 Read it together with:
 
-- `docs/design-rules.md`: the rules behind the values (colour meaning, the 4 px grid, sourcing, edge states).
+- `docs/design-rules.md`: the rules behind the values (color meaning, the 4 px grid, sourcing, edge states).
 - `docs/data-model.md`: the shape of the mock data these components render.
 
 ---
@@ -32,7 +32,7 @@ All values come from `tokens.css`. The groups are:
 
 | Group  | Examples                                                      | Notes                                                                                                   |
 | ------ | ------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Colour | `--color-surface`, `--color-brand`, `--color-money-ink`       | Semantic names, light and dark values. Dark applies with `prefers-color-scheme` or `data-theme="dark"`. |
+| Color | `--color-surface`, `--color-brand`, `--color-money-ink`       | Semantic names, light and dark values. Dark applies with `prefers-color-scheme` or `data-theme="dark"`. |
 | Type   | `--font-size-16`, `--line-height-16`, `--line-height-reading` | Sizes are even; line heights are multiples of 4. Proportional figures (no `tnum`).                      |
 | Space  | `--space-2` … `--space-48`                                    | Multiples of 4; 2 is the only half step.                                                                |
 | Size   | `--size-touch`, `--size-button`, `--size-dot`                 | Touch targets 44 (40 inside toolbars).                                                                  |
@@ -95,7 +95,7 @@ For list rows only.
 | `urgent` | boolean                     |
 | `label`  | string                      |
 
-Without `urgent`, the chip is a sunken pill with an 8 px dot in the type colour. With `urgent`, it is solid `--color-urgent` with white text and a white dot. Padding is 4 12 4 8 (the dot side is 4 tighter).
+Without `urgent`, the chip is a sunken pill with an 8 px dot in the type color. With `urgent`, it is solid `--color-urgent` with white text and a white dot. Padding is 4 12 4 8 (the dot side is 4 tighter).
 
 ### AccountLabel
 
@@ -123,8 +123,8 @@ A value from the email. This is the building block of every scene card.
 
 **With a fact:**
 
-- The value has a 2 px dotted underline in the fact's type colour, offset 6.
-- When selected, the value is inked with that type's `-ink` colour, and the SourcePanel opens below the card.
+- The value has a 2 px dotted underline in the fact's type color, offset 6.
+- When selected, the value is inked with that type's `-ink` color, and the SourcePanel opens below the card.
 - `aria-label` reads as “Contract: $48,000/yr. Show where the email says so”.
 
 **Without a fact:** the field is plain text. It is not focusable, and it has no underline.
@@ -136,7 +136,7 @@ Inline ink on words in a source or an email.
 | Prop       | Values                                   |
 | ---------- | ---------------------------------------- |
 | `kind`     | `money` · `time` · `people` · `judgment` |
-| `selected` | adds a 1.5 px ring in the type colour    |
+| `selected` | adds a 1.5 px ring in the type color    |
 | `animate`  | the sweep (see Motion)                   |
 
 Text that wraps keeps the ink on every line (`box-decoration-break: clone`). Short facts do not wrap.
@@ -186,7 +186,7 @@ A 24 avatar (people tint, initial), followed by name and role.
 
 ### Skeleton
 
-A grey bar with a shimmer (1.6 s). It only shows the shape of content that is about to arrive. Never put placeholder text in it.
+A gray bar with a shimmer (1.6 s). It only shows the shape of content that is about to arrive. Never put placeholder text in it.
 
 ### Icons
 
@@ -232,7 +232,7 @@ A white card that holds rows: `Needs you`, `Good to know`. The header shows the 
 ### KnowRow (Good to know)
 
 - A 32 icon tile (type tint, type-text stroke).
-- Bold title, then text. One value in the text (`fact.value`) is a Field-style link: dotted underline in its type colour, inked when open.
+- Bold title, then text. One value in the text (`fact.value`) is a Field-style link: dotted underline in its type color, inked when open.
 - Selecting it opens a SourcePanel inline below the row (`Source · from · when`, the sentence with the words highlighted in the type’s ink). Only one panel is open at a time.
 - Optional AccountLabel.
 - Optional ✦ judgment pill that expands its ReasonPanel inline.
@@ -371,8 +371,8 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 ## 8. Storybook structure
 
 ```
-Introduction        What Glance is, how the system is organised, links to the app, prototypes and docs
-Foundations/        Colours (light and dark), Type, Spacing, Radius, Motion
+Introduction        What Glance is, how the system is organized, links to the app, prototypes and docs
+Foundations/        Colors (light and dark), Type, Spacing, Radius, Motion
 Primitives/         Button, IconButton, SegmentedControl, FactChip, AccountLabel, Badge, GlanceMark,
                     Field, Highlight, SourcePanel, ReasonPanel, DateTile, Person, Checkbox, Switch,
                     ProgressBar, Skeleton, Icons

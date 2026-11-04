@@ -1,3 +1,4 @@
+import language from './american-spellings.json' with { type: 'json' };
 import { execFileSync } from 'node:child_process';
 import { lstatSync, readFileSync, readlinkSync } from 'node:fs';
 
@@ -23,6 +24,7 @@ const pngSignature = Buffer.from([
   0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a,
 ]);
 const jpegSignature = Buffer.from([0xff, 0xd8, 0xff]);
+const { words: spellings, legacyStoryPrefix } = language;
 let failures = 0;
 
 function report(path, message) {
@@ -36,10 +38,42 @@ function report(path, message) {
   failures += 1;
 }
 
-for (const path of paths) {
-  if (cjk.test(path)) {
-    report(path, 'CJK character in file path.');
+function checkText(path, content) {
+  const match = cjk.exec(content);
+  if (match) {
+    const line = content.slice(0, match.index).split('\n').length;
+    const codePoint = match[0].codePointAt(0).toString(16).toUpperCase();
+    report(path, `CJK character U+${codePoint} on line ${line}.`);
   }
+  // The dictionary explicitly lists the forms it detects.
+  if (path === 'scripts/american-spellings.json') return;
+  for (const [index, line] of content.split('\n').entries()) {
+    // A public bookmark still uses the previous story ID.
+    const text =
+      path === '.storybook/manager-head.html'
+        ? line.replaceAll(legacyStoryPrefix, '')
+        : line;
+    const words =
+      text
+        .replace(/([a-z])([A-Z])/g, '$1 $2')
+        .toLowerCase()
+        .match(/[a-z]+/g) ?? [];
+    for (const word of new Set(words)) {
+      if (Object.hasOwn(spellings, word)) {
+        report(
+          path,
+          `Use "${spellings[word]}" instead of "${word}" on line ${index + 1}.`,
+        );
+      }
+    }
+  }
+}
+
+const stdin = process.argv.includes('--stdin');
+if (stdin) checkText('stdin', readFileSync(0, 'utf8'));
+
+for (const path of stdin ? [] : paths) {
+  checkText('file path', path);
 
   let bytes;
   try {
@@ -67,16 +101,15 @@ for (const path of paths) {
     continue;
   }
 
-  const match = cjk.exec(content);
-  if (match) {
-    const line = content.slice(0, match.index).split('\n').length;
-    const codePoint = match[0].codePointAt(0).toString(16).toUpperCase();
-    report(path, `CJK character U+${codePoint} on line ${line}.`);
-  }
+  checkText(path, content);
 }
 
 if (failures > 0) {
   process.exitCode = 1;
 } else {
-  console.log(`English check passed for ${paths.length} tracked paths.`);
+  console.log(
+    stdin
+      ? 'American English check passed.'
+      : `English check passed for ${paths.length} tracked paths.`,
+  );
 }

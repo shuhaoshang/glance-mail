@@ -3,11 +3,11 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import tokenSource from '../tokens/tokens.css?raw';
 import { FoundationPage } from './catalog';
 import { tokenNames, useTokenValues } from './tokenValues';
-import styles from './Colours.module.css';
+import styles from './Colors.module.css';
 
-const colours = tokenNames.filter((name) => name.startsWith('--color-'));
+const colors = tokenNames.filter((name) => name.startsWith('--color-'));
 // Apply the original theme rules to two local scopes so both palettes can be measured at once.
-const comparisonRules = tokenSource.replaceAll(':root', '[data-colour-scope]');
+const comparisonRules = tokenSource.replaceAll(':root', '[data-color-scope]');
 
 const groups = [
   ['Surfaces and text', /^--color-(?:bg|surface|border|text|icon|scrim)/],
@@ -18,7 +18,7 @@ const groups = [
   ['Demo controls', /^--color-demo/],
 ] as const;
 
-function ColourCell({ value }: { value: string }) {
+function ColorCell({ value }: { value: string }) {
   return (
     <td>
       <div className={styles.sample}>
@@ -33,32 +33,32 @@ function ColourCell({ value }: { value: string }) {
   );
 }
 
-function Colours({ dark }: { dark: boolean }) {
+function Colors({ dark }: { dark: boolean }) {
   const lightScope = useRef<HTMLSpanElement>(null);
   const darkScope = useRef<HTMLSpanElement>(null);
-  const lightValues = useTokenValues(colours, lightScope);
-  const darkValues = useTokenValues(colours, darkScope);
+  const lightValues = useTokenValues(colors, lightScope);
+  const darkValues = useTokenValues(colors, darkScope);
   const current = dark ? darkValues : lightValues;
   const alternate = dark ? lightValues : darkValues;
   const sections: { label: string; names: string[] }[] = groups.map(
     ([label, match]) => ({
       label,
-      names: colours.filter((name) => match.test(name)),
+      names: colors.filter((name) => match.test(name)),
     }),
   );
-  const other = colours.filter(
+  const other = colors.filter(
     (name) => !groups.some(([, match]) => match.test(name)),
   );
-  if (other.length) sections.push({ label: 'Other colours', names: other });
+  if (other.length) sections.push({ label: 'Other colors', names: other });
 
   return (
     <FoundationPage
-      title="Colours"
-      description="Compare each colour in both themes. The current swatch follows the theme selected in the toolbar."
+      title="Colors"
+      description="Compare each color in both themes. The current swatch follows the theme selected in the toolbar."
     >
       <style>{comparisonRules}</style>
-      <span hidden ref={lightScope} data-colour-scope="" data-theme="light" />
-      <span hidden ref={darkScope} data-colour-scope="" data-theme="dark" />
+      <span hidden ref={lightScope} data-color-scope="" data-theme="light" />
+      <span hidden ref={darkScope} data-color-scope="" data-theme="dark" />
       {sections.map(({ label, names }) => (
         <section className={styles.panel} key={label}>
           <h2>{label}</h2>
@@ -76,8 +76,8 @@ function Colours({ dark }: { dark: boolean }) {
                   <th scope="row">
                     <code>{name}</code>
                   </th>
-                  <ColourCell value={current[name] ?? ''} />
-                  <ColourCell value={alternate[name] ?? ''} />
+                  <ColorCell value={current[name] ?? ''} />
+                  <ColorCell value={alternate[name] ?? ''} />
                 </tr>
               ))}
             </tbody>
@@ -89,11 +89,11 @@ function Colours({ dark }: { dark: boolean }) {
 }
 
 const meta = {
-  title: 'Foundations/Colours',
+  title: 'Foundations/Colors',
   tags: ['!autodocs'],
   parameters: { layout: 'fullscreen' },
 } satisfies Meta;
 export default meta;
 export const Default: StoryObj<typeof meta> = {
-  render: (_args, { globals }) => <Colours dark={globals.theme === 'dark'} />,
+  render: (_args, { globals }) => <Colors dark={globals.theme === 'dark'} />,
 };

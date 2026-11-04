@@ -13,6 +13,7 @@ Before doing anything:
 3. Look at docs/screens/ and open docs/prototype/index.html to see what the result should look like.
 
 Rules that matter most:
+- Write all public text in American English, including GitHub titles, descriptions, and replies.
 - Design owns src/design-system/tokens/tokens.css and src/data/*.json. Do not change them; propose changes in a separate PR.
 - Use tokens for every design value. No raw hex or px outside tokens.css.
 - Product screens use only design-system components. If a component is missing, open a separate ds/ PR first.

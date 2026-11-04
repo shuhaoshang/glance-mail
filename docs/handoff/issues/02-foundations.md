@@ -6,7 +6,7 @@
 The design system starts with its foundations, documented so reviewers can check values at a glance.
 
 ## What to build
-- Storybook pages: Colours (every `--color-*` token, light and dark side by side), Type, Spacing, Radius, Motion.
+- Storybook pages: Colors (every `--color-*` token, light and dark side by side), Type, Spacing, Radius, Motion.
 - A global toolbar toggle for theme (light / dark) that sets `data-theme` on the root.
 - Text style components or classes: Display, Request, Title, Section, Body, Reading, Meta, Chip, with phone and desktop sizes from `docs/design-system.md` §3.
 - Icon set from §3 as React components (stroke 2, round caps).

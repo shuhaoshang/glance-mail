@@ -22,7 +22,7 @@ Everything in a brief is one of two things, and the user must always be able to 
 Rules:
 
 - **Quotation marks mean verbatim.** Never put quotation marks around text Glance wrote.
-- If an email contains an explicit request, show the request as a quote. If it does not (school notices, bills, system notifications), show a ✦ summary labelled “Glance’s summary · not the sender’s words”.
+- If an email contains an explicit request, show the request as a quote. If it does not (school notices, bills, system notifications), show a ✦ summary labeled “Glance’s summary · not the sender’s words”.
 - A judgment that draws on another email must link to that email.
 
 ## 2. Ranking
@@ -75,7 +75,7 @@ Rules:
 - **List rows are uniform.** Every item uses the same row and shows up to 2 fact chips (urgent first). The request may take two lines on desktop and phone, then an ellipsis; it is the most important text in the row (D27, D40).
 - **Detail views use a scene card** chosen by the email’s structure: deal, decision, approval, payment, mismatch, event, range, checklist. Emails with no stable structure use the text fallback: an underlined list of facts, no card.
 - Scene cards hold **only facts from the email**. Glance’s judgments stay in “Glance’s read”.
-- Inside a card, a value with a source has a dotted underline in its type colour; a value without one is plain text. See `docs/design-system.md` §5 for every type and when to use it.
+- Inside a card, a value with a source has a dotted underline in its type color; a value without one is plain text. See `docs/design-system.md` §5 for every type and when to use it.
 
 ## 5. Sources
 
@@ -91,11 +91,11 @@ Rules:
 - With one connected account, account labels are hidden.
 - With several, the coverage line shows the split (“Work 64 · Personal 8”), and **only items from the less common account carry a label**. Mark the exception, not the rule.
 - Per-account time rules are shown under the coverage line, named as a setting: “Quiet hours: work email hides after 7:00 PM”.
-- Account labels are outlined (white, 1 px ring), never filled. Filled grey belongs to fact pills, so a filled label would read as a fact.
+- Account labels are outlined (white, 1 px ring), never filled. Filled gray belongs to fact pills, so a filled label would read as a fact.
 
 ## 7. Tiers and naming
 
-| In code | On screen        | Behaviour                                         |
+| In code | On screen        | Behavior                                         |
 | ------- | ---------------- | ------------------------------------------------- |
 | Act     | **Needs you**    | Ranked list; one item selected                    |
 | Know    | **Good to know** | Short list; facts and ✦ judgments as in section 1 |
@@ -175,7 +175,7 @@ Motion only shows cause and effect; nothing moves for decoration.
 - **Source reveal:** the source panel fades in (200 ms), then the highlighter sweeps across the exact words left to right (480 ms), then the type ring appears (200 ms). The order says “these words, from this email”.
 - **Highlighter switch:** highlights draw in or wipe out the same way (360 ms).
 - **Done and snooze:** the row collapses (320 ms), the next item is selected, and the item reappears in the done list with Undo.
-- **Everything else:** 160 ms colour changes on hover, selection and tabs.
+- **Everything else:** 160 ms color changes on hover, selection and tabs.
 - Easing `cubic-bezier(0.2, 0.7, 0.2, 1)` for sweeps, `ease` for the rest. With reduced motion turned on, every animation finishes at once.
 
 ## 12. Formatting
@@ -197,7 +197,7 @@ US English throughout.
 
 ## 14. Demo controls
 
-The persona switcher and simulations live in a dark bar labelled “Demo controls · Not part of the product”, separate from the product interface.
+The persona switcher and simulations live in a dark bar labeled “Demo controls · Not part of the product”, separate from the product interface.
 
 ## 15. Not decided yet
 
