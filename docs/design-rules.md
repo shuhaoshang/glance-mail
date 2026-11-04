@@ -56,7 +56,8 @@ Color carries meaning. Hue says **what kind** of information something is; a sol
 | | `color.people.text` | `#1D4BAE` | Text on people tint |
 | Neutral | `color.bg` | `#F4F4F7` | Page background |
 | | `color.surface` | `#FFFFFF` | Cards |
-| | `color.surface.muted` | `#F0F0F4` | Fact pills, secondary surfaces |
+| | `color.surface.muted` | `#F7F7FA` | Panels inside cards: sources, scene cards, reasoning |
+| | `color.surface.sunken` | `#F0F0F4` | Fact chips, segmented controls, neutral buttons |
 | | `color.text` | `#16151C` | Primary text |
 | | `color.text.muted` | `#6A6875` | Secondary text |
 | | `color.border` | `#ECECF1` | Dividers |
@@ -132,7 +133,7 @@ Inter, with proportional figures. Tabular figures only where numbers must line u
 
 | Style | Size / line height / weight | Use |
 |---|---|---|
-| Display | 28 / 32 / 700, −0.025em (desktop 32 / 40) | Page greeting |
+| Display | 28 / 32 / 700, −0.03em (desktop 32 / 40) | Page greeting |
 | Request | 20 / 28 / 600, −0.015em | The ✦ summary or quoted request in detail view |
 | Title | 18 / 24 (phone), 20 / 28 (desktop) / 700 | Item name in detail view; always smaller than the request |
 | Section | 18 / 24 / 700 | Section headings, wordmark |

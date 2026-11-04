@@ -162,7 +162,7 @@ Each entry records one decision: what was decided, what else was considered, and
 
 ### D24 · One scale, two densities
 
-- **Decision:** Phone and desktop share one spacing scale. Desktop uses larger steps of it (gutter 32 instead of 16, greeting 40/48 instead of 28/32); it never adds new numbers. On the phone, what looks right may override the scale, but every exception is written into the rules with its reason.
+- **Decision:** Phone and desktop share one spacing scale. Desktop uses larger steps of it (gutter 32 instead of 16, greeting 32/40 instead of 28/32); it never adds new numbers. On the phone, what looks right may override the scale, but every exception is written into the rules with its reason.
 - **Considered:** Strict even-number rules on desktop only, with the phone free.
 - **Why:** Glance is one responsive web app, so the same component renders on both. Two rule sets would mean components switching values at breakpoints and two sets of tokens for Codex. The strict scale cost nothing on the phone: every screen still fit after the change.
 

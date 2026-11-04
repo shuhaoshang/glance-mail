@@ -93,6 +93,14 @@ docs/
 - **Not a single Chinese character** (or any other CJK character) may appear in the repository or on GitHub. CI checks the files (issue 01); check PR and issue text yourself before posting.
 - Background notes you may be given outside the repository stay outside it. Never commit them or quote them.
 
+## Authorship labels
+
+The pull requests and comments Codex writes are published from the designer's GitHub account, so they must be recognisable as Codex's own.
+
+- Start every pull request title and every comment, review reply and issue comment you write with `[Codex]`, for example `[Codex] feat(ds): add Storybook foundations`.
+- This applies to new work and to existing open and closed pull requests: add the prefix to their titles and to your own earlier comments.
+- Do not add the prefix to the designer's comments. Do not rewrite commit messages that are already merged.
+
 ## Git workflow
 
 - **Never commit directly to `main`.** All changes go through a pull request.
