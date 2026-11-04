@@ -1,0 +1,112 @@
+.bar {
+  display: inline-block;
+  max-inline-size: 100%;
+  block-size: var(--space-12);
+  background: var(--color-brand);
+  border-radius: var(--radius-highlight);
+}
+
+.square {
+  display: inline-block;
+  max-inline-size: 100%;
+  background: var(--color-brand-tint);
+  border: var(--border-hairline) solid var(--color-brand);
+}
+
+.tile,
+.border,
+.shadow {
+  display: inline-block;
+  inline-size: calc(var(--size-button) + var(--space-24));
+  max-inline-size: 100%;
+  block-size: var(--size-button);
+  background: var(--color-brand-tint);
+}
+
+.tile {
+  border: var(--border-hairline) solid var(--color-brand);
+}
+
+.border,
+.shadow {
+  border-radius: var(--radius-tile);
+}
+
+.shadow {
+  background: var(--color-surface);
+}
+
+.excerpt {
+  margin: var(--space-16) 0;
+  padding: var(--space-16);
+  border-inline-start: var(--border-selected) solid var(--color-money);
+  background: var(--color-surface-muted);
+  color: var(--color-text-body);
+  line-height: var(--line-height-reading);
+}
+
+.ink {
+  background: linear-gradient(var(--color-money-ink), var(--color-money-ink))
+    left / 100% 100% no-repeat;
+  border-radius: var(--radius-highlight);
+  box-shadow: inset 0 0 0 var(--border-selected) var(--color-money);
+}
+
+.excerpt[data-playing='true'] {
+  animation: reveal var(--duration-reveal) var(--ease-standard) both;
+}
+
+.excerpt[data-playing='true'] .ink {
+  animation:
+    sweep var(--duration-sweep) var(--ease-sweep) var(--duration-reveal) both,
+    ring var(--duration-reveal) var(--ease-standard)
+      calc(var(--duration-reveal) + var(--duration-sweep)) both;
+}
+
+.replay {
+  min-block-size: var(--size-touch);
+  padding: var(--space-8) var(--space-16);
+  border: var(--border-hairline) solid var(--color-border-strong);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface);
+  color: var(--color-brand-text);
+  font: inherit;
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+}
+
+.replay:hover {
+  background: var(--color-brand-tint);
+}
+
+.replay:focus-visible {
+  outline: var(--space-2) solid var(--color-brand);
+  outline-offset: var(--space-2);
+}
+
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes sweep {
+  from {
+    background-size: 0 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+
+@keyframes ring {
+  from {
+    box-shadow: inset 0 0 0 var(--border-selected) transparent;
+  }
+  to {
+    box-shadow: inset 0 0 0 var(--border-selected) var(--color-money);
+  }
+}

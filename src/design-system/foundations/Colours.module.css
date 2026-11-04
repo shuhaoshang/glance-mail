@@ -1,0 +1,40 @@
+.panel {
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+  padding: var(--gap-section) var(--gutter);
+  min-width: 0;
+}
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  margin-block-start: var(--space-16);
+}
+.table th,
+.table td {
+  text-align: start;
+  vertical-align: middle;
+  padding: var(--space-8) var(--space-4);
+  border-block-end: var(--border-hairline) solid var(--color-border);
+}
+.table tbody th {
+  font-weight: var(--font-weight-regular);
+}
+.table thead th {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
+.sample {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-8);
+}
+.swatch {
+  flex: none;
+  width: var(--size-avatar);
+  height: var(--size-avatar-small);
+  border-radius: var(--radius-highlight);
+  border: var(--border-hairline) solid var(--color-border-strong);
+}
