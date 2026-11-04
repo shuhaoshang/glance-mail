@@ -1,0 +1,29 @@
+.track {
+  display: inline-flex;
+  max-inline-size: 100%;
+  gap: var(--space-2);
+  padding: var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--color-surface-sunken);
+}
+.tab {
+  min-inline-size: 0;
+  min-block-size: var(--size-touch-compact);
+  padding: var(--space-8) var(--space-16);
+  border: 0;
+  border-radius: var(--radius-pill);
+  color: var(--color-text-muted);
+  background: transparent;
+  line-height: var(--line-height-14);
+  font-size: var(--font-size-14);
+  overflow-wrap: anywhere;
+}
+.tab[aria-selected='true'] {
+  --control-shadow: var(--shadow-tab);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow: var(--control-shadow);
+}
+.tab:disabled {
+  color: var(--color-icon-muted);
+}

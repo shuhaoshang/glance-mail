@@ -1,0 +1,16 @@
+.button {
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--size-touch);
+  block-size: var(--size-touch);
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: var(--color-text-secondary);
+}
+.compact {
+  inline-size: var(--size-touch-compact);
+  block-size: var(--size-touch-compact);
+}

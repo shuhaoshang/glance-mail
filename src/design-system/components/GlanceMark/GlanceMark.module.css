@@ -1,0 +1,16 @@
+.mark {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-4);
+  color: var(--color-brand-text);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  font-weight: var(--font-weight-semibold);
+}
+.star {
+  color: var(--color-brand);
+}
+.disclosure {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+}

@@ -5,7 +5,11 @@ import { mergeConfig } from 'vite';
 const config: StorybookConfig = {
   framework: '@storybook/react-vite',
   stories: ['../src/design-system/docs/*.mdx', '../src/**/*.stories.@(ts|tsx)'],
-  addons: ['@storybook/addon-docs', '@storybook/addon-themes'],
+  addons: [
+    '@storybook/addon-docs',
+    '@storybook/addon-themes',
+    'storybook-addon-pseudo-states',
+  ],
   managerHead: (head) =>
     (head ?? '') +
     '<style>' +

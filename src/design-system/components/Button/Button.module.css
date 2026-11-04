@@ -1,0 +1,37 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-block-size: var(--size-button);
+  padding: var(--space-12) var(--space-16);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-16);
+  text-decoration: none;
+}
+.primary {
+  padding-inline: var(--space-20);
+  background: var(--color-brand);
+  color: var(--color-on-brand);
+}
+.tint {
+  background: var(--color-brand-tint);
+  color: var(--color-brand-text);
+}
+.neutral {
+  background: var(--color-surface-sunken);
+  color: var(--color-text);
+}
+.text {
+  padding-inline: var(--space-8);
+  background: transparent;
+  color: var(--color-brand-text);
+}
+.compact {
+  min-block-size: var(--size-touch-compact);
+  padding-block: var(--space-8);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
