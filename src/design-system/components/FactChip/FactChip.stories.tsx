@@ -16,6 +16,14 @@ const meta = {
     },
   },
   args: { ...factSamples.money.fact },
+  play: async ({ canvas, args }) => {
+    const chip = canvas.getByText(args.label, { exact: true });
+    await expect(chip).not.toHaveAttribute('aria-label');
+    await expect(chip).toHaveTextContent(
+      args.kind + ': ' + args.label + (args.urgent ? ', urgent' : ''),
+    );
+    await expect(canvas.queryByRole('button')).not.toBeInTheDocument();
+  },
 } satisfies Meta<typeof FactChip>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -25,10 +33,4 @@ export const Time: Story = { args: { ...factSamples.money.item.facts[2] } };
 export const People: Story = { args: { ...factSamples.people.fact } };
 export const Urgent: Story = {
   args: { ...urgentFact },
-  play: async ({ canvas }) => {
-    await expect(
-      canvas.getByLabelText('time: ' + urgentFact.label + ', urgent'),
-    ).toBeVisible();
-    await expect(canvas.queryByRole('button')).not.toBeInTheDocument();
-  },
 };

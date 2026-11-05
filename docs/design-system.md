@@ -344,7 +344,7 @@ At most one panel is open in a SectionCard: a fact source or a judgment. Opening
 
 ### CollapsedGroup (Set aside)
 
-A card button: “31 set aside” plus a breakdown (“18 newsletters · 9 CC’d · 4 promotions”) and a chevron. It is selected while the Set aside view is open. It uses the same hover, pressed and selected fills as BriefRow.
+A card button: “31 set aside” plus a breakdown (“18 newsletters · 9 CC’d · 4 promotions”) and a chevron. It is selected while the Set aside view is open. It uses the same hover, pressed and selected fills as BriefRow. When selected, the category breakdown uses `--color-text-secondary` in the resting, hovered, and pressed states to preserve text contrast.
 
 ### SetAsideList
 
@@ -473,8 +473,8 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 - Sources open by click or Enter, never only on hover.
 - Screen-reader labels:
   - Fields read label, value and “Show where the email says so”.
-  - FactChips read type and value.
-  - Urgent chips include the word “urgent”.
+  - FactChips read type and value through visually hidden type text plus the visible value; static chip spans do not use `aria-label`.
+  - Urgent chips include visually hidden text with the word “urgent”.
 - Live regions:
   - The progress line (“2 of 5 done”) is announced when it changes.
   - The “2 new” row is announced when it appears.

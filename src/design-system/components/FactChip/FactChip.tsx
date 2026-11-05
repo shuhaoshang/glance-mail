@@ -14,10 +14,11 @@ export function FactChip({ kind, label, urgent = false }: FactChipProps) {
       className={[styles.chip, tones[kind], urgent && styles.urgent]
         .filter(Boolean)
         .join(' ')}
-      aria-label={kind + ': ' + label + (urgent ? ', urgent' : '')}
     >
+      <span className={styles.srOnly}>{kind + ': '}</span>
       <span className={styles.dot} aria-hidden="true" />
       {label}
+      {urgent && <span className={styles.srOnly}>, urgent</span>}
     </span>
   );
 }
