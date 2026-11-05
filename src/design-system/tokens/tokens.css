@@ -170,6 +170,7 @@
   /* ---------- Layout ---------- */
   --gutter: 16px;                   /* phone */
   --content-max: 1120px;
+  --content-narrow: 640px;
   --column-list: 416px;             /* desktop list column */
   --gap-section: 20px;              /* phone */
   --gap-column: 32px;
