@@ -13,6 +13,7 @@
 }
 .disabled {
   cursor: default;
+  color: var(--color-text-muted);
 }
 .input {
   position: absolute;
@@ -55,10 +56,22 @@
   );
 }
 .input:not(:disabled):hover + .track {
-  background: var(--color-text-muted);
+  background: var(--color-switch-off-hover);
+}
+.input:not(:disabled):active + .track {
+  background: var(--color-switch-off-pressed);
 }
 .input:checked:not(:disabled):hover + .track {
   background: var(--color-brand-hover);
+}
+.input:checked:not(:disabled):active + .track {
+  background: var(--color-brand-pressed);
+}
+.input:disabled + .track {
+  background: var(--color-surface-sunken);
+}
+.input:disabled + .track .knob {
+  background: var(--color-icon-muted);
 }
 .input:not(:disabled):focus-visible + .track {
   outline: var(--space-2) solid var(--color-brand);

@@ -22,7 +22,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '[Switch specification](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#switch). Press has no additional color override, and disabled retains its resting palette pending design review.',
+          '[Switch specification](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#switch). Off hover and press use theme-aware track tokens to preserve white-knob contrast. Disabled uses a sunken track, muted knob, and muted label.',
       },
     },
   },

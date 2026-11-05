@@ -41,6 +41,8 @@
   --color-sunken-hover: #E6E5EC;
   --color-sunken-pressed: #D9D8E0;
   --color-brand-text-hover: #3529B0;
+  --color-switch-off-hover: var(--color-text-muted);
+  --color-switch-off-pressed: var(--color-text-secondary);
 
   /* Field states follow the active fact palette. */
   --color-money-field-hover: var(--color-money-selected);
@@ -204,6 +206,8 @@
     --color-sunken-hover: #34333F;
     --color-sunken-pressed: #3B3A47;
     --color-brand-text-hover: #CFCBFF;
+    --color-switch-off-hover: #76748A;
+    --color-switch-off-pressed: #68667C;
     --color-urgent: #C2255C;
     --color-money: #E0B341;
     --color-money-text: #F0CB6B;
@@ -250,6 +254,8 @@
   --color-sunken-hover: #34333F;
   --color-sunken-pressed: #3B3A47;
   --color-brand-text-hover: #CFCBFF;
+  --color-switch-off-hover: #76748A;
+  --color-switch-off-pressed: #68667C;
   --color-urgent: #C2255C;
   --color-money: #E0B341;
   --color-money-text: #F0CB6B;

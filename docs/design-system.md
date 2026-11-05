@@ -52,6 +52,8 @@ All values come from `tokens.css`. The groups are:
 | `--color-sunken-hover` | `#E6E5EC` | `#34333F` | Neutral and icon button hover fill |
 | `--color-sunken-pressed` | `#D9D8E0` | `#3B3A47` | Neutral and icon button pressed fill |
 | `--color-brand-text-hover` | `#3529B0` | `#CFCBFF` | Text button hover and pressed ink |
+| `--color-switch-off-hover` | `var(--color-text-muted)` | `#76748A` | Switch off hover track |
+| `--color-switch-off-pressed` | `var(--color-text-secondary)` | `#68667C` | Switch off pressed track |
 | `--color-money-field-hover` | `var(--color-money-selected)` | `var(--color-money-selected)` | Money Field hover fill |
 | `--color-money-field-pressed` | `var(--color-money-tint)` | `var(--color-money-tint)` | Money Field pressed fill |
 | `--color-time-field-hover` | `var(--color-time-selected)` | `var(--color-time-selected)` | Time Field hover fill |
@@ -61,7 +63,7 @@ All values come from `tokens.css`. The groups are:
 | `--color-row-hover` | `var(--color-surface-muted)` | `var(--color-surface-muted)` | BriefRow and CollapsedGroup hover fill |
 | `--color-row-pressed` | `var(--color-surface-sunken)` | `var(--color-surface-sunken)` | BriefRow and CollapsedGroup pressed fill |
 
-Field and row aliases are declared once in `:root` and resolve against the active light or dark palette.
+Field and row aliases are declared once in `:root` and resolve against the active light or dark palette. Switch off-state tokens use light aliases and explicit overrides in both dark blocks to preserve contrast with the white knob.
 
 ### Enter motion
 
@@ -252,13 +254,16 @@ A 24 avatar (people tint, initial), followed by name and role.
 - Checked: `--color-brand` fill with an `--color-on-brand` check.
 - Hit area: 44 (`--size-touch`). Ticking is the main action in a checklist, so it gets the full touch target; the box stays 24.
 - Hover: unchecked fills with `--color-sunken-hover`; checked uses `--color-brand-hover`. Pressed: `--color-sunken-pressed` or `--color-brand-pressed`. No extra outline; the outline is for keyboard focus only.
+- Disabled: `--color-surface-sunken` box, `--color-icon-muted` ring and check, and `--color-text-muted` label. Native disabled behavior prevents toggling; inline Fields retain their own styling and remain operable.
 - Role: `checkbox`. `checked` and `onCheckedChange` are controlled by the caller. The `label` slot accepts inline Fields; their clicks do not toggle the checkbox. For a rich label, `aria-label` can supply its plain spoken text. The caller sets `completed` when the checklist is complete; its text is struck through while fact controls retain their own underline and remain operable.
 
 ### Switch
 
 - Track: `--size-switch-track-width` × `--size-switch-track-height` (36 × 20). Knob: `--size-switch-knob` (16), `--color-on-brand`.
 - On: `--color-brand`. Off: `--color-icon-muted`.
-- Hover: on uses `--color-brand-hover`; off uses `--color-text-muted`. The knob slides over `--duration-fast`.
+- Hover: on uses `--color-brand-hover`; off uses `--color-switch-off-hover`. Pressed: on uses `--color-brand-pressed`; off uses `--color-switch-off-pressed`. The off-track tokens keep the white knob contrast approximately 4.5:1 on hover and 5.6:1 on press in dark theme.
+- The knob slides over `--duration-fast`. Only `:focus-visible` draws an outline.
+- Disabled: `--color-surface-sunken` track, `--color-icon-muted` knob, and `--color-text-muted` label. The control cannot toggle and hover/press do not change its colors.
 - Hit area: 44, including the visible label.
 - Role: `switch`, with a native checkbox input and a visible text label. `checked` and `onCheckedChange` are controlled by the caller.
 

@@ -74,7 +74,7 @@ export const States: StoryObj<typeof meta> = {
   render: () => (
     <FoundationPage
       title="Control states"
-      description="Compare the specified states in both themes. Switch pressed and control disabled colors are awaiting a design decision."
+      description="Compare default, hover, pressed, keyboard focus, and disabled controls in both themes."
     >
       <div className={styles.states}>
         {['Default', 'Hover', 'Pressed', 'Focus', 'Disabled'].map((state) => (
@@ -119,8 +119,8 @@ export const States: StoryObj<typeof meta> = {
         ))}
       </div>
       <Text variant="meta">
-        Native disabled behavior is implemented. The disabled palette and
-        additional Switch press feedback are proposed in the PR.
+        Off switches use theme-aware hover and pressed colors. Disabled controls
+        use sunken fills and muted labels, checks, and knobs.
       </Text>
     </FoundationPage>
   ),

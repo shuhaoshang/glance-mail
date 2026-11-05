@@ -24,7 +24,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '[Checkbox specification](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#checkbox). The 24px box sits inside a native 44px input target. Disabled interaction is implemented; disabled colors await design review.',
+          '[Checkbox specification](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#checkbox). The 24px box sits inside a native 44px input target. Disabled uses the sunken box, muted ring/check, and muted label. Inline Fields remain independent.',
       },
     },
   },
