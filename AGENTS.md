@@ -119,7 +119,7 @@ The human reviewer is a designer. Write PR descriptions for a designer, not only
 
 ## Where to start
 
-Work through `docs/handoff/issues/` in the order given in `docs/handoff/README.md`: 01, 02, 17, then 03 to 16. Each file is one GitHub issue with acceptance criteria. Do one issue per PR unless the issue says otherwise.
+Work through `docs/handoff/issues/` in the order given in `docs/handoff/README.md`: 01, 02, 17, 03, 04, 05, 18, 06, 11, 07, 08, 09, 10, 12, 13, 14, 15, 16. Each file is one GitHub issue with acceptance criteria. Do one issue per PR unless the issue says otherwise.
 
 ## Definition of done
 

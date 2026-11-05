@@ -1,9 +1,16 @@
 # 07 · Scene cards: 8 types and the text fallback
 
-**Label:** `ds` · **Depends on:** 04
+**Label:** `ds` · **Depends on:** 04, 18
 
 ## Why
 Scene cards make the difference between formatted text and Glance visible: each email's facts in the shape of the email.
+
+## Decisions already made
+The designer approved these before the work started. They are written into `docs/design-system.md` §3 and §5.
+
+1. DateTile and Checkbox come from issue 18. The Checkbox hit area is 44 (D46).
+2. The mismatch card's ≠ uses `--color-urgent`.
+3. When every checklist step is ticked, use the Checkbox struck-through style from issue 18; inline fact values stay readable and tappable.
 
 ## What to build
 - `SceneCard` that renders `item.scene` by `type`: deal, decision, approval, payment, mismatch, event, range, checklist; `text` (no card, underlined list of facts).
@@ -13,6 +20,8 @@ Scene cards make the difference between formatted text and Glance visible: each 
 ## Acceptance criteria
 - [ ] A story per type using the real persona item that uses it (see the table in `docs/design-system.md` §5), plus one with a field selected and one in dark theme.
 - [ ] Unknown or missing `scene` renders the text fallback.
+- [ ] Every state in `docs/design-system.md` §5 has a story: default, one field selected, urgent header, long values, dark theme.
+- [ ] Anything the docs do not define is raised under **Open questions** with a proposal, not invented.
 - [ ] Matches `docs/screens/ds-components.png` (Scene cards section).
 - [ ] PR description follows `AGENTS.md` (What, Why, Design system impact, Screenshots, How to review, Open questions).
 

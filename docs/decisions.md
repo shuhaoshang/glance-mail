@@ -272,3 +272,33 @@ Each entry records one decision: what was decided, what else was considered, and
 - **Decision:** Storybook is themed as Glance, opens on an Introduction page, has a docs page for each category, and an autodocs page for every component. It is the one place to browse the design system.
 - **Considered:** A separate documentation website, like Material 3 or shadcn/ui; Storybook with its default look.
 - **Why:** Public design systems are browsed as documentation sites, and the default Storybook reads as a developer tool. A separate site would double the work and the content. A themed Storybook gives the same structure for about one issue of work, and engineers recognize it. A standalone site stays possible once the app is done, with the content already written.
+
+### D42 · Primitives are built before the screens that use them
+
+- **Decision:** A new issue 18 builds the remaining primitives (DateTile, Checkbox, Switch, ProgressBar, the outline Button) right after 05. The demo bar (11) moves up to follow 06, because Simulate reply (09) lives in it. The order is 05, 18, 06, 11, 07, 08, 09, 10, 12, 13, 14, 15, 16.
+- **Considered:** Building each primitive inside the first issue that needs it.
+- **Why:** The brief page needed ProgressBar from issue 13, scene cards needed DateTile and Checkbox from no issue at all, and 09 needed a button in a bar that did not exist yet. `AGENTS.md` already says a missing component gets its own PR first; the order now follows that rule instead of relying on each agent to notice.
+
+### D43 · Hover and press change color; outlines mean keyboard focus
+
+- **Decision:** Every interactive state is a color change from `tokens.css`: buttons, rows, fields, checkboxes and switches each have hover and pressed tokens. Only `:focus-visible` draws an outline. The `outline` Button's ring is its resting look, not a state.
+- **Considered:** A thin ring on hover and press, as the first build of the core primitives did.
+- **Why:** A ring makes a button look like a different variant, hover and press were hard to tell apart, and focus lost its distinct look. Naming the state colors as tokens also stops each component from borrowing border or text colors that mean something else.
+
+### D44 · The phone sheet behaves like a real sheet
+
+- **Decision:** The detail sheet slides up and down, closes with the close button, the scrim, Escape or a drag on the handle, and traps focus while open. After Done, Mark done, Snooze or Move to Set aside it closes and the brief shows the result; on desktop the panel moves to the next item.
+- **Considered:** A decorative handle; keeping the sheet open on the next item after an action.
+- **Why:** A handle that cannot be dragged is a dead control. Closing after an action lets Sarah see the done row and the new progress, which is the point of Close in her story (user flows, Sarah 5).
+
+### D45 · “Open in {app}” opens the real web inbox
+
+- **Decision:** The primary button links to the app's web inbox in a new tab: Gmail, Outlook or Yahoo Mail.
+- **Considered:** A link to `#`, as the first handoff allowed.
+- **Why:** A link that does nothing is a dead control, and the primary action must never be one. The demo has no real message to open, so the inbox is the honest destination.
+
+### D46 · Small controls keep a 44 px target
+
+- **Decision:** Controls that look small keep a hit area of at least 44 × 44 without changing their look: the small ReasonPill (24 tall) and the Checkbox (box 24). The Checkbox target grows from the earlier 40 to 44.
+- **Considered:** Making the pill 44 tall; keeping the Checkbox at 40.
+- **Why:** A 44-tall pill would outweigh the fact it explains, and ticking a step is the main action in a checklist. Extending the target keeps the visual hierarchy and meets the touch target rule in `design-rules.md` §13.

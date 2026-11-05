@@ -12,7 +12,7 @@ This folder is the work order for AI agents (Codex) and the checklist for the hu
 | Design system spec (components, scene cards, patterns)                    | `docs/design-system.md`                                    |
 | Tokens, light and dark                                                    | `src/design-system/tokens/tokens.css`                      |
 | Mock data for three personas                                              | `src/data/*.json` + `docs/data-model.md`                   |
-| Decision log (D1–D41)                                                     | `docs/decisions.md`                                        |
+| Decision log (D1–D46)                                                     | `docs/decisions.md`                                        |
 | Reference screens                                                         | `docs/screens/` (every flow step in `docs/screens/flows/`) |
 | Clickable prototypes                                                      | `docs/prototype/` (open `index.html` in a browser)         |
 | Issues, in order                                                          | `docs/handoff/issues.md` and `issues/`                     |
@@ -20,16 +20,17 @@ This folder is the work order for AI agents (Codex) and the checklist for the hu
 
 ## Order of work
 
-Issues 01 → 17, one PR each, in this order: 01, 02, **17**, then 03 → 16. 02–05 and 07 build the design system before any screen uses it (`AGENTS.md`: missing component → separate PR first); 17 turns Storybook into the system's documentation site as soon as the foundations exist.
+Issues 01 → 18, one PR each, in this order: 01, 02, 17, 03, 04, 05, **18**, 06, **11**, 07, 08, 09, 10, 12, 13, 14, 15, 16 (D42).
+
+- 02–05, 17 and 18 build the design system before any screen uses it (`AGENTS.md`: missing component → separate PR first). 18 adds the primitives the screens need: DateTile, Checkbox, Switch, ProgressBar and the outline Button.
+- 11 comes right after 06 because later issues add controls to the demo bar: Simulate reply (09) and the theme switch (14).
+- Every issue lists the **decisions already made** for it and the **tokens to add**. Anything else the docs do not define goes under Open questions, with a proposal.
 
 ```
-01 scaffold ─┬─ 02 foundations ─ 17 storybook docs ─ 03 primitives ─ 04 fact primitives ─┬─ 05 list composites ─ 06 brief page ─┬─ 08 detail ─┬─ 09 lifecycle
-             │                                                       └─ 07 scene cards ──────────────────────┘             ├─ 10 ask
-             │                                                                                     06 ─┬─ 11 demo bar      │
-             │                                                                                         ├─ 12 set aside     │
-             │                                                                                         ├─ 13 edge states   │
-             │                                                                                         └─ 14 dark theme    ├─ 15 a11y pass
-             │                                                                                                             └─ 16 e2e flows (also needs 12, 13)
+01 scaffold ─ 02 foundations ─ 17 storybook docs ─ 03 primitives ─ 04 fact primitives ─ 05 list composites ─ 18 remaining primitives
+                                                                                                                   │
+   ┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+   └─ 06 brief page ─ 11 demo bar ─ 07 scene cards ─ 08 detail ─ 09 lifecycle ─ 10 ask ─ 12 set aside ─ 13 edge states ─ 14 dark theme ─ 15 a11y pass ─ 16 e2e flows
 ```
 
 ## Creating the issues on GitHub

@@ -9,6 +9,8 @@ Accessibility is part of done; this pass checks the whole app end to end.
 - Keyboard: every action reachable, visible focus, Escape closes sheets and panels, focus returns to the row.
 - Screen readers: labels for icon buttons, fields, chips (“urgent” included), live region for progress and new mail.
 - Reduced motion verified on every animation.
+- Touch targets: every control is at least 44 × 44 on phone, including the small ReasonPill and the Checkbox (D46).
+- States: hover and press are color changes and only `:focus-visible` draws an outline (D43).
 - Lighthouse accessibility score ≥ 95 on desktop and mobile.
 
 ## Acceptance criteria
