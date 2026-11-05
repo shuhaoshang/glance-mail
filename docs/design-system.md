@@ -121,7 +121,7 @@ Hover and pressed use the interactive color tokens above and the 160 ms fast tra
 
 Disabled primary, tint, and neutral buttons use `--color-surface-sunken` with `--color-text-muted`. Disabled text buttons stay transparent with `--color-text-muted`. Any icons use `--color-icon-muted`. Disabled links follow the same variant rules. Hover and pressed do not add a ring; the outline marks keyboard focus.
 
-**Outline** (issue 18): `--color-surface` fill, a `--border-hairline` inset ring in `--color-border-strong`, `--color-text`, 14/20 medium, `compact` height 40. Hover fills with `--color-sunken-hover`, pressed with `--color-sunken-pressed`; the ring stays. Used for Snooze options, Ask suggestions and “Move to Set aside”. Disabled follows the filled-button rule.
+**Outline** (issue 18): `--color-surface` fill, a `--border-hairline` inset ring in `--color-border-strong`, `--color-text`, 14/20 medium, `compact` height 40. Hover fills with `--color-sunken-hover`, pressed with `--color-sunken-pressed`; the ring stays. Used for Snooze options, Ask suggestions and “Move to Set aside”. It defaults to `compact` when `size` is omitted. Disabled follows the filled-button rule.
 
 ### IconButton
 
@@ -240,7 +240,7 @@ The panel accepts `from`, `when`, `source` (`pre`, `hl`, `post`), and `kind`. Th
 
 ### DateTile
 
-A 56 × 56 tile: month on top (12/16, `--color-time-text`), day below (24/28 bold).
+A 56 × 56 tile: month on top (12/16, `--color-time-text`), day below (24/28 bold). The supplied calendar reference uses `--color-surface`, `--radius-panel-small`, and a `--border-hairline` inset ring in `--color-border-card`.
 
 ### Person
 
@@ -252,7 +252,7 @@ A 24 avatar (people tint, initial), followed by name and role.
 - Checked: `--color-brand` fill with an `--color-on-brand` check.
 - Hit area: 44 (`--size-touch`). Ticking is the main action in a checklist, so it gets the full touch target; the box stays 24.
 - Hover: unchecked fills with `--color-sunken-hover`; checked uses `--color-brand-hover`. Pressed: `--color-sunken-pressed` or `--color-brand-pressed`. No extra outline; the outline is for keyboard focus only.
-- Role: `checkbox`.
+- Role: `checkbox`. `checked` and `onCheckedChange` are controlled by the caller. The `label` slot accepts inline Fields; their clicks do not toggle the checkbox. For a rich label, `aria-label` can supply its plain spoken text. The caller sets `completed` when the checklist is complete; its text is struck through while fact controls retain their own underline and remain operable.
 
 ### Switch
 
@@ -260,7 +260,7 @@ A 24 avatar (people tint, initial), followed by name and role.
 - On: `--color-brand`. Off: `--color-icon-muted`.
 - Hover: on uses `--color-brand-hover`; off uses `--color-text-muted`. The knob slides over `--duration-fast`.
 - Hit area: 44, including the visible label.
-- Role: `switch`.
+- Role: `switch`, with a native checkbox input and a visible text label. `checked` and `onCheckedChange` are controlled by the caller.
 
 ### ProgressBar
 

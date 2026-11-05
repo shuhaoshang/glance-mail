@@ -1,0 +1,45 @@
+.stack {
+  display: grid;
+  gap: var(--space-16);
+}
+.sheet {
+  display: grid;
+  gap: var(--space-16);
+  padding: var(--space-24);
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+}
+.row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-16);
+}
+.states {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, calc(var(--size-touch) * 5)), 1fr)
+  );
+  gap: var(--space-16);
+}
+.specimen {
+  display: grid;
+  align-content: start;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  background: var(--color-surface);
+  border-radius: var(--radius-panel);
+}
+.specimen h2 {
+  margin: 0;
+}
+.narrow {
+  max-inline-size: calc(var(--size-touch) * 7);
+}
+.progress {
+  inline-size: var(--column-list);
+  max-inline-size: 100%;
+  display: grid;
+  gap: var(--space-8);
+}

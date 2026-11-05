@@ -9,7 +9,7 @@ import styles from './Button.module.css';
 
 interface Appearance {
   children: ReactNode;
-  variant?: 'primary' | 'tint' | 'neutral' | 'text';
+  variant?: 'primary' | 'tint' | 'neutral' | 'outline' | 'text';
   size?: 'default' | 'touch' | 'compact';
   leadingIcon?: IconName;
   trailingIcon?: IconName;
@@ -31,18 +31,19 @@ type ButtonProps = Appearance &
 export function Button({
   children,
   variant = 'primary',
-  size = 'default',
+  size,
   leadingIcon,
   trailingIcon,
   external,
   className,
   ...props
 }: ButtonProps) {
+  const resolvedSize = size ?? (variant === 'outline' ? 'compact' : 'default');
   const classes = [
     control.control,
     styles.button,
     styles[variant],
-    size !== 'default' && styles[size],
+    resolvedSize !== 'default' && styles[resolvedSize],
     className,
   ]
     .filter(Boolean)

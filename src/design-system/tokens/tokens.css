@@ -117,6 +117,11 @@
   --space-48: 48px;
 
   /* ---------- Sizes ---------- */
+  --size-checkbox: 24px;
+  --size-switch-track-width: 36px;
+  --size-switch-track-height: 20px;
+  --size-switch-knob: 16px;
+  --size-progress: 4px;
   --size-touch: 44px;
   --size-touch-compact: 40px;       /* inside toolbars and tab groups */
   --size-button: 48px;

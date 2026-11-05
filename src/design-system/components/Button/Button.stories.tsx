@@ -18,7 +18,7 @@ const meta = {
     },
     variant: {
       control: 'inline-radio',
-      options: ['primary', 'tint', 'neutral', 'text'],
+      options: ['primary', 'tint', 'neutral', 'outline', 'text'],
     },
     size: { control: 'inline-radio', options: ['default', 'touch', 'compact'] },
   },
@@ -68,5 +68,35 @@ export const DisabledExternalLink: Story = {
     await expect(link).not.toHaveAttribute('href');
     await userEvent.click(link);
     await expect(args.onClick).not.toHaveBeenCalled();
+  },
+};
+
+export const Outline: Story = {
+  args: { variant: 'outline', children: 'Snooze' },
+};
+export const OutlineHover: Story = {
+  ...Outline,
+  parameters: { pseudo: { hover: true } },
+};
+export const OutlinePressed: Story = {
+  ...Outline,
+  parameters: { pseudo: { active: true } },
+};
+export const OutlineFocus: Story = {
+  ...Outline,
+  parameters: { pseudo: { focusVisible: true } },
+};
+export const OutlineDisabled: Story = {
+  ...Outline,
+  args: { ...Outline.args, disabled: true },
+};
+export const OutlineKeyboard: Story = {
+  ...Outline,
+  play: async ({ canvas, args }) => {
+    const button = canvas.getByRole('button', { name: 'Snooze' });
+    await expect(button.getBoundingClientRect().height).toBe(40);
+    button.focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(args.onClick).toHaveBeenCalledOnce();
   },
 };
