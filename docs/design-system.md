@@ -41,6 +41,18 @@ All values come from `tokens.css`. The groups are:
 | Motion | `--duration-sweep`, `--ease-sweep`                            | Every duration becomes 1 ms under reduced motion.                                                       |
 | Layout | `--gutter`, `--column-list`, `--content-max`                  | Desktop (≥ 960 px) picks larger steps: one scale, two densities.                                        |
 
+### Interactive colors
+
+| Token | Light | Dark | Use |
+| --- | --- | --- | --- |
+| `--color-brand-hover` | `#4A3FD0` | `#5A4EE0` | Primary button hover fill |
+| `--color-brand-pressed` | `#3F35B8` | `#5045CC` | Primary button pressed fill |
+| `--color-brand-tint-hover` | `#E3E0FB` | `#322D5E` | Tint button hover fill |
+| `--color-brand-tint-pressed` | `#D8D4F8` | `#3B356E` | Tint button pressed fill |
+| `--color-sunken-hover` | `#E6E5EC` | `#34333F` | Neutral and icon button hover fill |
+| `--color-sunken-pressed` | `#D9D8E0` | `#3B3A47` | Neutral and icon button pressed fill |
+| `--color-brand-text-hover` | `#3529B0` | `#CFCBFF` | Text button hover and pressed ink |
+
 If a component needs a value that is not a token, **stop and ask in the PR**. Do not add it inline.
 
 ---
@@ -73,9 +85,15 @@ Text styles are utility components or CSS classes, not one-off font sizes:
 
 **States:** default, hover, focus-visible (2 px brand outline, 2 px offset), pressed, disabled.
 
+Hover and pressed use the interactive color tokens above and the 160 ms fast transition. Tint buttons keep `--color-brand-text` in both states; neutral buttons keep `--color-text`. Text buttons stay transparent and use `--color-brand-text-hover` for both hover and pressed.
+
+Disabled primary, tint, and neutral buttons use `--color-surface-sunken` with `--color-text-muted`. Disabled text buttons stay transparent with `--color-text-muted`. Any icons use `--color-icon-muted`. Disabled links follow the same variant rules. Hover and pressed do not add a ring; the outline marks keyboard focus.
+
 ### IconButton
 
 44 × 44 hit area (40 compact) around a 16–20 icon. `aria-label` is required.
+
+The background is transparent at rest. Hover shows a `--color-sunken-hover` circle, and pressed uses `--color-sunken-pressed`. Disabled stays transparent with `--color-icon-muted`. The focus-visible outline follows Button.
 
 ### SegmentedControl
 

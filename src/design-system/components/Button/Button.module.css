@@ -15,35 +15,31 @@
   padding-inline: var(--space-20);
   --control-fill: var(--color-brand);
   --control-ink: var(--color-on-brand);
-  /* The palette supplies one darker brand fill for hover and press. */
-  --hover-fill: light-dark(var(--color-brand-text), var(--color-brand-tint));
+  --hover-fill: var(--color-brand-hover);
+  --pressed-fill: var(--color-brand-pressed);
 }
 .tint {
   --control-fill: var(--color-brand-tint);
   --control-ink: var(--color-brand-text);
-  --pressed-ink: light-dark(var(--color-brand-text), var(--color-text-muted));
+  --hover-fill: var(--color-brand-tint-hover);
+  --pressed-fill: var(--color-brand-tint-pressed);
 }
 .neutral {
   --control-fill: var(--color-surface-sunken);
   --control-ink: var(--color-text);
-  --pressed-ink: light-dark(var(--color-text), var(--color-text-body));
+  --hover-fill: var(--color-sunken-hover);
+  --pressed-fill: var(--color-sunken-pressed);
 }
+.primary,
 .tint,
 .neutral {
-  --hover-fill: light-dark(
-    var(--color-border-card),
-    var(--color-surface-muted)
-  );
-  --pressed-fill: light-dark(
-    var(--color-border-strong),
-    var(--color-surface-muted)
-  );
+  --disabled-fill: var(--color-surface-sunken);
 }
 .text {
   padding-inline: var(--space-8);
   --control-ink: var(--color-brand-text);
-  --hover-ink: light-dark(var(--color-text-secondary), var(--color-text-muted));
-  --pressed-ink: light-dark(var(--color-text-body), var(--color-text-muted));
+  --hover-ink: var(--color-brand-text-hover);
+  --pressed-ink: var(--color-brand-text-hover);
 }
 .touch {
   min-block-size: var(--size-touch);
