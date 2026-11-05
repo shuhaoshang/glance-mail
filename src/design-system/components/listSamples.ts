@@ -1,0 +1,11 @@
+import { getPersona } from '../../data';
+export const maya = getPersona('maya');
+export const sarah = getPersona('sarah');
+export const daniel = getPersona('daniel');
+export const personas = [maya, daniel, sarah];
+const suppliedNew = maya.items.find((item) => item.isNew);
+if (!suppliedNew) throw new Error('Missing new-mail example.');
+export const newItem = suppliedNew;
+const suppliedUpsell = maya.goodToKnow.find((item) => item.judgment);
+if (!suppliedUpsell?.judgment) throw new Error('Missing judgment example.');
+export const upsell = { ...suppliedUpsell, judgment: suppliedUpsell.judgment };

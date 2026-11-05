@@ -1,0 +1,48 @@
+.page {
+  display: grid;
+  gap: var(--space-24);
+}
+.columns {
+  max-inline-size: calc(var(--column-list) * 2 + var(--gap-column));
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--column-list)), 1fr)
+  );
+  align-items: start;
+  gap: var(--gap-column);
+}
+.stack {
+  display: grid;
+  gap: var(--space-24);
+}
+.list {
+  max-inline-size: var(--column-list);
+  inline-size: 100%;
+}
+.states {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--column-list)), 1fr)
+  );
+  gap: var(--space-24);
+  align-items: start;
+}
+.specimen {
+  display: grid;
+  gap: var(--space-8);
+}
+.specimen h2 {
+  margin: 0;
+}
+.readout {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}

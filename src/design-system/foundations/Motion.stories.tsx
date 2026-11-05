@@ -14,6 +14,7 @@ const meta = {
 export default meta;
 
 const uses: Record<string, string> = {
+  '--duration-enter': 'Rows and content appear',
   '--duration-fast': 'Hover, selection and tabs',
   '--duration-reveal': 'Panels appear',
   '--duration-collapse': 'Done and snoozed rows collapse',

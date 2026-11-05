@@ -47,6 +47,12 @@ export const glyphs = {
   external: (
     <path d="M14 5h5v5M19 5l-8 8M18 14v4a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4" />
   ),
+  'tray-arrow': (
+    <>
+      <path d="M4 14h4l2 3h4l2-3h4M5 5H4l-2 9v6h20v-6l-2-9h-1" />
+      <path d="M12 3v9m-3-3 3 3 3-3" />
+    </>
+  ),
   arrow: <path d="M5 12h14M13 6l6 6-6 6" />,
   moon: <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" />,
   lock: (

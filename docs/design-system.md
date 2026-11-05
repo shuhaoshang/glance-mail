@@ -171,6 +171,8 @@ The ✦ judgment trigger: an outlined brand pill with the ✦ glyph and the labe
 - Both: `--color-brand-text` on `--color-surface`, with a `--border-selected` inset ring in `--color-brand`.
 - Hover fills with `--color-brand-tint`; pressed with `--color-brand-tint-hover`. While expanded (`aria-expanded="true"`) it keeps `--color-brand-tint`.
 
+Both ReasonPill sizes expose a 44 × 44 button target while reserving only the visible pill height in the row layout. The visible sizes remain 24 and 40.
+
 ### Field
 
 A value from the email. This is the building block of every scene card.
@@ -188,6 +190,8 @@ A value from the email. This is the building block of every scene card.
 - The value has a 2 px dotted underline in the fact's type color, offset 6.
 - When selected, the value is inked with that type's `-ink` color, and the SourcePanel opens below the card.
 - `aria-label` reads as “Contract: $48,000/yr. Show where the email says so”.
+
+In sentence content such as KnowRow, `inline` keeps the surrounding type size, line height, and weight while preserving the Field interaction and accessibility behavior.
 
 **Without a fact:** the field is plain text. It is not focusable, and it has no underline.
 

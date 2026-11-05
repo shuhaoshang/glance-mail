@@ -1,0 +1,90 @@
+import type { Item, Account } from '../../../data/types';
+import { FactChip } from '../FactChip/FactChip';
+import { AccountLabel } from '../AccountLabel/AccountLabel';
+import { Badge } from '../Badge/Badge';
+import { GlanceMark } from '../GlanceMark/GlanceMark';
+import { Icon } from '../Icon/Icon';
+import { useDesktopLayout } from '../useDesktopLayout';
+import control from '../Control.module.css';
+import row from '../ListRow.module.css';
+import motion from '../ListMotion.module.css';
+
+interface BriefRowProps {
+  item: Item;
+  rank: number;
+  account?: Account;
+  selected?: boolean;
+  leaving?: boolean;
+  onSelect: (itemId: string) => void;
+  onLeaveComplete?: () => void;
+}
+export function BriefRow({
+  item,
+  rank,
+  account,
+  selected = false,
+  leaving = false,
+  onSelect,
+  onLeaveComplete,
+}: BriefRowProps) {
+  const desktop = useDesktopLayout();
+  // Keep the supplied first two facts; order only that pair by urgency.
+  const facts = item.facts
+    .slice(0, 2)
+    .map((fact, index) => ({ fact, index }))
+    .sort(
+      (a, b) =>
+        Number(b.fact.urgent) - Number(a.fact.urgent) || a.index - b.index,
+    );
+  return (
+    <div
+      role="listitem"
+      inert={leaving}
+      className={[
+        motion.shell,
+        item.isNew && motion.enter,
+        leaving && motion.leaving,
+      ]
+        .filter(Boolean)
+        .join(' ')}
+      onAnimationEnd={(event) => {
+        if (leaving && event.target === event.currentTarget)
+          onLeaveComplete?.();
+      }}
+    >
+      <div className={motion.content}>
+        <button
+          type="button"
+          aria-pressed={selected}
+          onClick={() => onSelect(item.id)}
+          className={[control.control, row.button, selected && row.selected]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          <span className={row.rank}>{rank}</span>
+          <span className={row.content}>
+            <span className={row.heading}>
+              <span className={row.name}>{item.name}</span>
+              {account && <AccountLabel account={account} />}
+              {item.isNew && <Badge />}
+            </span>
+            <span className={row.request}>
+              {item.request.type === 'summary' && (
+                <>
+                  <GlanceMark />{' '}
+                </>
+              )}
+              {item.request.text}
+            </span>
+            <span className={row.facts}>
+              {facts.map(({ fact }) => (
+                <FactChip key={fact.id} {...fact} />
+              ))}
+            </span>
+          </span>
+          {!desktop && <Icon name="chevron" className={row.chevron} />}
+        </button>
+      </div>
+    </div>
+  );
+}

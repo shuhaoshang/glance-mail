@@ -1,0 +1,15 @@
+.card {
+  padding: var(--space-20);
+  border-radius: var(--radius-card);
+  align-items: center;
+}
+.breakdown {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  font-weight: var(--font-weight-regular);
+}
+
+.card:not([aria-pressed='true']) {
+  --control-fill: var(--color-surface);
+}

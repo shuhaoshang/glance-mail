@@ -1,0 +1,55 @@
+.row + .row {
+  border-block-start: var(--border-hairline) solid var(--color-border);
+}
+.main {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-12);
+  padding: var(--space-12);
+}
+.tile {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--size-tile);
+  block-size: var(--size-tile);
+  border-radius: var(--radius-tile);
+}
+.money {
+  background: var(--color-money-tint);
+  color: var(--color-money-text);
+}
+.time {
+  background: var(--color-time-tint);
+  color: var(--color-time-text);
+}
+.people {
+  background: var(--color-people-tint);
+  color: var(--color-people-text);
+}
+.neutral {
+  background: var(--color-surface-sunken);
+  color: var(--color-text-secondary);
+}
+.text {
+  flex: 1;
+  min-inline-size: 0;
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  overflow-wrap: anywhere;
+}
+.text strong {
+  font-weight: var(--font-weight-semibold);
+}
+.disclosure {
+  margin: 0 var(--space-12) var(--space-12);
+}
+.read {
+  margin-block-end: var(--space-12);
+}
+.moved {
+  color: var(--color-text-muted);
+  display: block;
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+}
