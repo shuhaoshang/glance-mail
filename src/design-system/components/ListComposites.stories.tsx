@@ -1,4 +1,4 @@
-import { fn } from 'storybook/test';
+import { expect, fn, userEvent } from 'storybook/test';
 import { FoundationPage } from '../foundations/catalog';
 import { SectionCard } from './SectionCard/SectionCard';
 import { BriefRow } from './BriefRow/BriefRow';
@@ -76,4 +76,44 @@ export const States: Story = {
       </div>
     </FoundationPage>
   ),
+};
+
+export const AdjacentRowFocus: Story = {
+  parameters: {
+    pseudo: {
+      focusVisible: '[role="listitem"]:nth-child(2) button',
+      hover: '[role="listitem"]:nth-child(3) button',
+    },
+  },
+  render: () => (
+    <FoundationPage
+      title="Adjacent row focus"
+      description="The first row is selected, the second has keyboard focus, and the third is hovered. The focus outline stays complete above both neighbors."
+    >
+      <div className={styles.list}>
+        <SectionCard title="Needs you" count={3}>
+          {maya.items
+            .filter((item) => !item.isNew)
+            .slice(0, 3)
+            .map((item, index) => (
+              <BriefRow
+                key={item.id}
+                item={item}
+                rank={index + 1}
+                selected={index === 0}
+                onSelect={fn()}
+              />
+            ))}
+        </SectionCard>
+      </div>
+    </FoundationPage>
+  ),
+  play: async ({ canvas }) => {
+    const rows = canvas.getAllByRole('button');
+    await expect(rows).toHaveLength(3);
+    await expect(rows[0]).toHaveAttribute('aria-pressed', 'true');
+    rows[0].focus();
+    await userEvent.tab();
+    await expect(rows[1]).toHaveFocus();
+  },
 };

@@ -74,6 +74,6 @@
   background: var(--color-icon-muted);
 }
 .input:not(:disabled):focus-visible + .track {
-  outline: var(--space-2) solid var(--color-brand);
-  outline-offset: var(--space-2);
+  outline: var(--focus-ring-width) solid var(--color-brand);
+  outline-offset: var(--focus-ring-offset);
 }
