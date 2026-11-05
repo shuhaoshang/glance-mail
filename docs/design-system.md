@@ -147,6 +147,11 @@ A value from the email. This is the building block of every scene card.
 
 **Without a fact:** the field is plain text. It is not focusable, and it has no underline.
 
+The enclosing item resolves the fact ID and supplies its `kind` plus `onSelect(factId)`. `selected` is controlled by that item, and `sourcePanelId` links the trigger to its source region. Enter or Space opens the source; closing the connected example restores focus to the field.
+
+Keyboard focus uses the same 2 px brand outline and 2 px offset as the other primitives. Hover and pressed keep the field's existing appearance until fact-specific interaction colors are approved; the Interactive colors table currently defines button states only.
+
+
 ### Highlight
 
 Inline ink on words in a source or an email.
@@ -159,6 +164,9 @@ Inline ink on words in a source or an email.
 
 Text that wraps keeps the ink on every line (`box-decoration-break: clone`). Short facts do not wrap.
 
+`wrap` defaults to false for short facts; set it for source passages that can span lines. The ink and the inset `--border-selected` ring are cloned on every line. `animate` sweeps the ink and, when selected, reveals the ring afterward. Reduced motion shows the completed ink and ring immediately.
+
+
 ### SourcePanel
 
 - **Header:** “Source · {sender} · {date}”, an “Open email” text button, and a close IconButton.
@@ -167,6 +175,9 @@ Text that wraps keeps the ink on every line (`box-decoration-break: clone`). Sho
   1. The panel fades in (200 ms).
   2. The ink sweeps across the words left to right (480 ms).
   3. The ring appears (200 ms).
+
+The panel accepts `from`, `when`, `source` (`pre`, `hl`, `post`), and `kind`. The caller handles `onOpenEmail` and `onClose`; the primitive does not choose an email app or a mobile sheet layout. `animate` defaults to true. Remount the panel to replay the entrance; the Storybook examples provide **Replay source reveal**. With reduced motion, all three stages appear immediately.
+
 
 ### ReasonPanel (“Glance’s read”)
 

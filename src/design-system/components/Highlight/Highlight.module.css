@@ -1,0 +1,48 @@
+.highlight {
+  padding: var(--space-2);
+  border-radius: var(--radius-highlight);
+  background: linear-gradient(var(--fact-ink), var(--fact-ink)) left / 100% 100%
+    no-repeat;
+  color: inherit;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}
+.nowrap {
+  white-space: nowrap;
+}
+.selected {
+  box-shadow: inset 0 0 0 var(--border-selected) var(--fact-color);
+}
+.animate {
+  animation: sweep var(--duration-sweep) var(--ease-sweep)
+    var(--highlight-delay, 0s) both;
+}
+.animate.selected {
+  animation:
+    sweep var(--duration-sweep) var(--ease-sweep) var(--highlight-delay, 0s)
+      both,
+    ring var(--duration-reveal) var(--ease-standard)
+      calc(var(--highlight-delay, 0s) + var(--duration-sweep)) both;
+}
+@keyframes sweep {
+  from {
+    background-size: 0 100%;
+  }
+  to {
+    background-size: 100% 100%;
+  }
+}
+@keyframes ring {
+  from {
+    box-shadow: inset 0 0 0 var(--border-selected) transparent;
+  }
+  to {
+    box-shadow: inset 0 0 0 var(--border-selected) var(--fact-color);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate,
+  .animate.selected {
+    animation: none;
+  }
+}

@@ -1,0 +1,41 @@
+.panel {
+  display: grid;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  border-radius: var(--radius-panel-small);
+  background: var(--color-surface-muted);
+  --highlight-delay: var(--duration-reveal);
+}
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-8);
+}
+.metadata {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.actions {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  flex: none;
+}
+.reveal {
+  animation: reveal var(--duration-reveal) var(--ease-standard) both;
+}
+@keyframes reveal {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    animation: none;
+  }
+}

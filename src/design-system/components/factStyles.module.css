@@ -1,0 +1,16 @@
+.money {
+  --fact-color: var(--color-money);
+  --fact-ink: var(--color-money-ink);
+}
+.time {
+  --fact-color: var(--color-time);
+  --fact-ink: var(--color-time-ink);
+}
+.people {
+  --fact-color: var(--color-people);
+  --fact-ink: var(--color-people-ink);
+}
+.judgment {
+  --fact-color: var(--color-brand);
+  --fact-ink: var(--color-judgment-ink);
+}
