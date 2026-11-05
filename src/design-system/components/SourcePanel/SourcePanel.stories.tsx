@@ -150,3 +150,14 @@ export const CloseAndReplay: Story = {
     });
   },
 };
+
+export const HeaderAlignment: Story = {
+  render: (args) => (
+    <div className={styles.example}>
+      <PanelExample {...args} />
+      <div className={styles.narrow}>
+        <PanelExample {...args} />
+      </div>
+    </div>
+  ),
+};

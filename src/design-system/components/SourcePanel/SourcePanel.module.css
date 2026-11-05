@@ -9,13 +9,10 @@
 .header {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
+  align-items: first baseline;
   gap: var(--space-8);
 }
 .metadata {
-  display: flex;
-  align-items: center;
-  min-block-size: var(--size-touch-compact);
   min-inline-size: 0;
   overflow-wrap: anywhere;
 }

@@ -1,0 +1,25 @@
+.tile {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  inline-size: var(--size-date-tile);
+  block-size: var(--size-date-tile);
+  border-radius: var(--radius-panel-small);
+  background: var(--color-surface);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--color-border-card);
+  color: var(--color-text);
+  font-family: var(--font-family);
+}
+.month {
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-time-text);
+}
+.day {
+  font-size: var(--font-size-24);
+  line-height: var(--line-height-24);
+  font-weight: var(--font-weight-bold);
+}
