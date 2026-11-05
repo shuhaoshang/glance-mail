@@ -1,0 +1,29 @@
+.section {
+  display: grid;
+  gap: var(--space-12);
+  min-inline-size: 0;
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+  padding-inline: var(--space-4);
+}
+.count {
+  color: var(--color-text-muted);
+}
+.right {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+}
+.card {
+  padding-block: var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-card);
+}
+.desktop {
+  padding: var(--space-8);
+}

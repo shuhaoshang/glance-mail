@@ -50,6 +50,9 @@
   --color-people-field-hover: var(--color-people-selected);
   --color-people-field-pressed: var(--color-people-tint);
 
+  --color-row-hover: var(--color-surface-muted);
+  --color-row-pressed: var(--color-surface-sunken);
+
   /* ---------- Color: urgency (independent of type) ---------- */
   --color-urgent: #C2255C;          /* solid chip = urgent */
   --color-on-urgent: #FFFFFF;
@@ -144,6 +147,7 @@
   --shadow-tab: 0 1px 2px rgba(22, 21, 28, 0.12);
 
   /* ---------- Motion ---------- */
+  --duration-enter: 240ms;          /* rows and content enter */
   --duration-fast: 160ms;           /* hover, selection, tabs */
   --duration-reveal: 200ms;         /* panels appear */
   --duration-collapse: 320ms;       /* done and snooze rows */
@@ -263,6 +267,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   :root {
+    --duration-enter: 1ms;
     --duration-fast: 1ms;
     --duration-reveal: 1ms;
     --duration-collapse: 1ms;

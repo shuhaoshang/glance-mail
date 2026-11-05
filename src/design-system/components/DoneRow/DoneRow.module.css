@@ -1,0 +1,30 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-4) var(--space-12);
+  border-block-start: var(--border-hairline) solid var(--color-border);
+}
+.text {
+  min-inline-size: 0;
+  flex: 1;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
+.text strong {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+.done {
+  color: var(--color-on-brand);
+  background: var(--color-brand);
+  border-radius: var(--radius-pill);
+  inline-size: var(--size-icon);
+  block-size: var(--size-icon);
+  flex: none;
+}
+.muted {
+  color: var(--color-icon-muted);
+  flex: none;
+}

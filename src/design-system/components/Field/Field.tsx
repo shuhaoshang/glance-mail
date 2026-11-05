@@ -9,6 +9,7 @@ interface Appearance {
   value: string;
   size?: 'small' | 'default' | 'large';
   selected?: boolean;
+  inline?: boolean;
 }
 
 type FieldProps = Appearance &
@@ -34,6 +35,7 @@ export function Field({
   value,
   size = 'default',
   selected = false,
+  inline = false,
   ref: buttonRef,
   ...source
 }: FieldProps) {
@@ -48,7 +50,11 @@ export function Field({
     .join(' ');
 
   return (
-    <span className={styles.field}>
+    <span
+      className={[styles.field, inline && styles.inline]
+        .filter(Boolean)
+        .join(' ')}
+    >
       {label && <Text variant="meta">{label}</Text>}
       {source.fact !== undefined ? (
         <button

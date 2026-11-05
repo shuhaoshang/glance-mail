@@ -51,3 +51,12 @@
   background: var(--fact-ink);
   border-radius: var(--radius-highlight);
 }
+
+.inline {
+  display: inline;
+}
+.inline .value {
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: inherit;
+}

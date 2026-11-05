@@ -1,3 +1,4 @@
+import { getPersona } from '../../../data';
 import { FoundationPage } from '../../foundations/catalog';
 import styles from '../FactExamples.module.css';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -27,6 +28,7 @@ const meta = {
     selected: false,
   },
   argTypes: {
+    inline: { control: false },
     size: { control: 'inline-radio', options: ['small', 'default', 'large'] },
     label: { control: false },
     value: { control: false },
@@ -134,5 +136,30 @@ export const States: Story = {
         </section>
       ))}
     </FoundationPage>
+  ),
+};
+
+export const Inline: Story = {
+  render: () => (
+    <span>
+      {getPersona('maya').goodToKnow[0].title}
+      {
+        getPersona('maya').goodToKnow[0].text.split(
+          getPersona('maya').goodToKnow[0].fact.value,
+        )[0]
+      }
+      <Field
+        value={getPersona('maya').goodToKnow[0].fact.value}
+        fact="discount"
+        kind="money"
+        inline
+        onSelect={fn()}
+      />
+      {
+        getPersona('maya').goodToKnow[0].text.split(
+          getPersona('maya').goodToKnow[0].fact.value,
+        )[1]
+      }
+    </span>
   ),
 };

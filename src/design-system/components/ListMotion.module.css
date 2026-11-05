@@ -1,0 +1,36 @@
+.shell {
+  display: grid;
+  grid-template-rows: 1fr;
+}
+.content {
+  min-block-size: 0;
+}
+.enter {
+  animation: enter var(--duration-enter) var(--ease-standard) both;
+}
+.leaving {
+  animation: collapse var(--duration-collapse) var(--ease-standard) both;
+}
+.leaving .content {
+  overflow: hidden;
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-4)));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes collapse {
+  from {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+  to {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+}
