@@ -14,7 +14,7 @@ import { itemViews } from './SegmentedControl/detailExampleData';
 import styles from './CorePrimitives.stories.module.css';
 
 const meta = {
-  title: 'Primitives/Core primitives',
+  title: 'Primitives/Gallery: Controls and labels',
   tags: ['!autodocs'],
   parameters: { layout: 'fullscreen' },
 } satisfies Meta;
@@ -26,7 +26,7 @@ function Gallery() {
   const [view, setView] = useState('details');
   return (
     <FoundationPage
-      title="Core primitives"
+      title="Controls and labels"
       description="Try the buttons and move between item views using the arrow keys."
     >
       <div className={styles.sheet}>

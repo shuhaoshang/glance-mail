@@ -77,6 +77,7 @@ docs/
    - The feature PR waits until the component PR is reviewed and merged.
 4. **Every component has stories** for all meaningful states: default, hover, focus, disabled, loading, empty, error (as applicable).
 5. **Accessibility is part of done**: semantic HTML, visible focus states, keyboard support, WCAG AA color contrast, labels for icon-only buttons.
+6. **State tokens, never invented states (D43).** Hover, pressed, and disabled styling use the documented state tokens. If the specification does not define a state, do not invent it; put a concrete proposal under **Open questions** in the PR and wait for the designer to confirm it.
 
 ## Product rules that are easy to get wrong
 

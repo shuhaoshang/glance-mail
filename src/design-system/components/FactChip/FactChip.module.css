@@ -27,3 +27,14 @@
 .urgent .dot {
   background: var(--color-on-urgent);
 }
+.srOnly {
+  position: absolute;
+  inline-size: var(--border-hairline);
+  block-size: var(--border-hairline);
+  padding: 0;
+  margin: calc(-1 * var(--border-hairline));
+  border: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

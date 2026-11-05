@@ -21,8 +21,10 @@
   );
 }
 .control:focus-visible {
-  outline: var(--space-2) solid var(--color-brand);
-  outline-offset: var(--space-2);
+  position: relative;
+  z-index: 1;
+  outline: var(--focus-ring-width) solid var(--color-brand);
+  outline-offset: var(--focus-ring-offset);
 }
 .control:disabled,
 .control[aria-disabled='true'] {

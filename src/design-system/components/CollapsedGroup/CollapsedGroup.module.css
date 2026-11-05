@@ -13,3 +13,6 @@
 .card:not([aria-pressed='true']) {
   --control-fill: var(--color-surface);
 }
+.card[aria-pressed='true'] .breakdown {
+  color: var(--color-text-secondary);
+}

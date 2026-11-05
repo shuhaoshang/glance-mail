@@ -30,7 +30,3 @@
   --pressed-ink: var(--color-text);
   box-shadow: var(--shadow-tab);
 }
-.tab:focus-visible {
-  position: relative;
-  z-index: 1;
-}

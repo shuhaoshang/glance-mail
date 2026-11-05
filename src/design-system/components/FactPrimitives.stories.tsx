@@ -9,7 +9,7 @@ import { evidence, factSamples, plainField, urgentFact } from './factSamples';
 import styles from './FactExamples.module.css';
 
 const meta = {
-  title: 'Primitives/Fact primitives',
+  title: 'Primitives/Gallery: Facts and sources',
   tags: ['!autodocs'],
   parameters: {
     layout: 'fullscreen',
@@ -25,7 +25,7 @@ export default meta;
 export const Overview: StoryObj<typeof meta> = {
   render: () => (
     <FoundationPage
-      title="Fact primitives"
+      title="Facts and sources"
       description="Scan a fact, open its source, and verify the exact words. Examples use Maya's and Sarah's emails."
     >
       <section className={styles.sheet}>

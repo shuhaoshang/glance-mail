@@ -20,7 +20,7 @@ import {
 } from './remainingSamples';
 import styles from './RemainingExamples.module.css';
 const meta = {
-  title: 'Primitives/Remaining primitives',
+  title: 'Primitives/Gallery: Dates, checklists and progress',
   tags: ['!autodocs'],
   parameters: { layout: 'fullscreen' },
 } satisfies Meta;
@@ -28,7 +28,7 @@ export default meta;
 export const Overview: StoryObj<typeof meta> = {
   render: () => (
     <FoundationPage
-      title="Remaining primitives"
+      title="Dates, checklists and progress"
       description="Dates, checklist controls, the highlighter switch, progress, and the outline action. Examples use the supplied persona data."
     >
       <section className={styles.sheet}>

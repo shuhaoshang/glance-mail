@@ -38,6 +38,7 @@ All values come from `tokens.css`. The groups are:
 | Size   | `--size-touch`, `--size-button`, `--size-dot`                 | Touch targets 44 (40 inside toolbars).                                                                  |
 | Radius | `--radius-highlight` … `--radius-pill`                        | 4 · 8 · 12 · 16 · 20 · 24 · 999                                                                         |
 | Border | `--border-hairline`, `--border-selected`                      | Exempt from the grid. Selection rings are inset `box-shadow`, so selection never changes size.          |
+| Focus | `--focus-ring-width`, `--focus-ring-offset` | Keyboard focus: 2 px width and 2 px offset, independent of spacing. |
 | Motion | `--duration-sweep`, `--ease-sweep`                            | Every duration becomes 1 ms under reduced motion.                                                       |
 | Layout | `--gutter`, `--column-list`, `--content-max`                  | Desktop (≥ 960 px) picks larger steps: one scale, two densities.                                        |
 
@@ -64,6 +65,10 @@ All values come from `tokens.css`. The groups are:
 | `--color-row-pressed` | `var(--color-surface-sunken)` | `var(--color-surface-sunken)` | BriefRow and CollapsedGroup pressed fill |
 
 Field and row aliases are declared once in `:root` and resolve against the active light or dark palette. Switch off-state tokens use light aliases and explicit overrides in both dark blocks to preserve contrast with the white knob.
+
+### Keyboard focus
+
+Every focus outline uses `--focus-ring-width` (2 px), `--focus-ring-offset` (2 px), and `--color-brand`. Spacing tokens do not define focus outlines. The shared `.control:focus-visible` rule sets `position: relative` and `z-index: 1` so the focused control is above neighboring selected or hovered controls. SegmentedControl inherits this shared rule.
 
 ### Enter motion
 
@@ -117,7 +122,7 @@ Text styles are utility components or CSS classes, not one-off font sizes:
 | `icon`     | optional leading or trailing icon (16)                                                                                   |
 | `external` | shows the external-link icon (for "Open in Gmail")                                                                       |
 
-**States:** default, hover, focus-visible (2 px brand outline, 2 px offset), pressed, disabled.
+**States:** default, hover, focus-visible (`--focus-ring-width` brand outline, `--focus-ring-offset` offset), pressed, disabled.
 
 Hover and pressed use the interactive color tokens above and the 160 ms fast transition. Tint buttons keep `--color-brand-text` in both states; neutral buttons keep `--color-text`. Text buttons stay transparent and use `--color-brand-text-hover` for both hover and pressed.
 
@@ -138,7 +143,7 @@ Used for the detail tabs (Details · Original email · Ask) and the demo-only le
 - Sunken track with 4 px padding.
 - Unselected segments use `--color-sunken-hover` on hover and `--color-sunken-pressed` on press, with `--color-text-secondary` text in both states.
 - The selected segment keeps its `--color-surface` fill, `--color-text` text, and `--shadow-tab` on hover and press; its appearance does not change.
-- Only `:focus-visible` adds an outline. The focused segment uses `position: relative` and `z-index: 1` so neighboring hover fills cannot cover its outline.
+- Only `:focus-visible` adds an outline. The focused segment inherits the shared focus layering rule so neighboring hover fills cannot cover its outline.
 - Roles: `tablist` / `tab`, with arrow-key navigation.
 
 ### FactChip
@@ -339,7 +344,7 @@ At most one panel is open in a SectionCard: a fact source or a judgment. Opening
 
 ### CollapsedGroup (Set aside)
 
-A card button: “31 set aside” plus a breakdown (“18 newsletters · 9 CC’d · 4 promotions”) and a chevron. It is selected while the Set aside view is open. It uses the same hover, pressed and selected fills as BriefRow.
+A card button: “31 set aside” plus a breakdown (“18 newsletters · 9 CC’d · 4 promotions”) and a chevron. It is selected while the Set aside view is open. It uses the same hover, pressed and selected fills as BriefRow. When selected, the category breakdown uses `--color-text-secondary` in the resting, hovered, and pressed states to preserve text contrast.
 
 ### SetAsideList
 
@@ -468,8 +473,8 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 - Sources open by click or Enter, never only on hover.
 - Screen-reader labels:
   - Fields read label, value and “Show where the email says so”.
-  - FactChips read type and value.
-  - Urgent chips include the word “urgent”.
+  - FactChips read type and value through visually hidden type text plus the visible value; static chip spans do not use `aria-label`.
+  - Urgent chips include visually hidden text with the word “urgent”.
 - Live regions:
   - The progress line (“2 of 5 done”) is announced when it changes.
   - The “2 new” row is announced when it appears.

@@ -14,10 +14,11 @@ Before doing anything:
 
 Rules that matter most:
 - Write all public text in American English, including GitHub titles, descriptions, and replies.
+- Start every PR title and every comment you write with "[Codex] ".
 - Design owns src/design-system/tokens/tokens.css and src/data/*.json. Do not change them; propose changes in a separate PR.
 - Use tokens for every design value. No raw hex or px outside tokens.css.
 - Product screens use only design-system components. If a component is missing, open a separate ds/ PR first.
-- Do not make product decisions. If something is not documented, list it under Open questions in the PR.
+- Do not make product decisions or invent behavior or states the specification does not define. Put a concrete proposal under Open questions in the PR and wait for the designer to confirm it.
 
 Your task now: issue 01 in docs/handoff/issues/ (Scaffold the app and deploy it to GitHub Pages).
 Work on a branch named chore/scaffold, open one pull request, and write the description for a designer
@@ -32,6 +33,9 @@ Re-read the sections of AGENTS.md and docs/ that the issue references.
 Branch name: <label>/<short-name>. One pull request, description in the AGENTS.md format with screenshots
 (light and dark where relevant). Do not merge. If anything in the issue conflicts with the docs, follow the docs and
 say so under Open questions.
+Start every PR title and every comment you write with "[Codex] ".
+Do not invent behavior or states the specification does not define. Put a concrete proposal under Open questions
+and wait for the designer to confirm it.
 ```
 
 ## When the reviewer asks for changes
