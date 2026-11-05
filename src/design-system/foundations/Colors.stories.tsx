@@ -10,7 +10,10 @@ const colors = tokenNames.filter((name) => name.startsWith('--color-'));
 const comparisonRules = tokenSource.replaceAll(':root', '[data-color-scope]');
 
 const groups = [
-  ['Surfaces and text', /^--color-(?:bg|surface|border|text|icon|scrim)/],
+  [
+    'Surfaces and text',
+    /^--color-(?:bg|surface|sunken|border|text|icon|scrim)/,
+  ],
   ['Glance and urgency', /^--color-(?:brand|on-brand|urgent|on-urgent)/],
   ['Money', /^--color-money/],
   ['Time', /^--color-time/],

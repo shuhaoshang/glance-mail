@@ -1,0 +1,8 @@
+.person {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}

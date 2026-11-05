@@ -1,0 +1,19 @@
+.avatar {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--size-avatar);
+  block-size: var(--size-avatar);
+  border-radius: var(--radius-pill);
+  background: var(--color-people-tint);
+  color: var(--color-people-text);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  font-weight: var(--font-weight-bold);
+}
+.small {
+  inline-size: var(--size-avatar-small);
+  block-size: var(--size-avatar-small);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+}

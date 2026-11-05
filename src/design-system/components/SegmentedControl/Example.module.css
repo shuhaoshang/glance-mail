@@ -1,0 +1,15 @@
+.example {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-12);
+  min-inline-size: 0;
+}
+.panel {
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
+.panel:focus-visible {
+  outline: var(--space-2) solid var(--color-brand);
+  outline-offset: var(--space-2);
+}

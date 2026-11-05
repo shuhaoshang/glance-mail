@@ -1,0 +1,53 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-block-size: var(--size-button);
+  padding: var(--space-12) var(--space-16);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-16);
+  text-decoration: none;
+}
+.primary {
+  padding-inline: var(--space-20);
+  --control-fill: var(--color-brand);
+  --control-ink: var(--color-on-brand);
+  --hover-fill: var(--color-brand-hover);
+  --pressed-fill: var(--color-brand-pressed);
+}
+.tint {
+  --control-fill: var(--color-brand-tint);
+  --control-ink: var(--color-brand-text);
+  --hover-fill: var(--color-brand-tint-hover);
+  --pressed-fill: var(--color-brand-tint-pressed);
+}
+.neutral {
+  --control-fill: var(--color-surface-sunken);
+  --control-ink: var(--color-text);
+  --hover-fill: var(--color-sunken-hover);
+  --pressed-fill: var(--color-sunken-pressed);
+}
+.primary,
+.tint,
+.neutral {
+  --disabled-fill: var(--color-surface-sunken);
+}
+.text {
+  padding-inline: var(--space-8);
+  --control-ink: var(--color-brand-text);
+  --hover-ink: var(--color-brand-text-hover);
+  --pressed-ink: var(--color-brand-text-hover);
+}
+.touch {
+  min-block-size: var(--size-touch);
+  padding-block: var(--space-8);
+}
+.compact {
+  min-block-size: var(--size-touch-compact);
+  padding-block: var(--space-8);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}

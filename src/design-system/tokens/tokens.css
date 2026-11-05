@@ -33,6 +33,15 @@
   --color-brand-tint: #EEECFD;      /* selected row, tint buttons, New badge */
   --color-on-brand: #FFFFFF;
 
+  /* ---------- Color: interactive control states ---------- */
+  --color-brand-hover: #4A3FD0;
+  --color-brand-pressed: #3F35B8;
+  --color-brand-tint-hover: #E3E0FB;
+  --color-brand-tint-pressed: #D8D4F8;
+  --color-sunken-hover: #E6E5EC;
+  --color-sunken-pressed: #D9D8E0;
+  --color-brand-text-hover: #3529B0;
+
   /* ---------- Color: urgency (independent of type) ---------- */
   --color-urgent: #C2255C;          /* solid chip = urgent */
   --color-on-urgent: #FFFFFF;
@@ -171,6 +180,13 @@
     --color-brand: #6559EE;
     --color-brand-text: #B0AAFF;
     --color-brand-tint: #28244D;
+    --color-brand-hover: #5A4EE0;
+    --color-brand-pressed: #5045CC;
+    --color-brand-tint-hover: #322D5E;
+    --color-brand-tint-pressed: #3B356E;
+    --color-sunken-hover: #34333F;
+    --color-sunken-pressed: #3B3A47;
+    --color-brand-text-hover: #CFCBFF;
     --color-urgent: #C2255C;
     --color-money: #E0B341;
     --color-money-text: #F0CB6B;
@@ -210,6 +226,13 @@
   --color-brand: #6559EE;
   --color-brand-text: #B0AAFF;
   --color-brand-tint: #28244D;
+  --color-brand-hover: #5A4EE0;
+  --color-brand-pressed: #5045CC;
+  --color-brand-tint-hover: #322D5E;
+  --color-brand-tint-pressed: #3B356E;
+  --color-sunken-hover: #34333F;
+  --color-sunken-pressed: #3B3A47;
+  --color-brand-text-hover: #CFCBFF;
   --color-urgent: #C2255C;
   --color-money: #E0B341;
   --color-money-text: #F0CB6B;
