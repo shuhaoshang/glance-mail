@@ -13,10 +13,10 @@
   border: 0;
   border-radius: var(--radius-pill);
   --control-ink: var(--color-text-muted);
-  --hover-ink: light-dark(var(--color-text-secondary), var(--color-text-muted));
-  --pressed-ink: light-dark(var(--color-text-body), var(--color-text-muted));
-  --hover-fill: light-dark(transparent, var(--color-surface-muted));
-  --pressed-fill: light-dark(transparent, var(--color-surface));
+  --hover-ink: var(--color-text-secondary);
+  --pressed-ink: var(--color-text-secondary);
+  --hover-fill: var(--color-sunken-hover);
+  --pressed-fill: var(--color-sunken-pressed);
   line-height: var(--line-height-14);
   font-size: var(--font-size-14);
   overflow-wrap: anywhere;
@@ -24,9 +24,13 @@
 .tab[aria-selected='true'] {
   --control-fill: var(--color-surface);
   --control-ink: var(--color-text);
-  --hover-fill: light-dark(var(--color-surface-muted), var(--color-surface));
-  --pressed-fill: light-dark(var(--color-surface-sunken), var(--color-surface));
-  --hover-ink: light-dark(var(--color-text), var(--color-text-body));
-  --pressed-ink: light-dark(var(--color-text), var(--color-text-secondary));
+  --hover-fill: var(--color-surface);
+  --pressed-fill: var(--color-surface);
+  --hover-ink: var(--color-text);
+  --pressed-ink: var(--color-text);
   box-shadow: var(--shadow-tab);
+}
+.tab:focus-visible {
+  position: relative;
+  z-index: 1;
 }

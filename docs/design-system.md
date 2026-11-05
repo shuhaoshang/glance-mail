@@ -136,7 +136,9 @@ The background is transparent at rest. Hover shows a `--color-sunken-hover` circ
 Used for the detail tabs (Details · Original email · Ask) and the demo-only level switch.
 
 - Sunken track with 4 px padding.
-- The selected segment uses the surface fill and `--shadow-tab`.
+- Unselected segments use `--color-sunken-hover` on hover and `--color-sunken-pressed` on press, with `--color-text-secondary` text in both states.
+- The selected segment keeps its `--color-surface` fill, `--color-text` text, and `--shadow-tab` on hover and press; its appearance does not change.
+- Only `:focus-visible` adds an outline. The focused segment uses `position: relative` and `z-index: 1` so neighboring hover fills cannot cover its outline.
 - Roles: `tablist` / `tab`, with arrow-key navigation.
 
 ### FactChip
