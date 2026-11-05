@@ -93,6 +93,13 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+export const Narrow: Story = {
+  render: (args) => (
+    <div className={styles.narrow}>
+      <PanelExample {...args} />
+    </div>
+  ),
+};
 export const Time: Story = {
   args: {
     from: factSamples.time.item.from,

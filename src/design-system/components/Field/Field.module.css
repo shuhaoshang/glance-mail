@@ -29,11 +29,19 @@
 }
 .traceable {
   cursor: pointer;
+  border-radius: var(--radius-highlight);
+  transition: background-color var(--duration-fast) var(--ease-standard);
   text-decoration-line: underline;
   text-decoration-style: dotted;
   text-decoration-color: var(--fact-color);
   text-decoration-thickness: var(--space-2);
   text-underline-offset: calc(var(--space-4) + var(--space-2));
+}
+.traceable:not(.selected):hover {
+  background: var(--fact-hover);
+}
+.traceable:not(.selected):active {
+  background: var(--fact-pressed);
 }
 .traceable:focus-visible {
   outline: var(--space-2) solid var(--color-brand);

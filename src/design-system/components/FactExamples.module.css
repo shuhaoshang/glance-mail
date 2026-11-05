@@ -48,3 +48,7 @@
 .example > button {
   justify-self: start;
 }
+
+.narrow {
+  max-inline-size: calc(var(--size-touch) * 7);
+}

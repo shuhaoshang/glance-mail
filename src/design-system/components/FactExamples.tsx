@@ -97,3 +97,16 @@ export function FieldExample({
     </div>
   );
 }
+
+export function FieldStatesExample({ sample }: { sample: FactSample }) {
+  return (
+    <div className={styles.columns}>
+      {['Default', 'Hover', 'Focus', 'Pressed', 'Selected'].map((state) => (
+        <div key={state} className={styles.specimen} data-field-state={state}>
+          <h3>{state === 'Focus' ? 'Keyboard focus' : state}</h3>
+          <FieldExample sample={sample} initiallyOpen={state === 'Selected'} />
+        </div>
+      ))}
+    </div>
+  );
+}

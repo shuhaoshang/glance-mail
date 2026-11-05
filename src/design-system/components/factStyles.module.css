@@ -1,13 +1,19 @@
 .money {
   --fact-color: var(--color-money);
+  --fact-hover: var(--color-money-field-hover);
+  --fact-pressed: var(--color-money-field-pressed);
   --fact-ink: var(--color-money-ink);
 }
 .time {
   --fact-color: var(--color-time);
+  --fact-hover: var(--color-time-field-hover);
+  --fact-pressed: var(--color-time-field-pressed);
   --fact-ink: var(--color-time-ink);
 }
 .people {
   --fact-color: var(--color-people);
+  --fact-hover: var(--color-people-field-hover);
+  --fact-pressed: var(--color-people-field-pressed);
   --fact-ink: var(--color-people-ink);
 }
 .judgment {

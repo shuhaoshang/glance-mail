@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { FoundationPage } from '../foundations/catalog';
 import { FactChip } from './FactChip/FactChip';
 import { Field } from './Field/Field';
-import { FieldExample } from './FactExamples';
+import { FieldExample, FieldStatesExample } from './FactExamples';
 import { Highlight } from './Highlight/Highlight';
 import { Text } from './Text/Text';
 import { evidence, factSamples, plainField, urgentFact } from './factSamples';
@@ -14,6 +14,8 @@ const meta = {
   parameters: {
     layout: 'fullscreen',
     pseudo: {
+      hover: '[data-field-state="Hover"] button[aria-expanded]',
+      active: '[data-field-state="Pressed"] button[aria-expanded]',
       focusVisible: '[data-field-state="Focus"] button[aria-expanded]',
     },
   },
@@ -41,21 +43,7 @@ export const Overview: StoryObj<typeof meta> = {
       </section>
       <section className={styles.sheet}>
         <h2>Field states</h2>
-        <div className={styles.columns}>
-          {['Default', 'Focus', 'Selected'].map((state) => (
-            <div
-              key={state}
-              className={styles.specimen}
-              data-field-state={state}
-            >
-              <h3>{state === 'Focus' ? 'Keyboard focus' : state}</h3>
-              <FieldExample
-                sample={factSamples.money}
-                initiallyOpen={state === 'Selected'}
-              />
-            </div>
-          ))}
-        </div>
+        <FieldStatesExample sample={factSamples.money} />
         <div className={styles.row}>
           <Field {...plainField} fact={undefined} />
         </div>

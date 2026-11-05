@@ -42,6 +42,14 @@
   --color-sunken-pressed: #D9D8E0;
   --color-brand-text-hover: #3529B0;
 
+  /* Field states follow the active fact palette. */
+  --color-money-field-hover: var(--color-money-selected);
+  --color-money-field-pressed: var(--color-money-tint);
+  --color-time-field-hover: var(--color-time-selected);
+  --color-time-field-pressed: var(--color-time-tint);
+  --color-people-field-hover: var(--color-people-selected);
+  --color-people-field-pressed: var(--color-people-tint);
+
   /* ---------- Color: urgency (independent of type) ---------- */
   --color-urgent: #C2255C;          /* solid chip = urgent */
   --color-on-urgent: #FFFFFF;

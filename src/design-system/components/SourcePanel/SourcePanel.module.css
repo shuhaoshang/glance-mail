@@ -7,10 +7,9 @@
   --highlight-delay: var(--duration-reveal);
 }
 .header {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
   gap: var(--space-8);
 }
 .metadata {
@@ -21,7 +20,7 @@
   display: flex;
   align-items: center;
   gap: var(--space-4);
-  flex: none;
+  white-space: nowrap;
 }
 .reveal {
   animation: reveal var(--duration-reveal) var(--ease-standard) both;

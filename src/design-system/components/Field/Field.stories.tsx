@@ -1,7 +1,9 @@
+import { FoundationPage } from '../../foundations/catalog';
+import styles from '../FactExamples.module.css';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, fn, waitFor } from 'storybook/test';
 import { Field } from './Field';
-import { FieldExample } from '../FactExamples';
+import { FieldExample, FieldStatesExample } from '../FactExamples';
 import { factSamples, plainField } from '../factSamples';
 
 const meta = {
@@ -11,7 +13,7 @@ const meta = {
     docs: {
       description: {
         component:
-          '[Field specification](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#field). The enclosing item supplies the fact ID, kind, and selection handler. Hover and press leave the default style unchanged pending design approval.',
+          '[Field specification](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#field). The enclosing item supplies the fact ID, kind, and selection handler. Hover and press use fact-palette aliases. Selected ink takes precedence.',
       },
     },
   },
@@ -45,6 +47,20 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 export const Default: Story = {};
+export const Hover: Story = {
+  parameters: { pseudo: { hover: 'button[aria-expanded]' } },
+};
+export const Pressed: Story = {
+  parameters: { pseudo: { active: 'button[aria-expanded]' } },
+};
+export const SelectedHover: Story = {
+  args: { selected: true },
+  parameters: { pseudo: { hover: 'button[aria-expanded]' } },
+};
+export const SelectedPressed: Story = {
+  args: { selected: true },
+  parameters: { pseudo: { active: 'button[aria-expanded]' } },
+};
 export const FocusVisible: Story = {
   parameters: { pseudo: { focusVisible: 'button[aria-expanded]' } },
 };
@@ -95,4 +111,28 @@ export const KeyboardSource: Story = {
       await expect(reopened).toBeVisible();
     });
   },
+};
+
+export const States: Story = {
+  parameters: {
+    layout: 'fullscreen',
+    pseudo: {
+      hover: '[data-field-state="Hover"] button[aria-expanded]',
+      active: '[data-field-state="Pressed"] button[aria-expanded]',
+      focusVisible: '[data-field-state="Focus"] button[aria-expanded]',
+    },
+  },
+  render: () => (
+    <FoundationPage
+      title="Field states"
+      description="Compare all five states for each fact type. Selected ink keeps its color during hover and press."
+    >
+      {Object.values(factSamples).map((sample) => (
+        <section className={styles.sheet} key={sample.fact.kind}>
+          <h2>{sample.fact.kind}</h2>
+          <FieldStatesExample sample={sample} />
+        </section>
+      ))}
+    </FoundationPage>
+  ),
 };
