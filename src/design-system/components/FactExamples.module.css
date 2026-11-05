@@ -52,3 +52,7 @@
 .narrow {
   max-inline-size: calc(var(--size-touch) * 7);
 }
+
+.specimen[data-field-state='Selected'] {
+  grid-column: 1 / -1;
+}
