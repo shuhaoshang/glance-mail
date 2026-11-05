@@ -19,7 +19,7 @@ export function ListOverview({ personaId }: { personaId: PersonaId }) {
   const [action, setAction] = useState('');
   return (
     <FoundationPage
-      title="List composites"
+      title="Brief lists"
       description="Select rows and trace facts. These component examples use the supplied persona data."
     >
       <output className={styles.readout} aria-live="polite">

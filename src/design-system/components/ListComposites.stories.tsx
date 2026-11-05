@@ -8,7 +8,7 @@ import styles from './ListExamples.module.css';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { ListOverview } from './ListExamples';
 const meta = {
-  title: 'Composites/List composites',
+  title: 'Composites/Gallery: Brief lists',
   component: ListOverview,
   tags: ['!autodocs'],
   parameters: { layout: 'fullscreen' },
