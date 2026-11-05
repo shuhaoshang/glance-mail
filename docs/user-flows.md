@@ -172,7 +172,7 @@ Scenario: Maya reads the original and goes to Outlook
   Then the subject reads "Pricing before Friday’s review"
   And every fact Glance used is highlighted by type (money, time, people, Glance’s read)
   And the Highlighter switch is on and can turn the ink off
-  And "Open in Outlook" is the only primary button and opens the email in Outlook
+  And "Open in Outlook" is the only primary button and opens the Outlook web inbox in a new tab
 ```
 
 ### Maya 6 · Close: Glance notices the reply

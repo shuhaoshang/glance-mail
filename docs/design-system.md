@@ -58,8 +58,32 @@ All values come from `tokens.css`. The groups are:
 | `--color-time-field-pressed` | `var(--color-time-tint)` | `var(--color-time-tint)` | Time Field pressed fill |
 | `--color-people-field-hover` | `var(--color-people-selected)` | `var(--color-people-selected)` | People Field hover fill |
 | `--color-people-field-pressed` | `var(--color-people-tint)` | `var(--color-people-tint)` | People Field pressed fill |
+| `--color-row-hover` | `var(--color-surface-muted)` | `var(--color-surface-muted)` | BriefRow and CollapsedGroup hover fill |
+| `--color-row-pressed` | `var(--color-surface-sunken)` | `var(--color-surface-sunken)` | BriefRow and CollapsedGroup pressed fill |
 
-Field aliases are declared once in `:root` and resolve against the active light or dark palette.
+Field and row aliases are declared once in `:root` and resolve against the active light or dark palette.
+
+### Enter motion
+
+Rows and content that appear (a new BriefRow, a DoneRow, an Ask answer, rows revealed by “Show more”) fade down over `--duration-enter` (240 ms), moving `--space-4`. Like every duration, it becomes 1 ms under reduced motion.
+
+### Other tokens added with the composites and screens
+
+| Token | Value | Use | Issue |
+| --- | --- | --- | --- |
+| `--size-checkbox` | `24px` | Checkbox box | 18 |
+| `--size-switch-track-width` | `36px` | Switch track | 18 |
+| `--size-switch-track-height` | `20px` | Switch track | 18 |
+| `--size-switch-knob` | `16px` | Switch knob | 18 |
+| `--size-progress` | `4px` | ProgressBar height | 18 |
+| `--content-narrow` | `640px` | Single-column max width from 600 to 959 px | 06 |
+| `--size-sheet-top` | `56px` | Gap above the phone sheet | 08 |
+| `--size-handle-width` | `36px` | Sheet handle | 08 |
+| `--size-handle-height` | `4px` | Sheet handle | 08 |
+| `--color-demo-control-hover` | `#36343F` (both themes) | Demo bar control hover | 11 |
+| `--duration-shimmer` | `1600ms` (no shimmer under reduced motion) | Skeleton shimmer | 13 |
+
+Each issue adds its own tokens to `tokens.css`; this table says where every value comes from.
 
 If a component needs a value that is not a token, **stop and ask in the PR**. Do not add it inline.
 
@@ -86,7 +110,7 @@ Text styles are utility components or CSS classes, not one-off font sizes:
 
 | Prop       | Values                                                                                                                   |
 | ---------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `variant`  | `primary` (brand fill, one per view) · `tint` (brand tint) · `neutral` (sunken) · `text` (brand text, no fill)           |
+| `variant`  | `primary` (brand fill, one per view) · `tint` (brand tint) · `neutral` (sunken) · `outline` (surface fill, 1 px ring) · `text` (brand text, no fill) |
 | `size`     | `default` (48) · `touch` (44, selected by phone layouts for secondary buttons) · `compact` (40, toolbars and tab groups) |
 | `icon`     | optional leading or trailing icon (16)                                                                                   |
 | `external` | shows the external-link icon (for "Open in Gmail")                                                                       |
@@ -96,6 +120,8 @@ Text styles are utility components or CSS classes, not one-off font sizes:
 Hover and pressed use the interactive color tokens above and the 160 ms fast transition. Tint buttons keep `--color-brand-text` in both states; neutral buttons keep `--color-text`. Text buttons stay transparent and use `--color-brand-text-hover` for both hover and pressed.
 
 Disabled primary, tint, and neutral buttons use `--color-surface-sunken` with `--color-text-muted`. Disabled text buttons stay transparent with `--color-text-muted`. Any icons use `--color-icon-muted`. Disabled links follow the same variant rules. Hover and pressed do not add a ring; the outline marks keyboard focus.
+
+**Outline** (issue 18): `--color-surface` fill, a `--border-hairline` inset ring in `--color-border-strong`, `--color-text`, 14/20 medium, `compact` height 40. Hover fills with `--color-sunken-hover`, pressed with `--color-sunken-pressed`; the ring stays. Used for Snooze options, Ask suggestions and “Move to Set aside”. Disabled follows the filled-button rule.
 
 ### IconButton
 
@@ -134,6 +160,16 @@ An outlined pill (surface fill, 1 px inset `--color-border-strong`). It appears 
 ### GlanceMark
 
 The ✦ glyph, plus the optional label “Glance’s summary · not the sender’s words”. Use it anywhere Glance wrote the words.
+
+### ReasonPill
+
+The ✦ judgment trigger: an outlined brand pill with the ✦ glyph and the label. KnowRow uses the small size; the ReasonPanel trigger uses the default size.
+
+- Two sizes:
+  - `small` (KnowRow): 12/16 semibold, padding 4 12 4 8, visible height 24. The hit area extends to at least 44 × 44 without changing the visible size or the layout.
+  - `default` (the “Glance’s read” trigger in the detail view): 14/20 semibold, padding 8 16 8 12, height 40.
+- Both: `--color-brand-text` on `--color-surface`, with a `--border-selected` inset ring in `--color-brand`.
+- Hover fills with `--color-brand-tint`; pressed with `--color-brand-tint-hover`. While expanded (`aria-expanded="true"`) it keeps `--color-brand-tint`.
 
 ### Field
 
@@ -180,6 +216,7 @@ Text that wraps keeps the ink on every line (`box-decoration-break: clone`). Sho
 - **Header:** “Source · {sender} · {date}”, an “Open email” text button, and a close IconButton.
 - **Body:** the sentence in `Reading` style, with the fact highlighted.
 - **Narrow header:** actions stay together on one line at the top right; the sender and date wrap within the remaining left column.
+- **Alignment:** the first line of the sender and date shares a baseline with “Open email” (`align-items: first baseline`), on one line or several (issue 18).
 - **Entrance:**
   1. The panel fades in (200 ms).
   2. The ink sweeps across the words left to right (480 ms).
@@ -195,7 +232,7 @@ The panel accepts `from`, `when`, `source` (`pre`, `hl`, `post`), and `kind`. Th
   - Title: “Glance’s reasoning · not stated in the email”.
   - One line per judgment.
   - Each judgment with evidence shows a nested source, using `judgment` ink.
-  - Last, under a divider: “Not for you? Glance will rank emails like this lower.” with a neutral outlined button “Move to Set aside” (tray-arrow icon). See design-rules §8.
+  - Last, under a divider: “Not for you? Glance will rank emails like this lower.” with an outline Button “Move to Set aside” (tray-arrow icon). See design-rules §8.
 
 ### DateTile
 
@@ -207,24 +244,27 @@ A 24 avatar (people tint, initial), followed by name and role.
 
 ### Checkbox
 
-- Box: 24, radius 8, 1.5 px ring in `--color-icon-muted`.
-- Checked: brand fill with a white check.
-- Hit area: 40.
+- Box: `--size-checkbox` (24), radius 8, `--border-selected` ring in `--color-icon-muted`.
+- Checked: `--color-brand` fill with an `--color-on-brand` check.
+- Hit area: 44 (`--size-touch`). Ticking is the main action in a checklist, so it gets the full touch target; the box stays 24.
+- Hover: unchecked fills with `--color-sunken-hover`; checked uses `--color-brand-hover`. Pressed: `--color-sunken-pressed` or `--color-brand-pressed`. No extra outline; the outline is for keyboard focus only.
 - Role: `checkbox`.
 
 ### Switch
 
-- Track: 36 × 20. Knob: 16.
-- On: brand. Off: `--color-icon-muted`.
+- Track: `--size-switch-track-width` × `--size-switch-track-height` (36 × 20). Knob: `--size-switch-knob` (16), `--color-on-brand`.
+- On: `--color-brand`. Off: `--color-icon-muted`.
+- Hover: on uses `--color-brand-hover`; off uses `--color-text-muted`. The knob slides over `--duration-fast`.
+- Hit area: 44, including the visible label.
 - Role: `switch`.
 
 ### ProgressBar
 
-4 px tall, brand fill on a brand-tint track. Used for “1 of 4 done” and the first-brief reading progress.
+`--size-progress` (4) tall, `--color-brand` fill on a `--color-brand-tint` track, radius pill. The fill width animates over `--duration-reveal`. Used for “1 of 4 done” and the first-brief reading progress. It is decorative: the text next to it carries the value, and the text is the live region.
 
 ### Skeleton
 
-A gray bar with a shimmer (1.6 s). It only shows the shape of content that is about to arrive. Never put placeholder text in it.
+A `--color-surface-sunken` bar with a `--color-surface-muted` shimmer over `--duration-shimmer` (1.6 s). With reduced motion it is a static bar. It only shows the shape of content that is about to arrive. Never put placeholder text in it.
 
 ### Icons
 
@@ -261,11 +301,19 @@ The same row for every item, whatever its type.
 - The request: a quote, or a ✦ summary. Up to two lines on desktop and phone, then an ellipsis.
 - Up to two FactChips, taken from the item's first two facts. An urgent fact always comes first.
 
-**States:** default, hover, selected (brand-tint fill, `aria-pressed`), leaving (collapses over 320 ms), new.
+**States:**
+
+- Default: no fill.
+- Hover: `--color-row-hover`. Pressed: `--color-row-pressed`. No outline; the outline is for keyboard focus only.
+- Selected: `--color-brand-tint` fill and `aria-pressed`; the rank turns brand. Selected and hovered: `--color-brand-tint-hover`.
+- Leaving: collapses over `--duration-collapse` (320 ms).
+- New: shows the `New` Badge and enters with the enter motion (§2).
 
 ### SectionCard
 
-A white card that holds rows: `Needs you`, `Good to know`. The header shows the title, a count, and an optional right slot (progress, “Most urgent first”, “From Gmail only”).
+A white card that holds rows: `Needs you`, `Good to know`. The header shows the title, a count, and an optional right slot (progress, “Most urgent first”, “From Gmail only”). The slot accepts any content.
+
+At most one panel is open in a SectionCard: a fact source or a judgment. Opening one closes the other.
 
 ### KnowRow (Good to know)
 
@@ -273,12 +321,12 @@ A white card that holds rows: `Needs you`, `Good to know`. The header shows the 
 - Bold title, then text. One value in the text (`fact.value`) is a Field-style link: dotted underline in its type color, inked when open.
 - Selecting it opens a SourcePanel inline below the row (`Source · from · when`, the sentence with the words highlighted in the type’s ink). Only one panel is open at a time.
 - Optional AccountLabel.
-- Optional ✦ judgment pill that expands its ReasonPanel inline.
+- Optional ReasonPill (§3). Opening it shows the judgment's ✦ read and a SourcePanel in `judgment` ink, inline below the row. The full ReasonPanel is used in the detail view only.
 - Rows the user moved here show “Moved by you” and have no fact (they are whole emails, not extracted facts).
 
 ### CollapsedGroup (Set aside)
 
-A card button: “31 set aside” plus a breakdown (“18 newsletters · 9 CC’d · 4 promotions”) and a chevron. It is selected while the Set aside view is open.
+A card button: “31 set aside” plus a breakdown (“18 newsletters · 9 CC’d · 4 promotions”) and a chevron. It is selected while the Set aside view is open. It uses the same hover, pressed and selected fills as BriefRow.
 
 ### SetAsideList
 
@@ -286,13 +334,15 @@ Groups with a title and a count. Each row has a sender or subject, a subject lin
 
 When the user has moved items out of Needs you, the first group is **Moved by you**: each row shows the item name and its request, with a “Back to Needs you” text button.
 
+On desktop the list opens in the detail area. On phone it opens in the same sheet as the detail view, titled “Set aside”, with the same motion and ways to close.
+
 ### DoneRow
 
-A brand check (a muted clock for snoozed items, a muted tray-arrow for items moved to Set aside), then “**Name** · what happened”, then an Undo text button. Done rows appear with a 240 ms fade-down.
+A brand check (a muted clock for snoozed items, a muted tray-arrow for items moved to Set aside), then “**Name** · what happened”, then an Undo text button. Done rows appear with the enter motion (§2).
 
 ### NewMailRow
 
-The first row of Needs you when new mail has arrived: “● 2 new since 8:00 AM · Add to brief”. The brief never reshuffles on its own.
+The first row of Needs you when new mail has arrived: “● 2 new since 8:00 AM · Add to brief”. The dot is `--color-brand`. The brief never reshuffles on its own.
 
 ### Notice
 
@@ -301,13 +351,20 @@ A neutral card with an icon tile, a title and a body. It may hold one primary Bu
 ### DetailPanel (desktop) / DetailSheet (phone)
 
 - **Top row:** position (“Needs you · 1 of 3”) and the SegmentedControl.
-- **Then:** Title, Person and AccountLabel, the request (with GlanceMark when it is a summary), “From the email · select an underlined value”, the SceneCard, the SourcePanel, the ReasonPanel trigger.
+- **Then:** Title, Person and AccountLabel, the request (with GlanceMark when it is a summary), “From the email · select an underlined value”, the SceneCard, the SourcePanel, the ReasonPanel trigger (ReasonPill, default size).
 - **Bottom bar:**
   - Primary “Open in {app}”, followed by Ask (tint).
   - Snooze and Done (neutral), aligned right on desktop.
   - On phone, the primary button is full width on its own row.
   - **Checklist complete** (every step ticked): “Mark done” is the primary; “Open in {app}” becomes neutral; Snooze is not shown. On desktop Mark done stays on the right; on phone it takes the full-width row, with Open and Ask below.
-- **Sheet (phone):** top 56, radius 24, 36 × 4 handle, scrim `--color-scrim`.
+- **“Open in {app}”** is an external link that opens the app's web inbox in a new tab (`https://mail.google.com/`, `https://outlook.office.com/mail/`, `https://mail.yahoo.com/`). The demo has no real message to link to, so it opens the inbox; it never points to `#` (D45).
+- **Sheet (phone):**
+  - Top `--size-sheet-top` (56), radius 24, a `--size-handle-width` × `--size-handle-height` (36 × 4) handle, scrim `--color-scrim`.
+  - Opens by sliding up over `--duration-collapse` (320 ms) with `--ease-standard` while the scrim fades in over `--duration-reveal`; closes in reverse. With reduced motion it appears and disappears at once.
+  - Closes with the close button, a tap on the scrim, Escape, or dragging the handle down. The handle is not decorative (D44).
+  - It is a modal dialog (`role="dialog"`, `aria-modal="true"`): focus moves into the sheet, stays there while it is open, and returns to the row that opened it.
+- **Desktop panel** is part of the page, not a dialog: focus stays where the user put it.
+- **After an action (phone):** Done, Mark done, a Snooze option, or Move to Set aside closes the sheet and returns to the brief, where the DoneRow shows the result. The next item becomes selected but the sheet does not reopen. On desktop the panel shows the next item (D44).
 
 ### EmailView
 
@@ -320,14 +377,15 @@ A neutral card with an icon tile, a title and a body. It may hold one primary Bu
 
 - The user's question is a sunken bubble on the right.
 - A **found** answer shows the ✦ Glance label, the answer, and a nested source (judgment ink).
-- A **not found** answer shows a dashed-outline box titled “Not in your email”.
-- Suggestions are outlined pills.
+- A **not found** answer shows a box with a `--border-hairline` dashed `--color-border-strong` outline, titled “Not in your email”.
+- Suggestions use the `outline` Button.
+- New questions and answers appear with the enter motion (§2).
 - **In the demo there is no input.** Answers are prepared in advance, so a dashed note replaces it: “**Demo:** answers are prepared in advance, so pick a question above. In the product you type your own.” When every question has been asked: “**Demo:** that’s every prepared question for this item.” An input that never answers would be a dead control (D39).
 - In the product, the input row has a tint send button. It is not the primary, because the view already has one.
 
 ### SnoozeMenu
 
-A panel with three option pills and the note “It comes back to Needs you at that time.” Choosing an option collapses the row like Done.
+A panel with three options (`outline` Buttons) and the note “It comes back to Needs you at that time.” It opens directly above the action bar, in the desktop panel and in the phone sheet, and pushes nothing else around. Choosing an option collapses the row like Done; Escape or Snooze again closes the menu.
 
 ---
 
@@ -346,7 +404,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 | `decision`  | offers named options and asks you to choose           | two option tiles (key badge, title, small Field)                                           | Daniel · Checkout redesign                         |
 | `approval`  | asks you to approve an amount                         | large amount Field, then small Fields (for, requested by, deadline), then an optional note | Daniel · Expense report                            |
 | `payment`   | is a bill or fee                                      | large amount Field, then due and payee                                                     | Sarah · City Water                                 |
-| `mismatch`  | contains two numbers that should agree and don't      | two large Fields with a pink ≠ between them, then the deadline                             | Maya · Okto invoice                                |
+| `mismatch`  | contains two numbers that should agree and don't      | two large Fields with a ≠ in `--color-urgent` between them, then the deadline                            | Maya · Okto invoice                                |
 | `event`     | sets one date and time                                | DateTile, then a time Field, a title and an instruction                                    | Sarah · Riverside appointment                      |
 | `range`     | spans dates                                           | two DateTiles with an arrow, then the dates Field                                          | Daniel · Lea’s time off                            |
 | `checklist` | asks for more than one step                           | Checkbox steps (inline Fields allowed), a divider, then due and context Fields             | Sarah · Lincoln trip slip                          |
@@ -374,7 +432,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 
 | Pattern            | What it is                                                                                                                                                                                                                                                                                                  |
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Brief layout       | **Phone:** coverage line, then Needs you, Good to know and Set aside, with a detail sheet. **Desktop (≥ 960):** list column 416 on the left and the DetailPanel on the right, with a 32 gap.                                                                                                                |
+| Brief layout       | **Phone:** coverage line, then Needs you, Good to know and Set aside, with a detail sheet. **600–959:** the phone layout in one column, at most `--content-narrow` (640) wide and centered. **Desktop (≥ 960):** list column 416 on the left and the DetailPanel on the right, with a 32 gap.                                                                                                               |
 | Coverage line      | “38 emails overnight, all in Outlook.” Per-account rules sit under it (“Quiet hours: work email hides after 7:00 PM”).                                                                                                                                                                                      |
 | Item lifecycle     | **Done** (manual or reply detected), **snoozed** (comes back at a time), **leaving** (collapse), then a done row with Undo. When nothing is left: “Nothing else needs you today”.                                                                                                                           |
 | New mail           | NewMailRow. Adding it puts new items at the end of the ranking and adds the rest to Set aside.                                                                                                                                                                                                              |
@@ -382,9 +440,9 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 | First brief        | Connected inboxes with checks, reading progress (“312 of 480 emails”), a skeleton of the brief, and “Read-only” reassurance.                                                                                                                                                                                |
 | Disconnected inbox | Say what is missing in three places: the coverage line, a Notice with Reconnect (the one primary), and the section header (“From Gmail only”).                                                                                                                                                              |
 | Quiet hours        | Phone, evening: the greeting changes (“Good evening, Daniel”), the coverage line says which inbox is shown (“Personal inbox only.”), a moon label says until when, and a calm card says what is waiting with “Show work email anyway” (text button). Good to know and Set aside show only allowed accounts. |
-| Overload           | Needs you shows what fits one screen (phone: top 4), then “Show 8 more, ranked the same way”. Good to know and Set aside collapse into rows.                                                                                                                                                                |
+| Overload           | Needs you shows what fits one screen (phone: top 4), then “Show 8 more, ranked the same way”; the revealed rows enter with the enter motion and the button is removed. Good to know and Set aside collapse into rows.                                                                                                                                                                |
 | L1 / L2 / L3       | **Demo only.** The same facts as a paragraph, as formatted text, and as components.                                                                                                                                                                                                                         |
-| Demo bar           | **Demo only.** Dark bar: persona switch, level switch, “Simulate {sender}’s reply”. Never styled like the product.                                                                                                                                                                                          |
+| Demo bar           | **Demo only.** Dark bar in both themes, built from `--color-demo-*` tokens: persona switch, level switch, theme switch (System · Light · Dark), “Simulate reply to {sender}”. Controls hover with `--color-demo-control-hover`. On phone, a “Demo” button opens the same controls in a panel that drops down under the bar (not the product's sheet). Never styled like the product.                                                                                                                                                                                          |
 
 ---
 
@@ -411,7 +469,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 ```
 Introduction        What Glance is, how the system is organized, links to the app, prototypes and docs
 Foundations/        Colors (light and dark), Type, Spacing, Radius, Motion
-Primitives/         Button, IconButton, SegmentedControl, FactChip, AccountLabel, Badge, GlanceMark,
+Primitives/         Button, IconButton, SegmentedControl, FactChip, AccountLabel, Badge, GlanceMark, ReasonPill,
                     Field, Highlight, SourcePanel, ReasonPanel, DateTile, Person, Checkbox, Switch,
                     ProgressBar, Skeleton, Icons
 Composites/         BriefRow, SectionCard, KnowRow, CollapsedGroup, SetAsideList, DoneRow, NewMailRow,
