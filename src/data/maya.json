@@ -66,9 +66,9 @@
           "label": "$48,000/yr contract",
           "urgent": false,
           "source": {
-            "pre": "Can you send revised pricing before our review on Friday? Our current contract ",
-            "hl": "($48,000/yr)",
-            "post": " renews on Nov 15, and we’re evaluating other vendors before we commit."
+            "pre": "Can you send revised pricing before our review on Friday? Our current contract (",
+            "hl": "$48,000/yr",
+            "post": ") renews on Nov 15, and we’re evaluating other vendors before we commit."
           }
         },
         {
@@ -132,13 +132,13 @@
               "kind": "time",
               "tag": "Time · Due Fri"
             },
-            "? Our current contract ",
+            "? Our current contract (",
             {
-              "t": "($48,000/yr)",
+              "t": "$48,000/yr",
               "kind": "money",
               "tag": "Money · $48,000/yr contract"
             },
-            " ",
+            ") ",
             {
               "t": "renews on Nov 15",
               "kind": "time",

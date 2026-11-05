@@ -52,6 +52,14 @@ All values come from `tokens.css`. The groups are:
 | `--color-sunken-hover` | `#E6E5EC` | `#34333F` | Neutral and icon button hover fill |
 | `--color-sunken-pressed` | `#D9D8E0` | `#3B3A47` | Neutral and icon button pressed fill |
 | `--color-brand-text-hover` | `#3529B0` | `#CFCBFF` | Text button hover and pressed ink |
+| `--color-money-field-hover` | `var(--color-money-selected)` | `var(--color-money-selected)` | Money Field hover fill |
+| `--color-money-field-pressed` | `var(--color-money-tint)` | `var(--color-money-tint)` | Money Field pressed fill |
+| `--color-time-field-hover` | `var(--color-time-selected)` | `var(--color-time-selected)` | Time Field hover fill |
+| `--color-time-field-pressed` | `var(--color-time-tint)` | `var(--color-time-tint)` | Time Field pressed fill |
+| `--color-people-field-hover` | `var(--color-people-selected)` | `var(--color-people-selected)` | People Field hover fill |
+| `--color-people-field-pressed` | `var(--color-people-tint)` | `var(--color-people-tint)` | People Field pressed fill |
+
+Field aliases are declared once in `:root` and resolve against the active light or dark palette.
 
 If a component needs a value that is not a token, **stop and ask in the PR**. Do not add it inline.
 
@@ -147,6 +155,11 @@ A value from the email. This is the building block of every scene card.
 
 **Without a fact:** the field is plain text. It is not focusable, and it has no underline.
 
+The enclosing item resolves the fact ID and supplies its `kind` plus `onSelect(factId)`. `selected` is controlled by that item, and `sourcePanelId` links the trigger to its source region. Enter or Space opens the source; closing the connected example restores focus to the field.
+
+Keyboard focus uses the same 2 px brand outline and 2 px offset as the other primitives. Unselected sourced fields use their type's `-field-hover` and `-field-pressed` aliases, with the 160 ms fast transition. Their text and dotted underline stay unchanged. Selected ink takes precedence over hover and pressed; unsourced fields have neither interaction state.
+
+
 ### Highlight
 
 Inline ink on words in a source or an email.
@@ -159,14 +172,21 @@ Inline ink on words in a source or an email.
 
 Text that wraps keeps the ink on every line (`box-decoration-break: clone`). Short facts do not wrap.
 
+`wrap` defaults to false for short facts; set it for source passages that can span lines. The ink and the inset `--border-selected` ring are cloned on every line. `animate` sweeps the ink and, when selected, reveals the ring afterward. Reduced motion shows the completed ink and ring immediately.
+
+
 ### SourcePanel
 
 - **Header:** “Source · {sender} · {date}”, an “Open email” text button, and a close IconButton.
 - **Body:** the sentence in `Reading` style, with the fact highlighted.
+- **Narrow header:** actions stay together on one line at the top right; the sender and date wrap within the remaining left column.
 - **Entrance:**
   1. The panel fades in (200 ms).
   2. The ink sweeps across the words left to right (480 ms).
   3. The ring appears (200 ms).
+
+The panel accepts `from`, `when`, `source` (`pre`, `hl`, `post`), and `kind`. The caller handles `onOpenEmail` and `onClose`; the primitive does not choose an email app or a mobile sheet layout. `animate` defaults to true. Remount the panel to replay the entrance; the Storybook examples provide **Replay source reveal**. With reduced motion, all three stages appear immediately.
+
 
 ### ReasonPanel (“Glance’s read”)
 

@@ -1,0 +1,58 @@
+.example {
+  display: grid;
+  gap: var(--space-16);
+  min-inline-size: 0;
+}
+.sheet {
+  display: grid;
+  gap: var(--space-16);
+  padding: var(--space-24);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-16);
+}
+.columns {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, calc(var(--size-button) * 5)), 1fr)
+  );
+  gap: var(--space-16);
+  align-items: start;
+}
+.specimen {
+  display: grid;
+  gap: var(--space-16);
+  min-inline-size: 0;
+}
+.specimen h3 {
+  margin: 0;
+}
+.wrap {
+  display: block;
+  max-inline-size: calc(var(--size-button) * 5);
+}
+.email {
+  display: grid;
+  gap: var(--space-12);
+  padding: var(--space-16);
+  background: var(--color-surface-muted);
+  border-radius: var(--radius-panel-small);
+}
+
+.example > button {
+  justify-self: start;
+}
+
+.narrow {
+  max-inline-size: calc(var(--size-touch) * 7);
+}
+
+.specimen[data-field-state='Selected'] {
+  grid-column: 1 / -1;
+}
