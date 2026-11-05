@@ -35,11 +35,7 @@ Issues 01 → 18, one PR each, in this order: 01, 02, 17, 03, 04, 05, **18**, 06
 
 ## Creating the issues on GitHub
 
-Either paste each file in `issues/` into **Issues → New issue** (title = first line, body = the rest), or, with the GitHub CLI logged in:
-
-```sh
-sh docs/handoff/create-issues.sh
-```
+All issues have already been created on GitHub. Do not run `create-issues.sh` again; it would create duplicate issues. Work from the existing GitHub issues and the matching files in `issues/`.
 
 ## Reviewing a pull request (designer checklist)
 
