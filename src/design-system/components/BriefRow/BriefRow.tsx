@@ -8,6 +8,7 @@ import { useDesktopLayout } from '../useDesktopLayout';
 import control from '../Control.module.css';
 import row from '../ListRow.module.css';
 import motion from '../ListMotion.module.css';
+import styles from './BriefRow.module.css';
 
 interface BriefRowProps {
   item: Item;
@@ -42,6 +43,7 @@ export function BriefRow({
       inert={leaving}
       className={[
         motion.shell,
+        !desktop && styles.phone,
         item.isNew && motion.enter,
         leaving && motion.leaving,
       ]

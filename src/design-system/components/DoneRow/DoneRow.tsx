@@ -7,7 +7,7 @@ interface DoneRowProps {
   name: string;
   note: string;
   kind?: 'done' | 'snoozed' | 'moved';
-  onUndo: () => void;
+  onUndo?: () => void;
 }
 export function DoneRow({ name, note, kind = 'done', onUndo }: DoneRowProps) {
   return (
@@ -26,14 +26,16 @@ export function DoneRow({ name, note, kind = 'done', onUndo }: DoneRowProps) {
         <strong>{name}</strong>
         {' · ' + note}
       </span>
-      <Button
-        variant="text"
-        size="compact"
-        onClick={onUndo}
-        aria-label={'Undo ' + name}
-      >
-        Undo
-      </Button>
+      {onUndo && (
+        <Button
+          variant="text"
+          size="compact"
+          onClick={onUndo}
+          aria-label={'Undo ' + name}
+        >
+          Undo
+        </Button>
+      )}
     </div>
   );
 }

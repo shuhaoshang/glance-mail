@@ -12,6 +12,7 @@
   --pressed-fill: var(--color-row-pressed);
 }
 .selected {
+  --pressed-fill: var(--color-brand-tint-pressed);
   --control-fill: var(--color-brand-tint);
   --hover-fill: var(--color-brand-tint-hover);
 }

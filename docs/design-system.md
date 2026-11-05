@@ -309,9 +309,11 @@ The same row for every item, whatever its type.
 
 - Default: no fill.
 - Hover: `--color-row-hover`. Pressed: `--color-row-pressed`. No outline; the outline is for keyboard focus only.
-- Selected: `--color-brand-tint` fill and `aria-pressed`; the rank turns brand. Selected and hovered: `--color-brand-tint-hover`.
+- Selected: `--color-brand-tint` fill and `aria-pressed`; the rank turns brand. Selected and hovered: `--color-brand-tint-hover`. Selected and pressed: `--color-brand-tint-pressed`.
 - Leaving: collapses over `--duration-collapse` (320 ms).
 - New: shows the `New` Badge and enters with the enter motion (§2).
+
+On phone, adjacent BriefRows have a `--border-hairline` divider in `--color-border` that starts at the content edge, after the rank and gap. Desktop BriefRows have no dividers between them.
 
 ### SectionCard
 
@@ -342,7 +344,7 @@ On desktop the list opens in the detail area. On phone it opens in the same shee
 
 ### DoneRow
 
-A brand check (a muted clock for snoozed items, a muted tray-arrow for items moved to Set aside), then “**Name** · what happened”, then an Undo text button. Done rows appear with the enter motion (§2).
+A filled `--color-brand` circle with an `--color-on-brand` check at `--size-icon` (a muted clock for snoozed items, a muted tray-arrow for items moved to Set aside), then “**Name** · what happened”. Undo is optional: only items done during the session receive `onUndo` and show the Undo text button. Rows from `doneBefore` have no restore data and no Undo. Done rows appear with the enter motion (§2).
 
 ### NewMailRow
 

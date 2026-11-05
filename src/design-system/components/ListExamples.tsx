@@ -54,11 +54,7 @@ export function ListOverview({ personaId }: { personaId: PersonaId }) {
               />
             ))}
             {persona.doneBefore.map((done) => (
-              <DoneRow
-                key={done.name}
-                {...done}
-                onUndo={() => setAction('Undo requested: ' + done.name)}
-              />
+              <DoneRow key={done.name} {...done} />
             ))}
           </SectionCard>
           <CollapsedGroup

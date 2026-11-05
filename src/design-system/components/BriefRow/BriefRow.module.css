@@ -1,0 +1,15 @@
+.phone {
+  position: relative;
+}
+.phone + .phone::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: calc(
+    var(--space-12) + var(--size-icon) + var(--space-12)
+  );
+  inset-inline-end: var(--space-12);
+  border-block-start: var(--border-hairline) solid var(--color-border);
+  pointer-events: none;
+  z-index: 1;
+}

@@ -17,7 +17,11 @@
   color: var(--color-text-secondary);
 }
 .done {
-  color: var(--color-brand);
+  color: var(--color-on-brand);
+  background: var(--color-brand);
+  border-radius: var(--radius-pill);
+  inline-size: var(--size-icon);
+  block-size: var(--size-icon);
   flex: none;
 }
 .muted {
