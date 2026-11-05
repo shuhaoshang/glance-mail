@@ -8,7 +8,7 @@ import { itemViews } from './detailExampleData';
 const meta = {
   title: 'Primitives/SegmentedControl',
   component: SegmentedControl,
-  parameters: { layout: 'centered' },
+  parameters: { layout: 'padded' },
   args: {
     'aria-label': 'Item views',
     options: itemViews,
@@ -43,6 +43,25 @@ export const Hover: Story = {
 export const FocusVisible: Story = {
   parameters: {
     pseudo: { focusVisible: '[role="tab"][aria-selected="true"]' },
+  },
+};
+export const FocusAdjacentHover: Story = {
+  parameters: {
+    pseudo: {
+      focusVisible: '[role="tab"][aria-selected="true"]',
+      hover: '[role="tab"]:nth-child(2)',
+    },
+  },
+};
+export const SelectedHover: Story = {
+  parameters: { pseudo: { hover: '[role="tab"][aria-selected="true"]' } },
+};
+export const SelectedPressed: Story = {
+  parameters: {
+    pseudo: {
+      hover: '[role="tab"][aria-selected="true"]',
+      active: '[role="tab"][aria-selected="true"]',
+    },
   },
 };
 export const Pressed: Story = {
