@@ -27,7 +27,7 @@ Add these to `src/design-system/tokens/tokens.css`. The two colors are aliases d
 
 ## What to build
 - **`BriefRow`:** rank, name, optional AccountLabel and Badge, a request of up to two lines (✦ for summaries, “ ” for quotes), and up to 2 FactChips (urgent first). States: default, hover, pressed, focus-visible, selected (`aria-pressed`), leaving (collapses over `--duration-collapse`), new.
-- **`SectionCard`:** title, count, and a right slot that accepts any content. Use text in the stories (“Most urgent first”, “From Gmail only”); ProgressBar comes in issue 13.
+- **`SectionCard`:** title, count, and a right slot that accepts any content. Use text in the stories (“Most urgent first”, “From Gmail only”); ProgressBar comes in issue 18.
 - **`ReasonPill`** (primitive): both sizes; see Decision 4 and the §3 spec.
 - **`KnowRow`:** icon tile (from `icon` and `tone` in the data), bold title, text with one underlined fact value (`fact.value`) that opens its SourcePanel inline, optional AccountLabel, optional ReasonPill, and the “Moved by you” variant (no fact).
 - **`CollapsedGroup`:** the Set aside card button, with the same row states as BriefRow; selected while the Set aside view is open.
@@ -50,4 +50,4 @@ Add these to `src/design-system/tokens/tokens.css`. The two colors are aliases d
 `docs/design-system.md` §2–4, `docs/design-rules.md` §3–5 and §11, `docs/screens/`
 
 ## Out of scope
-Page layout (issue 06), the full ReasonPanel (issue 08), SetAsideList (issue 12), ProgressBar (issue 13).
+Page layout (issue 06), the full ReasonPanel (issue 08), SetAsideList (issue 12), ProgressBar (issue 18).

@@ -232,7 +232,7 @@ The panel accepts `from`, `when`, `source` (`pre`, `hl`, `post`), and `kind`. Th
   - Title: “Glance’s reasoning · not stated in the email”.
   - One line per judgment.
   - Each judgment with evidence shows a nested source, using `judgment` ink.
-  - Last, under a divider: “Not for you? Glance will rank emails like this lower.” with a neutral outlined button “Move to Set aside” (tray-arrow icon). See design-rules §8.
+  - Last, under a divider: “Not for you? Glance will rank emails like this lower.” with an outline Button “Move to Set aside” (tray-arrow icon). See design-rules §8.
 
 ### DateTile
 

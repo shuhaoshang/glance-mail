@@ -19,7 +19,7 @@ The designer approved these before the work started. They are written into `docs
 - Snooze menu (3 options); snoozed rows show a clock and Undo.
 - Progress updates; when nothing is left show “Nothing else needs you today” with Good to know and Set aside counts.
 - Demo bar button “Simulate reply to {sender}” (from `demo.simulate`): marks that item done as “reply detected in {app}, {time}”. If already done, the button says so.
-- **Move to Set aside** (decision D37): at the end of Glance’s reasoning, “Not for you? Glance will rank emails like this lower.” and a neutral “Move to Set aside” button. The item collapses like Done, the next item is selected, a `DoneRow` reads “**Name** · moved to Set aside by you” with Undo, the action count drops by one (never counted as done), and Set aside grows by one. Issue 12 shows it in Set aside.
+- **Move to Set aside** (decision D37): at the end of Glance’s reasoning, “Not for you? Glance will rank emails like this lower.” and an outline “Move to Set aside” button. The item collapses like Done, the next item is selected, a `DoneRow` reads “**Name** · moved to Set aside by you” with Undo, the action count drops by one (never counted as done), and Set aside grows by one. Issue 12 shows it in Set aside.
 - **Checklist complete** (decision D34): when every step of a checklist is ticked, “Mark done” becomes the primary, “Open in {app}” turns neutral, Snooze is hidden, and `scene.doneNote` appears under the card. Unticking a step restores the default bar. Ticks never mark the item done on their own.
 
 ## Acceptance criteria
