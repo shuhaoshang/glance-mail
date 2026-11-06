@@ -88,6 +88,8 @@ Rows and content that appear (a new BriefRow, a DoneRow, an Ask answer, rows rev
 | `--size-handle-width` | `36px` | Sheet handle | 08 |
 | `--size-handle-height` | `4px` | Sheet handle | 08 |
 | `--color-demo-control-hover` | `#36343F` (both themes) | Demo bar control hover | 11 |
+| `--color-demo-control-pressed` | `#42404D` (both themes) | Unselected demo control press | 11 |
+| `--content-reading` | `784px` | L1/L2 card outer maximum width (720 text plus 32 padding per side on desktop) | 11 |
 | `--duration-shimmer` | `1600ms` (no shimmer under reduced motion) | Skeleton shimmer | 13 |
 
 Each issue adds its own tokens to `tokens.css`; this table says where every value comes from.
@@ -463,7 +465,13 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 | Quiet hours        | Phone, evening: the greeting changes (“Good evening, Daniel”), the coverage line says which inbox is shown (“Personal inbox only.”), a moon label says until when, and a calm card says what is waiting with “Show work email anyway” (text button). Good to know and Set aside show only allowed accounts. |
 | Overload           | Needs you shows what fits one screen (phone: top 4), then “Show 8 more, ranked the same way”; the revealed rows enter with the enter motion and the button is removed. Good to know and Set aside collapse into rows.                                                                                                                                                                |
 | L1 / L2 / L3       | **Demo only.** The same facts as a paragraph, as formatted text, and as components.                                                                                                                                                                                                                         |
-| Demo bar           | **Demo only.** Dark bar in both themes, built from `--color-demo-*` tokens: persona switch, level switch, theme switch (System · Light · Dark), “Simulate reply to {sender}”. Controls hover with `--color-demo-control-hover`. On phone, a “Demo” button opens the same controls in a panel that drops down under the bar (not the product's sheet). Never styled like the product.                                                                                                                                                                                          |
+| Demo bar           | **Demo only.** Dark bar in both themes, built from `--color-demo-*` tokens: persona switch, level switch, theme switch (System · Light · Dark), “Simulate reply to {sender}”. Unselected controls hover with `--color-demo-control-hover` and press with `--color-demo-control-pressed`; selected controls retain the demo-text fill and demo-bg text. On phone, a “Demo” button opens the same controls in a panel that drops down under the bar (not the product's sheet). Never styled like the product.                                                                                                                                                                                          |
+
+The demo control groups follow the “Demo controls” caption directly on desktop, with the right end available for later reply simulation and theme controls. The L1 and L2 cards have a `--content-reading` outer maximum width.
+
+Below 600 px, visible persona labels are “Maya”, “Daniel”, and “Sarah”; level labels are “1 Plain”, “2 Formatted”, and “3 Glance”. From 600 px upward, the full labels remain visible. Accessible button names always retain the full persona/role and level labels.
+
+The narrow demo panel opens with `--duration-enter`, moving downward by `--space-4` with `--ease-standard`. Reduced motion shows the final state immediately. Closing uses the existing toggle or Escape.
 
 ---
 
