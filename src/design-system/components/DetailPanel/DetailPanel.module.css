@@ -171,3 +171,17 @@
 .mobile .snooze {
   inset-inline: var(--space-20);
 }
+.mobile .navigation > [role='tablist'] > button {
+  padding-inline: var(--space-8);
+}
+.mobile .actions > button,
+.mobile .complete .inbox {
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  padding-inline: var(--space-8);
+}
+.mobile .complete .done {
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-16);
+  padding-inline: var(--space-20);
+}
