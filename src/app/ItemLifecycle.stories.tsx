@@ -161,6 +161,24 @@ export const SnoozeAndUndo: Story = {
   play: async ({ canvas }) => {
     await select(canvas, 'Halden Health');
     const trigger = canvas.getByRole('button', { name: /^Snooze$/ });
+    if (canvas.queryByRole('dialog')) {
+      const sibling = canvas.getByRole('button', { name: /^Done$/ });
+      const footer = trigger.closest('footer')!;
+      const available =
+        footer.clientWidth -
+        parseFloat(getComputedStyle(footer).paddingLeft) -
+        parseFloat(getComputedStyle(footer).paddingRight);
+      const gap = parseFloat(getComputedStyle(footer).columnGap);
+      await expect(trigger.getBoundingClientRect().width).toBeCloseTo(
+        sibling.getBoundingClientRect().width,
+        1,
+      );
+      await expect(
+        trigger.getBoundingClientRect().width +
+          sibling.getBoundingClientRect().width +
+          gap,
+      ).toBeCloseTo(available, 1);
+    }
     await userEvent.click(trigger);
     await userEvent.keyboard('{Escape}');
     await expect(trigger).toHaveFocus();
@@ -265,6 +283,9 @@ export const AllSnoozed: Story = {
     }
     await progress(canvas, 0, 1, 4);
     await expect(
+      canvas.getByRole('heading', { name: 'Nothing else needs you right now' }),
+    ).toBeVisible();
+    await expect(
       canvas.getByRole('region', { name: 'All done' }),
     ).toHaveTextContent('3 snoozed items will come back later.');
     await userEvent.click(
@@ -282,30 +303,10 @@ export const MoveToSetAside: Story = {
   },
 };
 
-// Review captures wait for the prepared interaction state, including row removal.
-for (const story of [
-  Done,
-  Snooze,
-  Moved,
-  Undo,
-  ChecklistComplete,
-  AllDone,
-  SimulatedReply,
-  MoveToSetAside,
-  SarahFlow,
-]) {
-  const prepare = story.play;
-  story.play = async (context) => {
-    await prepare?.(context);
-    context.canvasElement.dataset.reviewReady = 'true';
-  };
-}
-
 export const SimulateReady: Story = {
-  play: async ({ canvas, canvasElement }) => {
+  play: async ({ canvas }) => {
     const trigger = canvas.queryByRole('button', { name: /^Demo$/ });
     if (trigger) await userEvent.click(trigger);
-    canvasElement.dataset.reviewReady = 'true';
   },
 };
 export const ReducedMotion: Story = {
@@ -336,3 +337,72 @@ export const SimulateInTextLevel: Story = {
     ).toBeVisible();
   },
 };
+
+export const SnoozedEmpty: Story = {
+  play: async ({ canvas }) => {
+    for (const name of [
+      'Fernway Logistics',
+      'Brightline Studio',
+      'Halden Health',
+    ]) {
+      await select(canvas, name);
+      await userEvent.click(canvas.getByRole('button', { name: /^Snooze$/ }));
+      await userEvent.click(
+        canvas.getByRole('button', { name: 'Later today, 3:00 PM' }),
+      );
+      await settled(canvas, name);
+    }
+    await progress(canvas, 0, 1, 4);
+    await expect(
+      canvas.getByRole('heading', { name: 'Nothing else needs you right now' }),
+    ).toBeVisible();
+  },
+};
+
+export const SnoozedResult: Story = {
+  play: async ({ canvas }) => {
+    await select(canvas, 'Fernway Logistics');
+    await userEvent.click(canvas.getByRole('button', { name: /^Snooze$/ }));
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Tomorrow, 8:00 AM' }),
+    );
+    await settled(canvas, 'Fernway Logistics');
+  },
+};
+export const SimulatedResult: Story = {
+  play: async ({ canvas }) => {
+    await simulate(canvas, 'Simulate reply to Priya');
+    await settled(canvas, 'Fernway Logistics');
+    const trigger = canvas.queryByRole('button', { name: /^Demo$/ });
+    if (trigger && trigger.getAttribute('aria-expanded') === 'true')
+      await userEvent.click(trigger);
+  },
+};
+
+// A capture is ready after its prepared state and entrance animations finish.
+for (const story of [
+  Done,
+  Snooze,
+  Moved,
+  Undo,
+  ChecklistComplete,
+  AllDone,
+  SimulatedReply,
+  MoveToSetAside,
+  SarahFlow,
+  SimulateReady,
+  SnoozedEmpty,
+  SnoozedResult,
+  SimulatedResult,
+]) {
+  const prepare = story.play;
+  story.play = async (context) => {
+    await prepare?.(context);
+    await Promise.all(
+      context.canvasElement
+        .getAnimations({ subtree: true })
+        .map((animation) => animation.finished.catch(() => {})),
+    );
+    context.canvasElement.dataset.reviewReady = 'true';
+  };
+}

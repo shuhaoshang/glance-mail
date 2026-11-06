@@ -1,3 +1,4 @@
+import { useDesktopLayout } from '../useDesktopLayout';
 import type { Ref } from 'react';
 import { Button } from '../Button/Button';
 import { Icon } from '../Icon/Icon';
@@ -20,8 +21,19 @@ export function DoneRow({
   undoRef,
   undoDisabled,
 }: DoneRowProps) {
+  const desktop = useDesktopLayout();
   return (
-    <div role="listitem" className={[styles.row, motion.enter].join(' ')}>
+    <div
+      role="listitem"
+      className={[
+        styles.row,
+        onUndo && styles.withUndo,
+        !desktop && styles.phone,
+        motion.enter,
+      ]
+        .filter(Boolean)
+        .join(' ')}
+    >
       <Icon
         name={
           kind === 'done'
@@ -41,7 +53,8 @@ export function DoneRow({
           ref={undoRef}
           disabled={undoDisabled}
           variant="text"
-          size="compact"
+          size="touch"
+          className={styles.undo}
           onClick={onUndo}
           aria-label={'Undo ' + name}
         >

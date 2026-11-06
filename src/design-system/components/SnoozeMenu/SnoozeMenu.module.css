@@ -3,7 +3,10 @@
   gap: var(--space-12);
   padding: var(--space-16) var(--space-20);
   border-radius: var(--radius-panel);
-  background: var(--color-surface-muted);
+  background: var(--color-surface);
+  box-shadow:
+    inset 0 0 0 var(--border-hairline) var(--color-border-strong),
+    var(--shadow-popover);
   animation: enter var(--duration-reveal) var(--ease-standard) both;
 }
 .title {

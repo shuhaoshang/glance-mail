@@ -107,7 +107,7 @@ Nothing disappears silently: every count on screen can be opened.
 
 - **Done** comes from two places: Glance detects the action in the email app (“reply detected in Outlook, 9:14 AM”), or the user marks it done.
 - Done items move below the list with an **Undo** action.
-- When nothing is left: “Nothing else needs you today”, followed by what is still in Good to know and Set aside.
+- When nothing is left: “Nothing else needs you right now” if any snoozed items will come back later; otherwise “Nothing else needs you today”. The body names the snoozed count, if present, and what is still in Good to know and Set aside.
 - **Show in brief** (in Set aside) moves an email to Good to know, marked “Moved by you”, lowers the Set aside count and teaches Glance. It can be undone from the same row.
 - **Move to Set aside** is the opposite, for a Needs you item that doesn’t need the user. It sits at the end of Glance’s reasoning (“Not for you? Glance will rank emails like this lower.”). The item collapses like Done, a row “**Name** · moved to Set aside by you” with Undo appears under the list, it is no longer counted as an action, and it shows in Set aside under “Moved by you” with “Back to Needs you” (D37). It is never counted as done.
 - Nothing that looks pressable is inert. If a control can’t act in the demo, it is plain text.

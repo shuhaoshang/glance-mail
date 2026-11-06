@@ -20,7 +20,9 @@ export function AllDone({
         <Icon name="check" />
       </span>
       <Text as="h2" variant="title" className={styles.title}>
-        Nothing else needs you today
+        {snoozed > 0
+          ? 'Nothing else needs you right now'
+          : 'Nothing else needs you today'}
       </Text>
       <Text as="p" variant="body" className={styles.text}>
         {done +

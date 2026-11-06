@@ -148,15 +148,24 @@
   padding-block-end: var(--space-12);
   z-index: 2;
 }
+.mobile .actions > a,
+.mobile .actions > button {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  margin-inline-start: 0;
+}
 .mobile .actions .inbox {
   inline-size: 100%;
+  flex-basis: 100%;
 }
 .mobile .complete .done {
+  flex-basis: 100%;
   order: -1;
   inline-size: 100%;
   margin: 0;
 }
 .mobile .complete .inbox {
+  flex-basis: 0;
   inline-size: auto;
 }
 .mobile .snooze {

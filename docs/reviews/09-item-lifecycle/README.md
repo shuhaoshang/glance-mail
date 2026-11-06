@@ -16,6 +16,7 @@ Desktop captures use the user-flow viewport of 1280 × 800; phone captures use 3
 | After Undo | [Light](desktop-undo-light.jpg) | [Dark](desktop-undo-dark.jpg) | [Light](phone-undo-light.jpg) | [Dark](phone-undo-dark.jpg) |
 | Sarah: both steps checked | [Light](desktop-checklist-complete-light.jpg) | [Dark](desktop-checklist-complete-dark.jpg) | [Light](phone-checklist-complete-light.jpg) | [Dark](phone-checklist-complete-dark.jpg) |
 | All actions done | [Light](desktop-all-done-light.jpg) | [Dark](desktop-all-done-dark.jpg) | [Light](phone-all-done-light.jpg) | [Dark](phone-all-done-dark.jpg) |
+| All remaining items snoozed | [Light](desktop-snoozed-empty-light.jpg) | [Dark](desktop-snoozed-empty-dark.jpg) | [Light](phone-snoozed-empty-light.jpg) | [Dark](phone-snoozed-empty-dark.jpg) |
 | Demo reply control | [Light](desktop-simulate-ready-light.jpg) | [Dark](desktop-simulate-ready-dark.jpg) | [Light](phone-simulate-ready-light.jpg) | [Dark](phone-simulate-ready-dark.jpg) |
 | Simulated reply detected | [Light](desktop-simulated-reply-light.jpg) | [Dark](desktop-simulated-reply-dark.jpg) | [Light](phone-simulated-reply-light.jpg) | [Dark](phone-simulated-reply-dark.jpg) |
 | Sarah: two of three done | [Light](desktop-sarah-flow-light.jpg) | [Dark](desktop-sarah-flow-dark.jpg) | [Light](phone-sarah-flow-light.jpg) | [Dark](phone-sarah-flow-dark.jpg) |
@@ -53,8 +54,14 @@ Snooze leaves the action total unchanged and never increases done. Move to Set a
 - Reply simulation uses each persona's supplied target, note, detected label, and already-done label. Simulation also works in Plain/Formatted demo levels. No reply is sent.
 - Previously completed rows keep their original notes and have no Undo.
 
-## Scope and open question
+## Review follow-up and scope
 
 Ask belongs to task 10; the Set aside view and Review set aside action belong to task 12. This task updates its count and retains moved items for that later view.
 
-The written spec says “Nothing else needs you today”; the prototype changes this to “Nothing else needs you right now” when the remaining items are snoozed. The implementation follows the written heading and explicitly lists the snoozed count in the body. Proposed follow-up: use “right now” only for that snoozed state if the designer confirms.
+The review confirmed the empty heading: use “Nothing else needs you right now” whenever snoozed items will return, and “Nothing else needs you today” only when nothing is snoozed. The specifications and product brief now match.
+
+SnoozeMenu remains an overlay and uses the approved surface fill, strong hairline ring, and popover shadow. The shadow token is defined for light, automatic dark, and explicit dark themes.
+
+Rows with Undo use the reference padding and contain a separate 44 px target; adjacent targets are checked for overlap. Phone Snooze and Done share the second row equally, and the single neutral Open action fills it after checklist completion. Primary and secondary heights remain 48 and 44 px.
+
+Regression checks cover both empty headings, the existing lifecycle counts, adjacent Undo target bounds at desktop and phone widths, and equal phone action widths.

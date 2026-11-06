@@ -28,3 +28,17 @@
   color: var(--color-icon-muted);
   flex: none;
 }
+
+.row.withUndo {
+  min-block-size: var(--size-touch);
+  gap: var(--space-12);
+  padding: var(--space-8) var(--space-4) var(--space-8) var(--space-12);
+}
+.row.withUndo.phone {
+  padding-inline: var(--space-16) var(--space-8);
+}
+.undo {
+  flex: none;
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
