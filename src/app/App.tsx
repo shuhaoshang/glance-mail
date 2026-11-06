@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { getPersona, type PersonaId } from '../data';
 import type { Account } from '../data/types';
 import { Text } from '../design-system/components/Text/Text';
@@ -24,7 +24,13 @@ function openInbox(account: Account) {
   window.open(urls[account.app], '_blank', 'noopener,noreferrer');
 }
 
-function Brief({ personaId }: { personaId: PersonaId }) {
+function Brief({
+  personaId,
+  children,
+}: {
+  personaId: PersonaId;
+  children?: ReactNode;
+}) {
   const persona = getPersona(personaId);
   const items = persona.items.filter((item) => !item.isNew);
   const [selectedId, setSelectedId] = useState(
@@ -77,72 +83,84 @@ function Brief({ personaId }: { personaId: PersonaId }) {
           )}
         </div>
       </header>
-      <div className={styles.layout}>
-        <div className={styles.list}>
-          <SectionCard
-            title="Needs you"
-            count={counts.needs}
-            rightSlot={
-              <div className={styles.progress}>
-                <Text
-                  variant="meta"
-                  role="status"
-                  aria-live="polite"
-                  aria-atomic="true"
-                >
-                  {counts.done + ' of ' + counts.actions + ' done'}
-                </Text>
-                <div className={styles.progressBar}>
-                  <ProgressBar
-                    value={counts.actions ? counts.done / counts.actions : 0}
-                  />
+      {children ?? (
+        <div className={styles.layout}>
+          <div className={styles.list}>
+            <SectionCard
+              title="Needs you"
+              count={counts.needs}
+              rightSlot={
+                <div className={styles.progress}>
+                  <Text
+                    variant="meta"
+                    role="status"
+                    aria-live="polite"
+                    aria-atomic="true"
+                  >
+                    {counts.done + ' of ' + counts.actions + ' done'}
+                  </Text>
+                  <div className={styles.progressBar}>
+                    <ProgressBar
+                      value={counts.actions ? counts.done / counts.actions : 0}
+                    />
+                  </div>
                 </div>
-              </div>
-            }
-          >
-            {items.map((item, index) => (
-              <BriefRow
-                key={item.id}
-                item={item}
-                rank={index + 1}
-                account={minorityAccount(item.account)}
-                selected={desktop && item.id === selectedId}
-                onSelect={(id) => {
-                  if (desktop) setSelectedId(id);
-                }}
-              />
-            ))}
-            {persona.doneBefore.map((item) => (
-              <DoneRow key={item.name} {...item} />
-            ))}
-          </SectionCard>
-          <SectionCard title="Good to know" count={counts.know}>
-            {persona.goodToKnow.map((item) => (
-              <KnowRow
-                key={item.title}
-                item={item}
-                account={minorityAccount(item.account)}
-                onOpenEmail={() => openInbox(accountFor(item.account))}
-              />
-            ))}
-          </SectionCard>
-          <CollapsedGroup groups={persona.setAside} static />
-        </div>
-        {desktop && selected && (
-          <div className={styles.detail}>
-            <DetailPanel
-              item={selected}
-              position={items.indexOf(selected) + 1}
-              total={counts.needs}
-              account={minorityAccount(selected.account)}
-            />
+              }
+            >
+              {items.map((item, index) => (
+                <BriefRow
+                  key={item.id}
+                  item={item}
+                  rank={index + 1}
+                  account={minorityAccount(item.account)}
+                  selected={desktop && item.id === selectedId}
+                  onSelect={(id) => {
+                    if (desktop) setSelectedId(id);
+                  }}
+                />
+              ))}
+              {persona.doneBefore.map((item) => (
+                <DoneRow key={item.name} {...item} />
+              ))}
+            </SectionCard>
+            <SectionCard title="Good to know" count={counts.know}>
+              {persona.goodToKnow.map((item) => (
+                <KnowRow
+                  key={item.title}
+                  item={item}
+                  account={minorityAccount(item.account)}
+                  onOpenEmail={() => openInbox(accountFor(item.account))}
+                />
+              ))}
+            </SectionCard>
+            <CollapsedGroup groups={persona.setAside} static />
           </div>
-        )}
-      </div>
+          {desktop && selected && (
+            <div className={styles.detail}>
+              <DetailPanel
+                item={selected}
+                position={items.indexOf(selected) + 1}
+                total={counts.needs}
+                account={minorityAccount(selected.account)}
+              />
+            </div>
+          )}
+        </div>
+      )}
     </main>
   );
 }
 
-export function App({ personaId }: { personaId: PersonaId }) {
-  return <Brief key={personaId} personaId={personaId} />;
+export function App({
+  personaId,
+  children,
+}: {
+  personaId: PersonaId;
+  children?: ReactNode;
+}) {
+  return (
+    <Brief key={personaId} personaId={personaId}>
+      {children}
+    </Brief>
+  );
 }

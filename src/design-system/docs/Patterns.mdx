@@ -14,4 +14,12 @@ import { section } from './section';
 
 The brief uses persona data at desktop, tablet, and phone widths. Desktop uses a header-only DetailPanel card; the full detail view follows in task 08. Narrow layouts have no selected row, and Set aside remains a static card until task 12.
 
+## Demo controls and levels
+
+[Demo bar and Glance](?path=/story/patterns-demo--glance) · [Plain AI text](?path=/story/patterns-demo--plain) · [Formatted text](?path=/story/patterns-demo--formatted)
+
+The demo bar is separate from the product brief. Switching personas preserves the level, and switching levels preserves the persona. The app writes persona changes to the URL; browser history restores the persona without resetting the current level. Level 3 is the default when the app loads.
+
+The narrow layout uses a Demo disclosure below the existing desktop breakpoint. The same controls appear under the bar and stay open until the toggle or Escape closes them. Later tasks add reply simulation and theme controls through the bar's extra-controls slot.
+
 <Markdown>{section(system, '6. Patterns')}</Markdown>
