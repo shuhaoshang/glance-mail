@@ -108,6 +108,7 @@ The pull requests and comments Codex writes are published from the designer's Gi
 - **Branch names**: `feat/<short-name>`, `ds/<component-name>` (design-system additions), `fix/<short-name>`, `docs/<short-name>`, `chore/<short-name>`.
 - **One concern per PR.** Keep PRs small enough to review in about 10 minutes.
 - **Commit messages** follow Conventional Commits, e.g. `feat(ds): add Badge component`.
+- **Reply after review changes.** After making changes in response to review feedback, post a PR comment starting with `[Codex] ` that addresses each review point individually, explains how it was handled, and gives a reason for any suggestion not adopted.
 - **PR description** must include:
   - **What**: what changed, in plain language
   - **Why**: the problem it solves
