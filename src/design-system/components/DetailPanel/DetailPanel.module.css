@@ -1,0 +1,46 @@
+.panel {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  min-inline-size: 0;
+  padding: var(--space-24) var(--space-32) var(--space-32);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  overflow-wrap: anywhere;
+}
+.topRow {
+  display: flex;
+  align-items: center;
+  min-block-size: calc(var(--size-touch-compact) + var(--space-4) * 2);
+}
+.panel .meta {
+  font-weight: var(--font-weight-semibold);
+}
+.identity {
+  display: grid;
+  gap: var(--space-8);
+}
+.panel .title {
+  font-size: var(--font-size-20);
+  line-height: var(--line-height-20);
+}
+.person {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+.requestGroup {
+  display: grid;
+  gap: var(--space-4);
+}
+.panel .request {
+  font-size: var(--font-size-24);
+  line-height: var(--line-height-24);
+}
+.preview {
+  inline-size: calc(
+    var(--content-max) - var(--column-list) - var(--gap-column)
+  );
+  max-inline-size: 100%;
+}

@@ -346,6 +346,8 @@ At most one panel is open in a SectionCard: a fact source or a judgment. Opening
 
 A card button: “31 set aside” plus a breakdown (“18 newsletters · 9 CC’d · 4 promotions”) and a chevron. It is selected while the Set aside view is open. It uses the same hover, pressed and selected fills as BriefRow. When selected, the category breakdown uses `--color-text-secondary` in the resting, hovered, and pressed states to preserve text contrast.
 
+Until the Set aside view exists, `CollapsedGroup` can render as a static card: count and category breakdown, no chevron, no interactive states, and no tab stop.
+
 ### SetAsideList
 
 Groups with a title and a count. Each row has a sender or subject, a subject line, and a “Show in brief” text button. A kept row shows “✓ In Good to know · Undo”. Below the rows: “+N more” as plain text, only when more exist.
@@ -368,6 +370,7 @@ A neutral card with an icon tile, a title and a body. It may hold one primary Bu
 
 ### DetailPanel (desktop) / DetailSheet (phone)
 
+- **Task 06 header:** the desktop card uses `--color-surface`, `--radius-card`, `--space-24` top padding and `--space-32` side/bottom padding. It contains the position, Title, Person and minority AccountLabel, then the request with its sender attribution or Glance summary label. Task 08 adds the tabs and body inside this card. Selection is displayed only while this panel is visible.
 - **Top row:** position (“Needs you · 1 of 3”) and the SegmentedControl.
 - **Then:** Title, Person and AccountLabel, the request (with GlanceMark when it is a summary), “From the email · select an underlined value”, the SceneCard, the SourcePanel, the ReasonPanel trigger (ReasonPill, default size).
 - **Bottom bar:**
