@@ -28,6 +28,12 @@ EmailView renders the supplied subject, metadata, and exact email paragraphs. It
 
 [AskThread](?path=/docs/composites-askthread--docs) offers prepared questions, attributed answers with judgment sources, and a plain not-found answer when the email does not say. The demo note replaces a free-text input.
 
+## Set aside and new mail
+
+[SetAsideList](?path=/docs/composites-setasidelist--docs) renders supplied group counts, mail rows, kept states, and items moved out of Needs you. Its caller owns keeping, undoing, restoring, and sheet navigation. Hidden-row counts exclude kept rows from the current Set aside count.
+
+[NewMailRow](?path=/docs/composites-newmailrow--docs) becomes a plain acknowledgement after adding mail. Whole emails kept in [KnowRow](?path=/docs/composites-knowrow--docs) use the mail tile and “Moved by you” label without invented facts.
+
 ## Component reference
 
 <Markdown>{section(system, '4. Composites')}</Markdown>

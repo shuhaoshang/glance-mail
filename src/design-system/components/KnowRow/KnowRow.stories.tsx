@@ -71,3 +71,13 @@ export const OnePanelPerCard: Story = {
     await expect(reason).toHaveAttribute('aria-expanded', 'false');
   },
 };
+
+export const KeptMail: Story = {
+  args: {
+    item: {
+      title: maya.setAside[0].rows.find((row) => !row.isNew)!.title,
+      sub: maya.setAside[0].rows.find((row) => !row.isNew)!.sub,
+      movedByUser: true,
+    },
+  },
+};

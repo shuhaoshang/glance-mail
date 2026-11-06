@@ -1,3 +1,4 @@
+import { Button } from '../Button/Button';
 import { Text } from '../Text/Text';
 import { Icon } from '../Icon/Icon';
 import styles from './AllDone.module.css';
@@ -7,12 +8,14 @@ export function AllDone({
   know,
   aside,
   snoozed = 0,
+  onReviewAside,
 }: {
   done: number;
   total: number;
   know: number;
   aside: number;
   snoozed?: number;
+  onReviewAside?: (trigger: HTMLButtonElement) => void;
 }) {
   return (
     <section aria-label="All done" className={styles.panel}>
@@ -42,6 +45,15 @@ export function AllDone({
           aside +
           ' emails are set aside.'}
       </Text>
+      {onReviewAside && (
+        <Button
+          data-review-set-aside
+          variant="tint"
+          onClick={(event) => onReviewAside(event.currentTarget)}
+        >
+          Review set aside
+        </Button>
+      )}
     </section>
   );
 }

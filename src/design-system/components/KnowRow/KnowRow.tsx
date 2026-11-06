@@ -8,10 +8,14 @@ import { SourcePanel } from '../SourcePanel/SourcePanel';
 import { GlanceMark } from '../GlanceMark/GlanceMark';
 import { Text } from '../Text/Text';
 import { useSectionDisclosure } from '../SectionCard/disclosure';
+import motion from '../ListMotion.module.css';
 import styles from './KnowRow.module.css';
 
 interface KnowRowProps {
-  item: KnowItem | Pick<Item, 'name' | 'request'>;
+  item:
+    | KnowItem
+    | Pick<Item, 'name' | 'request'>
+    | { title: string; sub: string; movedByUser: true };
   account?: Account;
   onOpenEmail: (source: KnowItem['fact']['source']) => void;
 }
@@ -23,6 +27,21 @@ export function KnowRow({ item, account, onOpenEmail }: KnowRowProps) {
   const factKey = prefix + '-fact',
     reasonKey = prefix + '-reason',
     panelId = prefix + '-source';
+  if ('movedByUser' in item)
+    return (
+      <div role="listitem" className={[styles.row, motion.enter].join(' ')}>
+        <div className={styles.main}>
+          <span className={[styles.tile, styles.neutral].join(' ')}>
+            <Icon name="mail" />
+          </span>
+          <div className={styles.text}>
+            <strong>{item.title}</strong>
+            {': ' + item.sub}
+          </div>
+          <span className={styles.moved}>Moved by you</span>
+        </div>
+      </div>
+    );
   if ('request' in item)
     return (
       <div role="listitem" className={styles.row}>

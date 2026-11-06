@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, waitFor } from 'storybook/test';
+import { expect, waitFor, fn } from 'storybook/test';
 import { AllDone } from './AllDone';
 const meta = {
   title: 'Composites/AllDone',
@@ -29,3 +29,5 @@ export const Snoozed: Story = {
     });
   },
 };
+
+export const ReviewSetAside: Story = { args: { onReviewAside: fn() } };
