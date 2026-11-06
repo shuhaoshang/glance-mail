@@ -39,3 +39,12 @@
   );
   max-inline-size: 100%;
 }
+
+.correction {
+  display: grid;
+  justify-items: start;
+  gap: var(--space-8);
+  border-block-start: var(--border-hairline) solid var(--color-border);
+  padding-block-start: var(--space-12);
+  margin-block-start: var(--space-4);
+}

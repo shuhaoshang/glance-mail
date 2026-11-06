@@ -7,8 +7,8 @@ const meta = {
   title: 'Composites/DoneRow',
   component: DoneRow,
   decorators: [
-    (Story) => (
-      <SectionCard title="Done" count={1}>
+    (Story, context) => (
+      <SectionCard title="Done" count={context.parameters.rowCount ?? 1}>
         <Story />
       </SectionCard>
     ),
@@ -54,5 +54,43 @@ export const Undo: Story = {
       canvas.getByRole('button', { name: 'Undo ' + args.name }),
     );
     await expect(args.onUndo).toHaveBeenCalledOnce();
+  },
+};
+
+export const AdjacentUndoTargets: Story = {
+  parameters: { rowCount: 3 },
+  args: { onUndo: fn() },
+  render: (args) => (
+    <>
+      {maya.items
+        .filter((item) => !item.isNew)
+        .map((item) => (
+          <DoneRow
+            key={item.id}
+            {...args}
+            name={item.name}
+            note="marked done in Glance"
+          />
+        ))}
+    </>
+  ),
+  play: async ({ canvas }) => {
+    const targets = canvas.getAllByRole('button', { name: /^Undo/ });
+    await expect(targets).toHaveLength(3);
+    const rects = [];
+    for (const target of targets) {
+      const row = target.closest('[role="listitem"]')!.getBoundingClientRect();
+      const bounds = target.getBoundingClientRect();
+      const minimum = parseFloat(
+        getComputedStyle(target).getPropertyValue('--size-touch'),
+      );
+      await expect(bounds.height).toBeGreaterThanOrEqual(minimum);
+      await expect(row.height).toBeGreaterThanOrEqual(minimum);
+      await expect(bounds.top).toBeGreaterThanOrEqual(row.top);
+      await expect(bounds.bottom).toBeLessThanOrEqual(row.bottom);
+      rects.push(bounds);
+    }
+    for (let i = 1; i < rects.length; i++)
+      await expect(rects[i].top).toBeGreaterThanOrEqual(rects[i - 1].bottom);
   },
 };

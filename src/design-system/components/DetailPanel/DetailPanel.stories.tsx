@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, userEvent, waitFor, within } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { getPersona } from '../../../data';
 import { DetailPanel } from './DetailPanel';
 import styles from './DetailPanel.module.css';
@@ -14,6 +14,9 @@ const meta = {
   title: 'Composites/DetailPanel',
   component: DetailPanel,
   args: {
+    onDone: fn(),
+    onSnooze: fn(),
+    onMoveAside: fn(),
     item: visibleItems(daniel)[0],
     position: 1,
     total: visibleItems(daniel).length,

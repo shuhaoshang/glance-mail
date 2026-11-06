@@ -1,0 +1,34 @@
+.panel {
+  display: grid;
+  gap: var(--space-12);
+  padding: var(--space-16) var(--space-20);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  box-shadow:
+    inset 0 0 0 var(--border-hairline) var(--color-border-strong),
+    var(--shadow-popover);
+  animation: enter var(--duration-reveal) var(--ease-standard) both;
+}
+.title {
+  font-weight: var(--font-weight-semibold);
+}
+.options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-8);
+}
+@keyframes enter {
+  from {
+    opacity: 0;
+    transform: translateY(calc(-1 * var(--space-4)));
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .panel {
+    animation: none;
+  }
+}

@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { getPersona, type PersonaId } from '../data';
 import type { Account } from '../data/types';
 import { Text } from '../design-system/components/Text/Text';
@@ -13,7 +13,12 @@ import { KnowRow } from '../design-system/components/KnowRow/KnowRow';
 import { DoneRow } from '../design-system/components/DoneRow/DoneRow';
 import { ProgressBar } from '../design-system/components/ProgressBar/ProgressBar';
 import { useDesktopLayout } from '../design-system/components/useDesktopLayout';
-import { getBriefCounts } from './briefData';
+import {
+  useItemLifecycle,
+  type ItemLifecycle,
+  type Resolution,
+} from './useItemLifecycle';
+import { AllDone } from '../design-system/components/AllDone/AllDone';
 import styles from './App.module.css';
 
 function openInbox(account: Account) {
@@ -29,13 +34,17 @@ function Brief({
   personaId,
   children,
   startClean = false,
+  session,
 }: {
   personaId: PersonaId;
   children?: ReactNode;
   startClean?: boolean;
+  session?: ItemLifecycle;
 }) {
   const persona = getPersona(personaId);
-  const items = persona.items.filter((item) => !item.isNew);
+  const local = useItemLifecycle(persona);
+  const life = session ?? local;
+  const items = life.active;
   const [selectedId, setSelectedId] = useState(
     items[persona.demo.initialSelection.itemIndex]?.id ?? items[0]?.id,
   );
@@ -48,8 +57,73 @@ function Brief({
     setPreviousDesktop(desktop);
     if (desktop) setSheetOpen(false);
   }
-  const selected = items.find((item) => item.id === selectedId);
-  const counts = getBriefCounts(persona);
+  const selected = items.find((item) => item.id === selectedId) ?? items[0];
+  const counts = life.counts;
+  const [sheetItem, setSheetItem] = useState(items[0]);
+  const [sheetPosition, setSheetPosition] = useState(1);
+  const [sheetTotal, setSheetTotal] = useState(items.length);
+  const [focusResult, setFocusResult] = useState<string | null>(null);
+  const undoRefs = useRef(new Map<string, HTMLButtonElement>());
+  useEffect(() => {
+    const id = focusResult;
+    if (!id || !life.records[id]) return;
+    let frame: number;
+    const restore = () => {
+      if (document.querySelector('dialog[open]')) {
+        frame = requestAnimationFrame(restore);
+        return;
+      }
+      undoRefs.current.get(id)?.focus({ preventScroll: true });
+      setFocusResult(null);
+    };
+    frame = requestAnimationFrame(restore);
+    return () => cancelAnimationFrame(frame);
+  }, [life.records, focusResult]);
+  function act(id: string, result: Resolution) {
+    setFocusResult(id);
+    life.finish(id, result);
+    setSheetOpen(false);
+  }
+  function undo(id: string) {
+    life.undo(id);
+    requestAnimationFrame(() =>
+      Array.from(
+        document.querySelectorAll<HTMLButtonElement>('[data-brief-item]'),
+      )
+        .find((button) => button.dataset.briefItem === id)
+        ?.focus({ preventScroll: true }),
+    );
+  }
+  const movedCount = Object.values(life.records).filter(
+    (entry) => entry.kind === 'moved',
+  ).length;
+  const detailActions = (id: string) => ({
+    busy: !!life.pending,
+    checkedSteps: life.checks[id] ?? [],
+    onChecksChange: (values: boolean[]) => life.check(id, values),
+    onDone: () => act(id, { kind: 'done', note: 'marked done in Glance' }),
+    onMoveAside: () =>
+      act(id, { kind: 'moved', note: 'moved to Set aside by you' }),
+    onSnooze: (label: string) =>
+      act(id, {
+        kind: 'snoozed',
+        note:
+          'snoozed until ' +
+          label
+            .replace(/^Later today/, 'today')
+            .replace(/^Tomorrow/, 'tomorrow'),
+      }),
+  });
+  const empty = (
+    <AllDone
+      done={counts.done}
+      total={counts.actions}
+      know={counts.know}
+      aside={counts.aside}
+      snoozed={counts.snoozed}
+    />
+  );
+
   const defaultAccount =
     persona.accounts.find((account) => !account.minority) ??
     persona.accounts[0];
@@ -122,9 +196,16 @@ function Brief({
                   item={item}
                   rank={index + 1}
                   account={minorityAccount(item.account)}
-                  selected={(desktop || sheetOpen) && item.id === selectedId}
+                  selected={(desktop || sheetOpen) && item.id === selected?.id}
+                  leaving={life.pending?.id === item.id}
+                  onLeaveComplete={() => life.settle(item.id)}
                   onSelect={(id, trigger) => {
                     setSelectedId(id);
+                    setSheetItem(items.find((item) => item.id === id)!);
+                    setSheetPosition(
+                      items.findIndex((item) => item.id === id) + 1,
+                    );
+                    setSheetTotal(counts.needs);
                     if (!desktop || id !== selectedId)
                       setSelectionRevision((value) => value + 1);
                     setReturnFocus(trigger);
@@ -135,7 +216,25 @@ function Brief({
               {persona.doneBefore.map((item) => (
                 <DoneRow key={item.name} {...item} />
               ))}
+              {Object.entries(life.records).map(([id, result]) => {
+                const item = persona.items.find((item) => item.id === id)!;
+                return (
+                  <DoneRow
+                    key={id + ':' + result.kind + ':' + result.note}
+                    undoDisabled={!!life.pending}
+                    name={item.name}
+                    kind={result.kind}
+                    note={result.note}
+                    undoRef={(button) => {
+                      if (button) undoRefs.current.set(id, button);
+                      else undoRefs.current.delete(id);
+                    }}
+                    onUndo={() => undo(id)}
+                  />
+                );
+              })}
             </SectionCard>
+            {!desktop && !items.length && empty}
             <SectionCard title="Good to know" count={counts.know}>
               {persona.goodToKnow.map((item) => (
                 <KnowRow
@@ -146,18 +245,29 @@ function Brief({
                 />
               ))}
             </SectionCard>
-            <CollapsedGroup groups={persona.setAside} static />
+            <CollapsedGroup
+              groups={
+                movedCount
+                  ? [
+                      { count: movedCount, short: 'moved by you' },
+                      ...persona.setAside,
+                    ]
+                  : persona.setAside
+              }
+              static
+            />
           </div>
           {desktop && selected && (
             <div className={styles.detail}>
               <DetailPanel
                 key={selected.id + ':' + selectionRevision}
+                {...detailActions(selected.id)}
                 item={selected}
                 position={items.indexOf(selected) + 1}
                 total={counts.needs}
                 account={accountFor(selected.account)}
                 initialFactId={
-                  !startClean && selectionRevision === 0
+                  !startClean && !life.started && selectionRevision === 0
                     ? selected.facts[
                         persona.demo.initialSelection.openFactIndex
                       ]?.id
@@ -165,27 +275,32 @@ function Brief({
                 }
                 initialReasonOpen={
                   !startClean &&
+                  !life.started &&
                   selectionRevision === 0 &&
                   persona.demo.initialSelection.reasonOpen
                 }
               />
             </div>
           )}
+          {desktop && !items.length && (
+            <div className={styles.detail}>{empty}</div>
+          )}
         </div>
       )}
-      {!desktop && selected && !children && (
+      {!desktop && sheetItem && !children && (
         <DetailSheet
           open={sheetOpen}
           onClose={() => setSheetOpen(false)}
           returnFocus={returnFocus}
-          label={selected.name}
+          label={sheetItem.name}
         >
           <DetailPanel
-            key={selected.id + ':' + selectionRevision}
-            item={selected}
-            position={items.indexOf(selected) + 1}
-            total={counts.needs}
-            account={accountFor(selected.account)}
+            key={sheetItem.id + ':' + selectionRevision}
+            {...detailActions(sheetItem.id)}
+            item={sheetItem}
+            position={sheetPosition}
+            total={sheetTotal}
+            account={accountFor(sheetItem.account)}
             mobile
             onClose={() => setSheetOpen(false)}
           />
@@ -199,13 +314,20 @@ export function App({
   personaId,
   children,
   startClean = false,
+  session,
 }: {
   personaId: PersonaId;
   children?: ReactNode;
   startClean?: boolean;
+  session?: ItemLifecycle;
 }) {
   return (
-    <Brief key={personaId} personaId={personaId} startClean={startClean}>
+    <Brief
+      key={personaId}
+      personaId={personaId}
+      startClean={startClean}
+      session={session}
+    >
       {children}
     </Brief>
   );

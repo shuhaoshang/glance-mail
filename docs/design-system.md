@@ -82,6 +82,7 @@ Rows and content that appear (a new BriefRow, a DoneRow, an Ask answer, rows rev
 | `--size-switch-track-width` | `36px` | Switch track | 18 |
 | `--size-switch-track-height` | `20px` | Switch track | 18 |
 | `--size-switch-knob` | `16px` | Switch knob | 18 |
+| `--shadow-popover` | Light: `0 8px 24px rgba(22, 21, 28, 0.12)`; dark: `0 8px 24px rgba(0, 0, 0, 0.48)` | SnoozeMenu overlay layer; dark override in both dark blocks | 09 |
 | `--size-progress` | `4px` | ProgressBar height | 18 |
 | `--content-narrow` | `640px` | Single-column max width from 600 to 959 px | 06 |
 | `--size-sheet-top` | `56px` | Gap above the phone sheet | 08 |
@@ -361,7 +362,7 @@ On desktop the list opens in the detail area. On phone it opens in the same shee
 
 ### DoneRow
 
-A filled `--color-brand` circle with an `--color-on-brand` check at `--size-icon` (a muted clock for snoozed items, a muted tray-arrow for items moved to Set aside), then “**Name** · what happened”. Undo is optional: only items done during the session receive `onUndo` and show the Undo text button. Rows from `doneBefore` have no restore data and no Undo. Done rows appear with the enter motion (§2).
+A filled `--color-brand` circle with an `--color-on-brand` check at `--size-icon` (a muted clock for snoozed items, a muted tray-arrow for items moved to Set aside), then “**Name** · what happened”. Undo is optional: only items done during the session receive `onUndo` and show the Undo text button. Rows from `doneBefore` have no restore data and no Undo. Done rows appear with the enter motion (§2). Rows with Undo have a minimum height of `--size-touch`; Undo has its own 44 px target within the row, so adjacent targets never overlap. Use a 12 px gap, with padding 8 4 8 12 on desktop and 8 8 8 16 on phone, from the references.
 
 ### NewMailRow
 
@@ -379,7 +380,7 @@ A neutral card with an icon tile, a title and a body. It may hold one primary Bu
 - **Bottom bar:**
   - Primary “Open in {app}”, followed by Ask (tint).
   - Snooze and Done (neutral), aligned right on desktop.
-  - On phone, the primary button is full width on its own row.
+  - On phone, the primary button is full width on its own row. Secondary buttons share the full width equally on the second row; if only one is present, it fills that row.
   - **Checklist complete** (every step ticked): “Mark done” is the primary; “Open in {app}” becomes neutral; Snooze is not shown. On desktop Mark done stays on the right; on phone it takes the full-width row, with Open and Ask below.
 - **“Open in {app}”** is an external link that opens the app's web inbox in a new tab (`https://mail.google.com/`, `https://outlook.office.com/mail/`, `https://mail.yahoo.com/`). The demo has no real message to link to, so it opens the inbox; it never points to `#` (D45).
 - **Sheet (phone):**
@@ -410,7 +411,7 @@ A neutral card with an icon tile, a title and a body. It may hold one primary Bu
 
 ### SnoozeMenu
 
-A panel with three options (`outline` Buttons) and the note “It comes back to Needs you at that time.” It opens directly above the action bar, in the desktop panel and in the phone sheet, and pushes nothing else around. Choosing an option collapses the row like Done; Escape or Snooze again closes the menu.
+A panel with `--color-surface` fill, a `--border-hairline` inset ring in `--color-border-strong`, and `--shadow-popover`. It contains three options (`outline` Buttons) and the note “It comes back to Needs you at that time.” It opens directly above the action bar, in the desktop panel and in the phone sheet, and pushes nothing else around. Choosing an option collapses the row like Done; Escape or Snooze again closes the menu.
 
 ---
 
@@ -459,7 +460,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 | ------------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Brief layout       | **Phone:** coverage line, then Needs you, Good to know and Set aside, with a detail sheet. **600–959:** the phone layout in one column, at most `--content-narrow` (640) wide and centered. **Desktop (≥ 960):** list column 416 on the left and the DetailPanel on the right, with a 32 gap.                                                                                                               |
 | Coverage line      | “38 emails overnight, all in Outlook.” Per-account rules sit under it (“Quiet hours: work email hides after 7:00 PM”).                                                                                                                                                                                      |
-| Item lifecycle     | **Done** (manual or reply detected), **snoozed** (comes back at a time), **leaving** (collapse), then a done row with Undo. When nothing is left: “Nothing else needs you today”.                                                                                                                           |
+| Item lifecycle     | **Done** (manual or reply detected), **snoozed** (comes back at a time), **leaving** (collapse), then a done row with Undo. When nothing is left: “Nothing else needs you right now” if any snoozed items will come back later; otherwise “Nothing else needs you today”.                                                                                                                           |
 | New mail           | NewMailRow. Adding it puts new items at the end of the ranking and adds the rest to Set aside.                                                                                                                                                                                                              |
 | Show in brief      | A Set aside row moves to Good to know, marked “Moved by you”; the counts update; it can be undone.                                                                                                                                                                                                          |
 | First brief        | Connected inboxes with checks, reading progress (“312 of 480 emails”), a skeleton of the brief, and “Read-only” reassurance.                                                                                                                                                                                |

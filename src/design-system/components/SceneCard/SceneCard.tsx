@@ -20,6 +20,8 @@ export type SceneCardItem = Pick<Item, 'id' | 'facts' | 'from' | 'when'> & {
 interface SceneCardProps {
   item: SceneCardItem;
   mobile?: boolean;
+  checkedSteps?: boolean[];
+  onCheckedStepsChange?: (values: boolean[]) => void;
   selectedField?: string;
   sourcePanelId?: string;
   onSelectFact: (selection: SceneFieldSelection) => void;
@@ -44,12 +46,15 @@ function isKnownScene(value: SceneCardItem['scene']): value is Scene {
 function Content({
   item,
   mobile = false,
+  checkedSteps,
+  onCheckedStepsChange,
   selectedField,
   sourcePanelId,
   onSelectFact,
   onChecklistCompleteChange,
 }: SceneCardProps) {
-  const [checked, setChecked] = useState<boolean[]>([]);
+  const [localChecked, setChecked] = useState<boolean[]>([]);
+  const checked = checkedSteps ?? localChecked;
   const scene = isKnownScene(item.scene) ? item.scene : undefined;
   const complete =
     scene?.type === 'checklist' &&
@@ -244,6 +249,7 @@ function Content({
                     index === i ? value : !!checked[index],
                   );
                   setChecked(next);
+                  onCheckedStepsChange?.(next);
                   onChecklistCompleteChange?.(next.every(Boolean));
                 }}
               />

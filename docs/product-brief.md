@@ -299,7 +299,7 @@ stateDiagram-v2
 | **Moved to Set aside** | User says it doesn’t need them (“Move to Set aside”, at the end of Glance’s read). It leaves Needs you, is not counted as an action or as done, shows under “Moved by you” in Set aside, and teaches Glance. Undo or “Back to Needs you” restores it ([D37](decisions.md)) |
 | **Carried over** | An unfinished Act item from a previous brief appears in today's brief, marked as carried over |
 
-Unfinished actions never fall out of the brief silently.
+Unfinished actions never fall out of the brief silently. When Needs you is empty, the heading is “Nothing else needs you right now” if snoozed items will return later, or “Nothing else needs you today” when nothing is snoozed. The body states the snoozed count when present and the Good to know and Set aside counts.
 
 **Checklist items** (more than one step, such as “sign and pay”): ticks are local progress. When every step is ticked, **Mark done** becomes the one primary action, but the item stays in Needs you until the user marks it done or a reply is detected. The user may want to keep it until the other side confirms ([D34](decisions.md)).
 
@@ -338,7 +338,7 @@ Unfinished actions never fall out of the brief silently.
 
 | State | Behavior |
 |---|---|
-| **Nothing to act on** | A calm, positive empty state (“Nothing else needs you today”), still showing what is in Good to know and Set aside |
+| **Nothing to act on** | A calm, positive empty state: “Nothing else needs you right now” while snoozed items will return later, or “Nothing else needs you today” when nothing is snoozed; still showing what is in Good to know and Set aside |
 | **Overload day** | Needs you shows what fits one screen (phone: the top 4), then “Show 8 more, ranked the same way”; Good to know and Set aside collapse into single rows |
 | **First brief** | Connected inboxes, real progress (“312 of 480 emails”), a skeleton of the brief, and “Read-only. Glance never sends or deletes email.” A short guide to sources is still open (design rules §15) |
 | **New mail while reading** | The brief never reshuffles; “2 new since 7:12 AM · Add to brief” waits at the top of Needs you, and the coverage line shows when it updated |

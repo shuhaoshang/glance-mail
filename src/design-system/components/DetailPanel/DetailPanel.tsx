@@ -13,6 +13,7 @@ import { ordinal } from '../ReasonPanel/reasonText';
 import { EmailView } from '../EmailView/EmailView';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
+import { SnoozeMenu } from '../SnoozeMenu/SnoozeMenu';
 import { firstFieldForFact, inboxUrls } from './detailSelection';
 import styles from './DetailPanel.module.css';
 
@@ -25,6 +26,12 @@ interface DetailPanelProps {
   onClose?: () => void;
   initialFactId?: string;
   initialReasonOpen?: boolean;
+  onDone?: () => void;
+  onSnooze?: (label: string) => void;
+  onMoveAside?: () => void;
+  busy?: boolean;
+  checkedSteps?: boolean[];
+  onChecksChange?: (values: boolean[]) => void;
   initialTab?: 'details' | 'email';
 }
 function Content({
@@ -37,6 +44,12 @@ function Content({
   initialFactId,
   initialReasonOpen = false,
   initialTab = 'details',
+  onDone,
+  onSnooze,
+  onMoveAside,
+  busy,
+  checkedSteps,
+  onChecksChange,
 }: DetailPanelProps) {
   const prefix = useId(),
     sourceId = prefix + '-source',
@@ -45,6 +58,20 @@ function Content({
     emailId = prefix + '-email';
   const root = useRef<HTMLElement>(null);
   const [tab, setTab] = useState(initialTab);
+  const [localChecks, setLocalChecks] = useState<boolean[]>([]);
+  const checks = checkedSteps ?? localChecks;
+  const complete =
+    item.scene.type === 'checklist' &&
+    item.scene.steps.length > 0 &&
+    item.scene.steps.every((_, index) => checks[index]);
+  const [snoozeOpen, setSnoozeOpen] = useState(false);
+  const snoozeId = prefix + '-snooze';
+  const snoozeTrigger = useRef<HTMLButtonElement>(null);
+  function closeSnooze() {
+    setSnoozeOpen(false);
+    snoozeTrigger.current?.focus();
+  }
+
   const [highlighted, setHighlighted] = useState(true);
   const [reasonOpen, setReasonOpen] = useState(initialReasonOpen);
   const [selection, setSelection] = useState<SceneFieldSelection | null>(() => {
@@ -73,6 +100,13 @@ function Content({
     <section
       ref={root}
       aria-label="Selected item"
+      onKeyDown={(event) => {
+        if (snoozeOpen && event.key === 'Escape') {
+          event.preventDefault();
+          event.stopPropagation();
+          closeSnooze();
+        }
+      }}
       className={[styles.panel, mobile && styles.mobile]
         .filter(Boolean)
         .join(' ')}
@@ -136,6 +170,12 @@ function Content({
             <SceneCard
               item={item}
               mobile={mobile}
+              checkedSteps={checks}
+              onCheckedStepsChange={(values) => {
+                setLocalChecks(values);
+                if (values.every(Boolean)) setSnoozeOpen(false);
+                onChecksChange?.(values);
+              }}
               selectedField={selection?.fieldKey}
               sourcePanelId={sourceId}
               onSelectFact={(next) =>
@@ -181,7 +221,13 @@ function Content({
               onToggle={() => setReasonOpen((value) => !value)}
             />
             {reasonOpen && (
-              <ReasonPanel item={item} position={position} id={reasonId} />
+              <ReasonPanel
+                item={item}
+                position={position}
+                id={reasonId}
+                onMoveAside={onMoveAside}
+                disabled={busy}
+              />
             )}
           </div>
         </div>
@@ -201,16 +247,75 @@ function Content({
           />
         </div>
       </div>
-      <footer className={styles.actions}>
-        <Button
-          href={inboxUrls[account.app]}
-          target="_blank"
-          rel="noopener noreferrer"
-          external
+      <div className={styles.actionArea}>
+        {snoozeOpen && !complete && onSnooze && (
+          <div className={styles.snooze}>
+            <SnoozeMenu
+              id={snoozeId}
+              onChoose={(label) => {
+                setSnoozeOpen(false);
+                onSnooze(label);
+              }}
+              onClose={closeSnooze}
+            />
+          </div>
+        )}
+        <footer
+          className={[styles.actions, complete && styles.complete]
+            .filter(Boolean)
+            .join(' ')}
         >
-          Open in {account.app}
-        </Button>
-      </footer>
+          <Button
+            className={styles.inbox}
+            size={mobile && complete && onDone ? 'touch' : undefined}
+            variant={complete && onDone ? 'neutral' : 'primary'}
+            href={inboxUrls[account.app]}
+            target="_blank"
+            rel="noopener noreferrer"
+            external
+          >
+            Open in {account.app}
+          </Button>
+          {!complete && onSnooze && (
+            <Button
+              ref={snoozeTrigger}
+              className={styles.snoozeTrigger}
+              size={mobile ? 'touch' : undefined}
+              variant="neutral"
+              leadingIcon="clock"
+              aria-expanded={snoozeOpen}
+              aria-controls={snoozeId}
+              disabled={busy}
+              onClick={() => {
+                if (snoozeOpen) closeSnooze();
+                else {
+                  setSnoozeOpen(true);
+                  requestAnimationFrame(() =>
+                    document
+                      .getElementById(snoozeId)
+                      ?.querySelector<HTMLButtonElement>('button')
+                      ?.focus(),
+                  );
+                }
+              }}
+            >
+              Snooze
+            </Button>
+          )}
+          {onDone && (
+            <Button
+              className={styles.done}
+              size={mobile && !complete ? 'touch' : undefined}
+              variant={complete ? 'primary' : 'neutral'}
+              leadingIcon="check"
+              disabled={busy}
+              onClick={onDone}
+            >
+              {complete ? 'Mark done' : 'Done'}
+            </Button>
+          )}
+        </footer>
+      </div>
     </section>
   );
 }
