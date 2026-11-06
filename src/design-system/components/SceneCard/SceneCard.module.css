@@ -179,5 +179,6 @@
   background: var(--fact-color);
 }
 .inlineFact {
+  display: inline-block;
   font-weight: var(--font-weight-semibold);
 }

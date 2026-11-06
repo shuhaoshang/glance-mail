@@ -76,6 +76,7 @@
   color: var(--color-text-muted);
 }
 .completed {
+  color: var(--color-text-muted);
   text-decoration-line: line-through;
 }
 .completed :is(button, a) {
