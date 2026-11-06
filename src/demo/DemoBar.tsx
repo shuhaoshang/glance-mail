@@ -2,6 +2,7 @@ import { useId, useRef, useState, type ReactNode } from 'react';
 import type { PersonaId } from '../data';
 import { useDesktopLayout } from '../design-system/components/useDesktopLayout';
 import type { DemoLevel } from './DemoApp';
+import { usePhoneLabels } from './usePhoneLabels';
 import styles from './DemoBar.module.css';
 
 interface DemoBarProps {
@@ -12,14 +13,14 @@ interface DemoBarProps {
   extraControls?: ReactNode;
 }
 const personas = [
-  { id: 'maya', label: 'Maya · Sales' },
-  { id: 'daniel', label: 'Daniel · Manager' },
-  { id: 'sarah', label: 'Sarah · Parent' },
+  { id: 'maya', label: 'Maya · Sales', shortLabel: 'Maya' },
+  { id: 'daniel', label: 'Daniel · Manager', shortLabel: 'Daniel' },
+  { id: 'sarah', label: 'Sarah · Parent', shortLabel: 'Sarah' },
 ] as const;
 const levels = [
-  { value: 1, label: 'Plain AI text' },
-  { value: 2, label: 'Formatted' },
-  { value: 3, label: 'Glance' },
+  { value: 1, label: 'Plain AI text', shortLabel: 'Plain' },
+  { value: 2, label: 'Formatted', shortLabel: 'Formatted' },
+  { value: 3, label: 'Glance', shortLabel: 'Glance' },
 ] as const;
 
 export function DemoBar({
@@ -30,13 +31,18 @@ export function DemoBar({
   extraControls,
 }: DemoBarProps) {
   const desktop = useDesktopLayout();
+  const phone = usePhoneLabels();
   const [expanded, setExpanded] = useState(false);
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   return (
     <aside
       aria-label="Demo controls"
-      className={[styles.shell, desktop && styles.desktop]
+      className={[
+        styles.shell,
+        desktop && styles.desktop,
+        phone && styles.phone,
+      ]
         .filter(Boolean)
         .join(' ')}
     >
@@ -77,11 +83,12 @@ export function DemoBar({
                 <button
                   key={persona.id}
                   type="button"
+                  aria-label={persona.label}
                   aria-pressed={personaId === persona.id}
                   className={styles.choice}
                   onClick={() => onPersonaChange(persona.id)}
                 >
-                  {persona.label}
+                  {phone ? persona.shortLabel : persona.label}
                 </button>
               ))}
             </div>
@@ -90,12 +97,13 @@ export function DemoBar({
                 <button
                   key={item.value}
                   type="button"
+                  aria-label={item.value + ' ' + item.label}
                   aria-pressed={level === item.value}
                   className={styles.choice}
                   onClick={() => onLevelChange(item.value)}
                 >
                   <span className={styles.number}>{item.value}</span>
-                  {' ' + item.label}
+                  {' ' + (phone ? item.shortLabel : item.label)}
                 </button>
               ))}
             </div>

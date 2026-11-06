@@ -84,6 +84,7 @@
   --color-demo-bg: #16151C;
   --color-demo-control: #2A2833;
   --color-demo-control-hover: #36343F;
+  --color-demo-control-pressed: #42404D;
   --color-demo-text: #FFFFFF;
   --color-demo-muted: #B9B6C8;
 
@@ -172,6 +173,7 @@
   --gutter: 16px;                   /* phone */
   --content-max: 1120px;
   --content-narrow: 640px;
+  --content-reading: 784px;
   --column-list: 416px;             /* desktop list column */
   --gap-section: 20px;              /* phone */
   --gap-column: 32px;

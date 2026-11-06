@@ -64,6 +64,15 @@ export const Hover: Story = {
   },
   play: openControls,
 };
+export const Pressed: Story = {
+  parameters: {
+    pseudo: {
+      hover: '[aria-label="Demo persona"] button:nth-child(2)',
+      active: '[aria-label="Demo persona"] button:nth-child(2)',
+    },
+  },
+  play: openControls,
+};
 export const FocusVisible: Story = {
   parameters: {
     pseudo: {
