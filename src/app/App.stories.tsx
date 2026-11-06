@@ -48,11 +48,15 @@ const verifyBrief: NonNullable<Story['play']> = async ({ canvas, args }) => {
       'listitem',
     ),
   ).toHaveLength(persona.goodToKnow.length);
+  const asideRegion = canvas.getByRole('region', { name: 'Set aside' });
   await expect(
-    canvas.getByRole('heading', {
-      name: new RegExp('^Set aside\\s+' + aside + '$'),
-    }),
+    within(asideRegion).getByText(aside + ' set aside', { exact: true }),
   ).toBeVisible();
+  await expect(
+    within(asideRegion).queryByRole('button'),
+  ).not.toBeInTheDocument();
+  const hasDetail = !!canvas.queryByRole('region', { name: 'Selected item' });
+
   await expect(
     canvas.getByText(done + ' of ' + (items.length + done) + ' done', {
       exact: true,
@@ -81,7 +85,13 @@ const verifyBrief: NonNullable<Story['play']> = async ({ canvas, args }) => {
   rows[1].focus();
   await userEvent.keyboard('{Enter}');
   await waitFor(async () => {
-    await expect(rows[1]).toHaveAttribute('aria-pressed', 'true');
+    await expect(rows[1]).toHaveAttribute(
+      'aria-pressed',
+      hasDetail ? 'true' : 'false',
+    );
+    if (!hasDetail)
+      for (const row of rows)
+        await expect(row).toHaveAttribute('aria-pressed', 'false');
   });
   await expect(needs.getAllByRole('button')).toEqual(rows);
   await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
@@ -93,6 +103,14 @@ const verifyBrief: NonNullable<Story['play']> = async ({ canvas, args }) => {
     ).toBeVisible();
     await expect(
       within(detail).getByText(items[1].request.text, { exact: true }),
+    ).toBeVisible();
+    await expect(
+      within(detail).getByText('Needs you · 2 of ' + items.length, {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(
+      within(detail).getByText(items[1].person.name, { exact: false }),
     ).toBeVisible();
     await expect(within(detail).queryByRole('button')).not.toBeInTheDocument();
   }

@@ -4,7 +4,8 @@ import type { Account } from '../data/types';
 import { Text } from '../design-system/components/Text/Text';
 import { Icon } from '../design-system/components/Icon/Icon';
 import { Avatar } from '../design-system/components/Avatar/Avatar';
-import { GlanceMark } from '../design-system/components/GlanceMark/GlanceMark';
+import { DetailPanel } from '../design-system/components/DetailPanel/DetailPanel';
+import { CollapsedGroup } from '../design-system/components/CollapsedGroup/CollapsedGroup';
 import { SectionCard } from '../design-system/components/SectionCard/SectionCard';
 import { BriefRow } from '../design-system/components/BriefRow/BriefRow';
 import { KnowRow } from '../design-system/components/KnowRow/KnowRow';
@@ -30,7 +31,9 @@ function Brief({ personaId }: { personaId: PersonaId }) {
     items[persona.demo.initialSelection.itemIndex]?.id ?? items[0]?.id,
   );
   const desktop = useDesktopLayout();
-  const selected = items.find((item) => item.id === selectedId);
+  const selected = desktop
+    ? items.find((item) => item.id === selectedId)
+    : undefined;
   const counts = getBriefCounts(persona);
   const defaultAccount =
     persona.accounts.find((account) => !account.minority) ??
@@ -67,7 +70,8 @@ function Brief({ personaId }: { personaId: PersonaId }) {
             {persona.coverage.text.replace('{n}', String(counts.covered))}
           </Text>
           {persona.coverage.note && (
-            <Text as="p" variant="meta">
+            <Text as="p" variant="meta" className={styles.accountNote}>
+              <Icon name="moon" />
               {persona.coverage.note}
             </Text>
           )}
@@ -102,8 +106,10 @@ function Brief({ personaId }: { personaId: PersonaId }) {
                 item={item}
                 rank={index + 1}
                 account={minorityAccount(item.account)}
-                selected={item.id === selectedId}
-                onSelect={setSelectedId}
+                selected={desktop && item.id === selectedId}
+                onSelect={(id) => {
+                  if (desktop) setSelectedId(id);
+                }}
               />
             ))}
             {persona.doneBefore.map((item) => (
@@ -120,30 +126,17 @@ function Brief({ personaId }: { personaId: PersonaId }) {
               />
             ))}
           </SectionCard>
-          <SectionCard title="Set aside" count={counts.aside}>
-            <div role="listitem" className={styles.asideSummary}>
-              <Text as="p" variant="meta">
-                {persona.setAside
-                  .map((group) => group.count + ' ' + group.short)
-                  .join(' · ')}
-              </Text>
-            </div>
-          </SectionCard>
+          <CollapsedGroup groups={persona.setAside} static />
         </div>
         {desktop && selected && (
-          <section aria-label="Selected item" className={styles.detail}>
-            <Text as="h2" variant="title">
-              {selected.name}
-            </Text>
-            <Text as="p" variant="request">
-              {selected.request.type === 'summary' && (
-                <>
-                  <GlanceMark />{' '}
-                </>
-              )}
-              {selected.request.text}
-            </Text>
-          </section>
+          <div className={styles.detail}>
+            <DetailPanel
+              item={selected}
+              position={items.indexOf(selected) + 1}
+              total={counts.needs}
+              account={minorityAccount(selected.account)}
+            />
+          </div>
         )}
       </div>
     </main>

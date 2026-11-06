@@ -33,3 +33,20 @@ export const SelectedPressed: Story = {
   args: { selected: true },
   parameters: { pseudo: { active: true } },
 };
+
+export const Static: Story = {
+  render: () => <CollapsedGroup groups={maya.setAside} static />,
+  play: async ({ canvas }) => {
+    const summary = canvas.getByRole('region', { name: 'Set aside' });
+    await expect(summary).toHaveTextContent('31 set aside');
+    await expect(summary).toHaveTextContent(
+      maya.setAside.map((group) => group.count + ' ' + group.short).join(' · '),
+    );
+    await expect(canvas.queryByRole('button')).not.toBeInTheDocument();
+    await expect(summary).not.toHaveAttribute('tabindex');
+    await expect(
+      summary.querySelector('[tabindex], a[href], input, select, textarea'),
+    ).not.toBeInTheDocument();
+    await expect(summary.querySelector('svg')).not.toBeInTheDocument();
+  },
+};

@@ -7,7 +7,8 @@ export function Person({ initial, name, role }: Item['person']) {
     <span className={styles.person}>
       <Avatar initial={initial} size="small" />
       <span>
-        {name}, {role}
+        {name}
+        {role && ', ' + role}
       </span>
     </span>
   );
