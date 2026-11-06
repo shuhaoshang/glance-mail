@@ -20,8 +20,16 @@
   flex-direction: column;
   animation: sheetIn var(--duration-collapse) var(--ease-standard) both;
 }
+.dialog[open][data-drag-state] {
+  animation: none;
+  transform: translateY(var(--sheet-drag-offset, 0%));
+}
+.dialog[open][data-drag-state='returning'] {
+  transition: transform var(--duration-fast) var(--ease-standard);
+}
 .dialog[open][data-closing='true'] {
-  animation-name: sheetOut;
+  animation: sheetOut var(--duration-collapse) var(--ease-standard) both;
+  transition: none;
 }
 .dialog::backdrop {
   background: var(--color-scrim);
@@ -69,7 +77,7 @@
 }
 @keyframes sheetOut {
   from {
-    transform: translateY(0);
+    transform: translateY(var(--sheet-close-offset, 0%));
   }
   to {
     transform: translateY(100%);
@@ -93,8 +101,12 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .dialog[open],
+  .dialog[open][data-closing='true'],
   .dialog::backdrop {
     animation: none;
+  }
+  .dialog[open][data-drag-state='returning'] {
+    transition: none;
   }
 }
 .example {

@@ -135,6 +135,7 @@ function Content({
             </Text>
             <SceneCard
               item={item}
+              mobile={mobile}
               selectedField={selection?.fieldKey}
               sourcePanelId={sourceId}
               onSelectFact={(next) =>
@@ -169,6 +170,7 @@ function Content({
           </div>
           <div className={styles.reason}>
             <ReasonPill
+              mobile={mobile}
               label={[
                 'Glance’s read: Ranked ' + ordinal(position),
                 ...item.judgments.map((entry) => entry.label),

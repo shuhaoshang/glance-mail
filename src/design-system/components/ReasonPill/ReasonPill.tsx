@@ -5,6 +5,7 @@ import styles from './ReasonPill.module.css';
 interface ReasonPillProps {
   label: string;
   size?: 'small' | 'default';
+  mobile?: boolean;
   expanded?: boolean;
   controls?: string;
   onToggle: () => void;
@@ -13,6 +14,7 @@ interface ReasonPillProps {
 export function ReasonPill({
   label,
   size = 'default',
+  mobile = false,
   expanded = false,
   controls,
   onToggle,
@@ -25,11 +27,15 @@ export function ReasonPill({
       aria-expanded={expanded}
       aria-controls={controls}
       onClick={onToggle}
-      className={[styles.pill, styles[size]].join(' ')}
+      className={[styles.pill, styles[size], mobile && styles.mobile]
+        .filter(Boolean)
+        .join(' ')}
     >
       <span className={styles.visual}>
-        <Icon name="star" size={size === 'small' ? 'small' : 'default'} />
-        {label}
+        <span className={styles.icon}>
+          <Icon name="star" size={size === 'small' ? 'small' : 'default'} />
+        </span>
+        <span>{label}</span>
       </span>
     </button>
   );

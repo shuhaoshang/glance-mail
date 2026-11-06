@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useArgs } from 'storybook/preview-api';
-import { expect, fn, userEvent, waitFor } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { getPersona } from '../../../data';
 import { EmailView } from './EmailView';
 import styles from './EmailView.module.css';
@@ -40,14 +40,58 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-export const Maya: Story = {};
+async function verifyLegend(legend: HTMLElement, expectedLabels: string[]) {
+  await expect(
+    within(legend)
+      .getAllByRole('listitem')
+      .map((entry) => entry.textContent),
+  ).toEqual(expectedLabels);
+}
+
+export const Maya: Story = {
+  play: async ({ canvas }) => {
+    await verifyLegend(canvas.getByRole('list', { name: 'Highlight legend' }), [
+      'Money',
+      'Time',
+      'People',
+      'Glance’s read',
+    ]);
+  },
+};
 export const Daniel: Story = {
   args: { item: daniel.items[0], account: daniel.accounts[0] },
+  play: async ({ canvas }) => {
+    await verifyLegend(canvas.getByRole('list', { name: 'Highlight legend' }), [
+      'Time',
+      'People',
+      'Glance’s read',
+    ]);
+  },
 };
 export const Sarah: Story = {
   args: { item: sarah.items[0], account: sarah.accounts[1] },
+  play: async ({ canvas }) => {
+    await verifyLegend(canvas.getByRole('list', { name: 'Highlight legend' }), [
+      'Money',
+      'Time',
+      'People',
+    ]);
+  },
 };
-export const HighlighterOff: Story = { args: { highlighted: false } };
+export const HighlighterOff: Story = {
+  args: { highlighted: false },
+  play: async ({ canvas }) => {
+    await verifyLegend(canvas.getByRole('list', { name: 'Highlight legend' }), [
+      'Money',
+      'Time',
+      'People',
+      'Glance’s read',
+    ]);
+    await expect(
+      canvas.getByRole('switch', { name: 'Highlighter' }),
+    ).not.toBeChecked();
+  },
+};
 export const KeyboardHighlighter: Story = {
   play: async ({ canvas, args }) => {
     const body = canvas.getByTestId('email-body');

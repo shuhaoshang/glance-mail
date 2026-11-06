@@ -19,6 +19,7 @@ export type SceneCardItem = Pick<Item, 'id' | 'facts' | 'from' | 'when'> & {
 };
 interface SceneCardProps {
   item: SceneCardItem;
+  mobile?: boolean;
   selectedField?: string;
   sourcePanelId?: string;
   onSelectFact: (selection: SceneFieldSelection) => void;
@@ -42,6 +43,7 @@ function isKnownScene(value: SceneCardItem['scene']): value is Scene {
 
 function Content({
   item,
+  mobile = false,
   selectedField,
   sourcePanelId,
   onSelectFact,
@@ -118,7 +120,11 @@ function Content({
       break;
     case 'decision':
       body = (
-        <div className={styles.options}>
+        <div
+          className={[styles.options, mobile && styles.stackedOptions]
+            .filter(Boolean)
+            .join(' ')}
+        >
           {scene.options.map((option, i) => (
             <div className={styles.option} key={option.key}>
               <div className={styles.optionHeading}>

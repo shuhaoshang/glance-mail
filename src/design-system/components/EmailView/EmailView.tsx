@@ -26,6 +26,16 @@ export function EmailView({
   onHighlightedChange,
 }: EmailViewProps) {
   const desktop = useDesktopLayout();
+  const usedKinds = new Set(
+    item.email.paras.flatMap((paragraph) =>
+      paragraph.flatMap((segment) =>
+        typeof segment === 'string'
+          ? []
+          : [segment.kind === 'judg' ? 'judgment' : segment.kind],
+      ),
+    ),
+  );
+  const visibleLegend = legend.filter((entry) => usedKinds.has(entry.kind));
   const accountName = account
     ? desktop
       ? account.app + (account.label ? ', ' + account.label : '')
@@ -59,7 +69,7 @@ export function EmailView({
       </header>
       <div className={styles.tools}>
         <ul aria-label="Highlight legend" className={styles.legend}>
-          {legend.map((entry) => (
+          {visibleLegend.map((entry) => (
             <li key={entry.kind}>
               <span
                 aria-hidden="true"

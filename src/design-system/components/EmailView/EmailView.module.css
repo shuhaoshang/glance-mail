@@ -24,7 +24,8 @@
 }
 .legend {
   display: flex;
-  flex: 1;
+  flex: 1 0 max-content;
+  max-inline-size: 100%;
   align-items: center;
   flex-wrap: wrap;
   gap: var(--space-8) var(--space-16);
@@ -42,6 +43,9 @@
 }
 .compact .legend {
   column-gap: var(--space-12);
+}
+.compact .toggle {
+  padding-inline: var(--space-8);
 }
 .legend li {
   display: inline-flex;

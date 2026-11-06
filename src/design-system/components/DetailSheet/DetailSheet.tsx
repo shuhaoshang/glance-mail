@@ -9,10 +9,40 @@ interface DetailSheetProps {
   label: string;
 }
 
+interface DragPoint {
+  y: number;
+  time: number;
+}
+
 interface DragStart {
   pointerId: number;
-  x: number;
   y: number;
+  offset: number;
+  height: number;
+  previous: DragPoint;
+  latest: DragPoint;
+  framePrevious: DragPoint;
+  frameLatest: DragPoint;
+}
+
+const DISMISS_DISTANCE_RATIO = 0.25;
+const DISMISS_VELOCITY_PX_PER_MS = 0.5;
+
+function translationY(dialog: HTMLDialogElement) {
+  const transform = getComputedStyle(dialog).transform;
+  return transform === 'none' ? 0 : new DOMMatrixReadOnly(transform).m42;
+}
+
+function setDragOffset(dialog: HTMLDialogElement, offset: number) {
+  dialog.style.setProperty('--sheet-drag-offset', `${offset}px`);
+}
+
+function returnToRest(dialog: HTMLDialogElement) {
+  setDragOffset(dialog, translationY(dialog));
+  dialog.dataset.dragState = 'returning';
+  // Commit the dragged position before starting the return transition.
+  dialog.getBoundingClientRect();
+  setDragOffset(dialog, 0);
 }
 
 const focusableSelector =
@@ -29,17 +59,43 @@ export function DetailSheet({
   const restoreTarget = useRef<HTMLElement | null>(null);
   const unlockScroll = useRef<(() => void) | null>(null);
   const drag = useRef<DragStart | null>(null);
+  const dragFrame = useRef<number | null>(null);
+  const stopDragSampling = useCallback(() => {
+    if (dragFrame.current !== null) cancelAnimationFrame(dragFrame.current);
+    dragFrame.current = null;
+  }, []);
+  const sampleDragFrame = useCallback(function sampleFrame(time: number) {
+    const active = drag.current;
+    if (!active) {
+      dragFrame.current = null;
+      return;
+    }
+    active.framePrevious = active.frameLatest;
+    active.frameLatest = {
+      y: active.latest.y,
+      time: Math.max(time, active.latest.time),
+    };
+    dragFrame.current = requestAnimationFrame(sampleFrame);
+  }, []);
   const scrimPress = useRef(false);
 
   const finishClose = useCallback(() => {
     const dialog = dialogRef.current;
     if (dialog?.open) dialog.close();
+    stopDragSampling();
+    drag.current = null;
+    scrimPress.current = false;
+    if (dialog) {
+      delete dialog.dataset.dragState;
+      dialog.style.removeProperty('--sheet-drag-offset');
+      dialog.style.removeProperty('--sheet-close-offset');
+    }
     unlockScroll.current?.();
     unlockScroll.current = null;
     const target = restoreTarget.current;
     restoreTarget.current = null;
     if (target?.isConnected) target.focus({ preventScroll: true });
-  }, []);
+  }, [stopDragSampling]);
 
   useLayoutEffect(() => {
     const dialog = dialogRef.current;
@@ -58,11 +114,20 @@ export function DetailSheet({
         if (body.style.overflow === 'hidden')
           body.style.overflow = previousOverflow;
       };
+      dialog.dataset.closing = 'false';
       dialog.showModal();
       dialog
         .querySelector<HTMLElement>('[data-sheet-autofocus]')
         ?.focus({ preventScroll: true });
-    } else if (!open && dialog.open) {
+    } else if (!open && dialog.open && dialog.dataset.closing !== 'true') {
+      // Exit from the current position, including an interrupted drag or return.
+      dialog.style.setProperty(
+        '--sheet-close-offset',
+        `${translationY(dialog)}px`,
+      );
+      dialog.dataset.closing = 'true';
+      stopDragSampling();
+      drag.current = null;
       const style = getComputedStyle(dialog);
       if (
         window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
@@ -74,13 +139,20 @@ export function DetailSheet({
         finishClose();
     }
 
+    if (open && dialog.dataset.closing === 'true') {
+      dialog.dataset.closing = 'false';
+      delete dialog.dataset.dragState;
+      dialog.style.removeProperty('--sheet-drag-offset');
+      dialog.style.removeProperty('--sheet-close-offset');
+    }
+
     const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
     const onMotionChange = () => {
       if (motion.matches && !open) finishClose();
     };
     motion.addEventListener('change', onMotionChange);
     return () => motion.removeEventListener('change', onMotionChange);
-  }, [open, returnFocus, finishClose]);
+  }, [open, returnFocus, finishClose, stopDragSampling]);
 
   useLayoutEffect(() => finishClose, [finishClose]);
 
@@ -97,7 +169,6 @@ export function DetailSheet({
       aria-label={label}
       aria-modal="true"
       className={styles.dialog}
-      data-closing={!open}
       onCancel={(event) => {
         event.preventDefault();
         if (open) onClose();
@@ -162,29 +233,90 @@ export function DetailSheet({
         aria-orientation="horizontal"
         data-sheet-handle
         onPointerDown={(event) => {
-          if (!open || !event.isPrimary || event.button !== 0) return;
+          const dialog = dialogRef.current;
+          if (!dialog || !open || !event.isPrimary || event.button !== 0)
+            return;
+          stopDragSampling();
+          const offset = translationY(dialog);
+          const point = { y: event.clientY, time: event.timeStamp };
           drag.current = {
             pointerId: event.pointerId,
-            x: event.clientX,
             y: event.clientY,
+            offset,
+            height: dialog.getBoundingClientRect().height,
+            previous: point,
+            latest: point,
+            framePrevious: point,
+            frameLatest: point,
           };
+          dragFrame.current = requestAnimationFrame(sampleDragFrame);
+          setDragOffset(dialog, offset);
+          dialog.dataset.dragState = 'dragging';
           event.currentTarget.setPointerCapture(event.pointerId);
+        }}
+        onPointerMove={(event) => {
+          const start = drag.current;
+          const dialog = dialogRef.current;
+          if (!dialog || !start || start.pointerId !== event.pointerId) return;
+          start.previous = start.latest;
+          start.latest = { y: event.clientY, time: event.timeStamp };
+          setDragOffset(
+            dialog,
+            Math.min(
+              start.height,
+              Math.max(0, start.offset + event.clientY - start.y),
+            ),
+          );
         }}
         onPointerUp={(event) => {
           const start = drag.current;
-          if (!start || start.pointerId !== event.pointerId) return;
+          const dialog = dialogRef.current;
+          if (!dialog || !start || start.pointerId !== event.pointerId) return;
+          stopDragSampling();
           drag.current = null;
           if (event.currentTarget.hasPointerCapture(event.pointerId))
             event.currentTarget.releasePointerCapture(event.pointerId);
-          const down = event.clientY - start.y;
-          const across = Math.abs(event.clientX - start.x);
-          if (open && down > 0 && down > across) onClose();
+          const offset = Math.min(
+            start.height,
+            Math.max(0, start.offset + event.clientY - start.y),
+          );
+          setDragOffset(dialog, offset);
+          // Pointer-up often repeats the last coordinates. Include the preceding
+          // movement segment and any release delay instead of reporting zero speed.
+          const eventSample =
+            event.clientY === start.latest.y ? start.previous : start.latest;
+          // Frame samples also observe a held finger when the browser emits no
+          // pointermove events. Use the most recent segment from either source.
+          const frameSample =
+            event.clientY === start.frameLatest.y
+              ? start.framePrevious
+              : start.frameLatest;
+          const sample =
+            frameSample.time > eventSample.time ? frameSample : eventSample;
+          const elapsed = event.timeStamp - sample.time;
+          const velocity =
+            elapsed > 0 ? (event.clientY - sample.y) / elapsed : 0;
+          if (
+            open &&
+            (offset >= start.height * DISMISS_DISTANCE_RATIO ||
+              velocity > DISMISS_VELOCITY_PX_PER_MS)
+          ) {
+            onClose();
+          } else {
+            returnToRest(dialog);
+          }
         }}
-        onPointerCancel={() => {
+        onPointerCancel={(event) => {
+          if (drag.current?.pointerId !== event.pointerId) return;
+          stopDragSampling();
           drag.current = null;
+          if (dialogRef.current) returnToRest(dialogRef.current);
         }}
-        onLostPointerCapture={() => {
+        onLostPointerCapture={(event) => {
+          if (drag.current?.pointerId !== event.pointerId) return;
+          stopDragSampling();
           drag.current = null;
+          if (dialogRef.current) returnToRest(dialogRef.current);
         }}
       >
         <span aria-hidden="true" className={styles.handle} />

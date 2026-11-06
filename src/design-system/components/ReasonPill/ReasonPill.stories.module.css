@@ -1,0 +1,5 @@
+.phonePreview {
+  inline-size: var(--column-list);
+  max-inline-size: 100%;
+  padding: var(--space-20);
+}

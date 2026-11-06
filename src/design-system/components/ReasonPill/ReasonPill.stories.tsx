@@ -1,7 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn, expect, userEvent } from 'storybook/test';
 import { ReasonPill } from './ReasonPill';
-import { maya, upsell } from '../listSamples';
+import { daniel, maya, upsell } from '../listSamples';
+import styles from './ReasonPill.stories.module.css';
 const meta = {
   title: 'Primitives/ReasonPill',
   component: ReasonPill,
@@ -40,4 +41,23 @@ export const SmallTarget: Story = {
     await userEvent.keyboard('{Enter}');
     await expect(args.onToggle).toHaveBeenCalledOnce();
   },
+};
+
+export const PhoneWrapped: Story = {
+  args: {
+    mobile: true,
+    label: [
+      'Glance’s read: Ranked 1st',
+      ...daniel.items[0].judgments.map((judgment) => judgment.label),
+      'Why?',
+    ].join(' · '),
+  },
+  parameters: { layout: 'padded' },
+  decorators: [
+    (Story) => (
+      <div className={styles.phonePreview}>
+        <Story />
+      </div>
+    ),
+  ],
 };

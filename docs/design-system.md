@@ -180,6 +180,7 @@ The ✦ judgment trigger: an outlined brand pill with the ✦ glyph and the labe
   - `small` (KnowRow): 12/16 semibold, padding 4 12 4 8, visible height 24. The hit area extends to at least 44 × 44 without changing the visible size or the layout.
   - `default` (the “Glance’s read” trigger in the detail view): 14/20 semibold, padding 8 16 8 12, height 40.
 - Both: `--color-brand-text` on `--color-surface`, with a `--border-selected` inset ring in `--color-brand`.
+- On phone, wrapped labels align to the start, with the ✦ aligned to the first line.
 - Hover fills with `--color-brand-tint`; pressed with `--color-brand-tint-hover`. While expanded (`aria-expanded="true"`) it keeps `--color-brand-tint`.
 
 Both ReasonPill sizes expose a 44 × 44 button target while reserving only the visible pill height in the row layout. The visible sizes remain 24 and 40.
@@ -385,6 +386,7 @@ A neutral card with an icon tile, a title and a body. It may hold one primary Bu
   - Top `--size-sheet-top` (56), radius 24, a `--size-handle-width` × `--size-handle-height` (36 × 4) handle, scrim `--color-scrim`.
   - Opens by sliding up over `--duration-collapse` (320 ms) with `--ease-standard` while the scrim fades in over `--duration-reveal`; closes in reverse. With reduced motion it appears and disappears at once.
   - Closes with the close button, a tap on the scrim, Escape, or dragging the handle down. The handle is not decorative (D44).
+  - While dragging the handle, the sheet follows the finger. On release, it closes after moving at least 25% of its height or with downward release velocity greater than 0.5 px/ms. Otherwise it returns over `--duration-fast`. DetailSheet names these thresholds `DISMISS_DISTANCE_RATIO = 0.25` and `DISMISS_VELOCITY_PX_PER_MS = 0.5`. With reduced motion, dragging still follows the finger and the return is instant.
   - It is a modal dialog (`role="dialog"`, `aria-modal="true"`): focus moves into the sheet, stays there while it is open, and returns to the row that opened it.
 - **Desktop panel** is part of the page, not a dialog: focus stays where the user put it.
 - **After an action (phone):** Done, Mark done, a Snooze option, or Move to Set aside closes the sheet and returns to the brief, where the DoneRow shows the result. The next item becomes selected but the sheet does not reopen. On desktop the panel shows the next item (D44).
@@ -392,7 +394,7 @@ A neutral card with an icon tile, a title and a body. It may hold one primary Bu
 ### EmailView
 
 - Subject (20/28) and meta.
-- A legend (Money · Time · People · Glance’s read) with a highlighter Switch.
+- A legend with a highlighter Switch, showing only the ink types that appear in the current email. Keep the order Money · Time · People · Glance’s read, omitting absent types. Maya’s first email shows four; Sarah’s museum email shows three because it has no judgment ink. Filtering depends on the email content, so switching the highlighter off does not remove the legend.
 - The body in `Reading` style, with every fact Glance used highlighted by type. A type label appears on hover or focus (as a `title`), not inline.
 - Toggling the switch draws the ink in or wipes it out (360 ms).
 
@@ -424,7 +426,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 | Type        | Use when the email…                                   | Layout                                                                                     | Examples                                           |
 | ----------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------- |
 | `deal`      | is about an account with a value, a date and a status | three Fields in a row (default size)                                                       | Maya · Fernway renewal; Halden new lead            |
-| `decision`  | offers named options and asks you to choose           | two option tiles (key badge, title, small Field)                                           | Daniel · Checkout redesign                         |
+| `decision`  | offers named options and asks you to choose           | two option tiles (key badge, title, small Field); one per row in the phone sheet                                           | Daniel · Checkout redesign                         |
 | `approval`  | asks you to approve an amount                         | large amount Field, then small Fields (for, requested by, deadline), then an optional note | Daniel · Expense report                            |
 | `payment`   | is a bill or fee                                      | large amount Field, then due and payee                                                     | Sarah · City Water                                 |
 | `mismatch`  | contains two numbers that should agree and don't      | two large Fields with a ≠ in `--color-urgent` between them, then the deadline                            | Maya · Okto invoice                                |
