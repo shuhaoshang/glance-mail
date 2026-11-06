@@ -264,7 +264,7 @@ A 24 avatar (people tint, initial), followed by name and role.
 - Hit area: 44 (`--size-touch`). Ticking is the main action in a checklist, so it gets the full touch target; the box stays 24.
 - Hover: unchecked fills with `--color-sunken-hover`; checked uses `--color-brand-hover`. Pressed: `--color-sunken-pressed` or `--color-brand-pressed`. No extra outline; the outline is for keyboard focus only.
 - Disabled: `--color-surface-sunken` box, `--color-icon-muted` ring and check, and `--color-text-muted` label. Native disabled behavior prevents toggling; inline Fields retain their own styling and remain operable.
-- Role: `checkbox`. `checked` and `onCheckedChange` are controlled by the caller. The `label` slot accepts inline Fields; their clicks do not toggle the checkbox. For a rich label, `aria-label` can supply its plain spoken text. The caller sets `completed` when the checklist is complete; its text is struck through while fact controls retain their own underline and remain operable.
+- Role: `checkbox`. `checked` and `onCheckedChange` are controlled by the caller. The `label` slot accepts inline Fields; their clicks do not toggle the checkbox. For a rich label, `aria-label` can supply its plain spoken text. The caller sets `completed` when the checklist is complete; its text uses `--color-text-muted` with a strike-through. Inline Fields retain `--color-text`, their own underline, and no strike-through, and remain operable.
 
 ### Switch
 
@@ -436,7 +436,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 **Selection rules:**
 
 1. The type comes from the data (`item.scene.type`). Components never infer it.
-2. If the data has no scene, render `text`. Knowing when _not_ to use a component is part of the system.
+2. If the data has no scene or its type is unknown, render `text`. Knowing when _not_ to use a component is part of the system.
 3. Checklist ticks are local progress. They do not mark the item done; only Done or an auto-detected reply does.
    - When every step is ticked: steps are struck through (inline fact values stay readable and tappable), the note `scene.doneNote` appears under the card, and the action bar swaps (see DetailPanel).
 4. New scene types need a design-system PR first, with a story for each state.

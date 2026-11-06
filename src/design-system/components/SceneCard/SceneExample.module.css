@@ -1,0 +1,48 @@
+.preview {
+  display: grid;
+  gap: var(--space-12);
+  inline-size: 100%;
+  max-inline-size: 100%;
+  min-inline-size: 0;
+}
+.narrow {
+  inline-size: var(--column-list);
+}
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(min(100%, var(--column-list)), 1fr)
+  );
+  gap: var(--space-24);
+  align-items: start;
+}
+.sheet {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-12);
+  min-inline-size: 0;
+  padding: var(--space-24);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+.sheet h2 {
+  margin: 0;
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-16);
+}
+.canvas {
+  inline-size: calc(
+    var(--content-max) - var(--column-list) - var(--gap-column)
+  );
+  max-inline-size: 100%;
+  padding: var(--space-24) var(--space-32) var(--space-32);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+.phoneCanvas {
+  padding: var(--space-20);
+}
+.canvas.narrowCanvas {
+  inline-size: calc(var(--column-list) + var(--space-32) * 2);
+}
