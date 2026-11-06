@@ -372,7 +372,7 @@ A neutral card with an icon tile, a title and a body. It may hold one primary Bu
 
 ### DetailPanel (desktop) / DetailSheet (phone)
 
-- **Task 06 header:** the desktop card uses `--color-surface`, `--radius-card`, `--space-24` top padding and `--space-32` side/bottom padding. It contains the position, Title, Person and minority AccountLabel, then the request with its sender attribution or Glance summary label. Task 08 adds the tabs and body inside this card. Selection is displayed only while this panel is visible.
+- **Desktop card:** uses `--color-surface`, `--radius-card`, `--space-24` top padding and `--space-32` side/bottom padding. It contains the position, tabs, Title, Person and minority AccountLabel, then the request with its sender attribution or Glance summary label. Details and Original email share this card. Selection is displayed only while this panel or its phone sheet is visible.
 - **Top row:** position (“Needs you · 1 of 3”) and the SegmentedControl.
 - **Then:** Title, Person and AccountLabel, the request (with GlanceMark when it is a summary), “From the email · select an underlined value”, the SceneCard, the SourcePanel, the ReasonPanel trigger (ReasonPill, default size).
 - **Bottom bar:**

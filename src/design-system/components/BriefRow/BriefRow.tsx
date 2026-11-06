@@ -16,7 +16,7 @@ interface BriefRowProps {
   account?: Account;
   selected?: boolean;
   leaving?: boolean;
-  onSelect: (itemId: string) => void;
+  onSelect: (itemId: string, trigger: HTMLButtonElement) => void;
   onLeaveComplete?: () => void;
 }
 export function BriefRow({
@@ -58,7 +58,7 @@ export function BriefRow({
         <button
           type="button"
           aria-pressed={selected}
-          onClick={() => onSelect(item.id)}
+          onClick={(event) => onSelect(item.id, event.currentTarget)}
           className={[control.control, row.button, selected && row.selected]
             .filter(Boolean)
             .join(' ')}

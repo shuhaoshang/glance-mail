@@ -85,37 +85,56 @@ const verifyBrief: NonNullable<Story['play']> = async ({ canvas, args }) => {
   rows[1].focus();
   await userEvent.keyboard('{Enter}');
   await waitFor(async () => {
-    await expect(rows[1]).toHaveAttribute(
-      'aria-pressed',
-      hasDetail ? 'true' : 'false',
-    );
-    if (!hasDetail)
-      for (const row of rows)
-        await expect(row).toHaveAttribute('aria-pressed', 'false');
+    await expect(rows[1]).toHaveAttribute('aria-pressed', 'true');
   });
-  await expect(needs.getAllByRole('button')).toEqual(rows);
-  await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
-
-  const detail = canvas.queryByRole('region', { name: 'Selected item' });
-  if (detail) {
+  const dialog = hasDetail
+    ? undefined
+    : await canvas.findByRole('dialog', { name: items[1].name });
+  const detail = within(
+    dialog ?? canvas.getByRole('region', { name: 'Selected item' }),
+  );
+  await expect(
+    detail.getByRole('heading', { name: items[1].name }),
+  ).toBeVisible();
+  await expect(
+    detail.getByText(items[1].request.text, { exact: true }),
+  ).toBeVisible();
+  await expect(
+    detail.getByText('Needs you · 2 of ' + items.length, { exact: true }),
+  ).toBeVisible();
+  const account =
+    persona.accounts.find((entry) => entry.id === items[1].account) ??
+    persona.accounts[0];
+  const link = detail.getByRole('link', { name: 'Open in ' + account.app });
+  await expect(link).toHaveAttribute('target', '_blank');
+  await expect(link).not.toHaveAttribute('href', '#');
+  await expect(
+    detail.queryByRole('button', { name: /^Done$/ }),
+  ).not.toBeInTheDocument();
+  if (dialog) {
+    await expect(dialog.contains(document.activeElement)).toBe(true);
+    // Native Escape is checked in the browser; exercise its cancel event here.
+    dialog.dispatchEvent(new Event('cancel', { cancelable: true }));
+    await waitFor(async () => {
+      await expect(dialog).not.toHaveAttribute('open');
+      await expect(rows[1]).toHaveFocus();
+    });
+    await expect(rows[1]).toHaveAttribute('aria-pressed', 'false');
+  } else {
+    await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
+    await expect(rows[1]).toHaveFocus();
+    await userEvent.click(detail.getByRole('tab', { name: 'Original email' }));
+    await userEvent.click(detail.getByRole('switch', { name: 'Highlighter' }));
+    await userEvent.click(rows[1]);
     await expect(
-      within(detail).getByText(items[1].name, { exact: true }),
-    ).toBeVisible();
+      detail.getByRole('tab', { name: 'Original email' }),
+    ).toHaveAttribute('aria-selected', 'true');
     await expect(
-      within(detail).getByText(items[1].request.text, { exact: true }),
-    ).toBeVisible();
-    await expect(
-      within(detail).getByText('Needs you · 2 of ' + items.length, {
-        exact: true,
-      }),
-    ).toBeVisible();
-    await expect(
-      within(detail).getByText(items[1].person.name, { exact: false }),
-    ).toBeVisible();
-    await expect(within(detail).queryByRole('button')).not.toBeInTheDocument();
+      detail.getByRole('switch', { name: 'Highlighter' }),
+    ).not.toBeChecked();
   }
+  await expect(needs.getAllByRole('button')).toEqual(rows);
 };
-
 export const Maya: Story = {};
 export const Daniel: Story = { args: { personaId: 'daniel' } };
 export const Sarah: Story = { args: { personaId: 'sarah' } };

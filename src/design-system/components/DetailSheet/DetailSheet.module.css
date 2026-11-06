@@ -1,0 +1,124 @@
+.dialog {
+  position: fixed;
+  inset-inline: 0;
+  inset-block-start: var(--size-sheet-top);
+  inset-block-end: 0;
+  inline-size: 100%;
+  block-size: calc(100dvh - var(--size-sheet-top));
+  max-inline-size: none;
+  max-block-size: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--color-surface);
+  color: var(--color-text);
+  overflow: hidden;
+}
+.dialog[open] {
+  display: flex;
+  flex-direction: column;
+  animation: sheetIn var(--duration-collapse) var(--ease-standard) both;
+}
+.dialog[open][data-closing='true'] {
+  animation-name: sheetOut;
+}
+.dialog::backdrop {
+  background: var(--color-scrim);
+  animation: scrimIn var(--duration-reveal) var(--ease-standard) both;
+}
+.dialog[data-closing='true']::backdrop {
+  animation-name: scrimOut;
+}
+.handleTarget {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  inline-size: var(--size-touch);
+  block-size: var(--size-touch);
+  padding-block-start: var(--space-8);
+  touch-action: none;
+  cursor: grab;
+  z-index: 1;
+}
+.handle {
+  inline-size: var(--size-handle-width);
+  block-size: var(--size-handle-height);
+  border-radius: var(--radius-pill);
+  background: var(--color-border-strong);
+}
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-block-size: 0;
+  min-inline-size: 0;
+  overflow: hidden;
+}
+@keyframes sheetIn {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes sheetOut {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+@keyframes scrimIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes scrimOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dialog[open],
+  .dialog::backdrop {
+    animation: none;
+  }
+}
+.example {
+  padding: var(--space-24);
+}
+.examplePanel {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-block-size: 0;
+  gap: var(--space-24);
+  padding: var(--space-24) var(--space-20) var(--space-32);
+}
+.exampleHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
+}
+.exampleBody {
+  display: grid;
+  align-content: start;
+  flex: 1;
+  min-block-size: 0;
+  gap: var(--space-24);
+  overflow-y: auto;
+}

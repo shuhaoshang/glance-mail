@@ -126,6 +126,9 @@
   --size-switch-track-height: 20px;
   --size-switch-knob: 16px;
   --size-progress: 4px;
+  --size-sheet-top: 56px;
+  --size-handle-width: 36px;
+  --size-handle-height: 4px;
   --size-touch: 44px;
   --size-touch-compact: 40px;       /* inside toolbars and tab groups */
   --size-button: 48px;

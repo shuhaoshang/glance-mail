@@ -4,6 +4,7 @@ import type { Account } from '../data/types';
 import { Text } from '../design-system/components/Text/Text';
 import { Icon } from '../design-system/components/Icon/Icon';
 import { Avatar } from '../design-system/components/Avatar/Avatar';
+import { DetailSheet } from '../design-system/components/DetailSheet/DetailSheet';
 import { DetailPanel } from '../design-system/components/DetailPanel/DetailPanel';
 import { CollapsedGroup } from '../design-system/components/CollapsedGroup/CollapsedGroup';
 import { SectionCard } from '../design-system/components/SectionCard/SectionCard';
@@ -27,9 +28,11 @@ function openInbox(account: Account) {
 function Brief({
   personaId,
   children,
+  startClean = false,
 }: {
   personaId: PersonaId;
   children?: ReactNode;
+  startClean?: boolean;
 }) {
   const persona = getPersona(personaId);
   const items = persona.items.filter((item) => !item.isNew);
@@ -37,9 +40,15 @@ function Brief({
     items[persona.demo.initialSelection.itemIndex]?.id ?? items[0]?.id,
   );
   const desktop = useDesktopLayout();
-  const selected = desktop
-    ? items.find((item) => item.id === selectedId)
-    : undefined;
+  const [sheetOpen, setSheetOpen] = useState(false);
+  const [returnFocus, setReturnFocus] = useState<HTMLElement | null>(null);
+  const [selectionRevision, setSelectionRevision] = useState(0);
+  const [previousDesktop, setPreviousDesktop] = useState(desktop);
+  if (previousDesktop !== desktop) {
+    setPreviousDesktop(desktop);
+    if (desktop) setSheetOpen(false);
+  }
+  const selected = items.find((item) => item.id === selectedId);
   const counts = getBriefCounts(persona);
   const defaultAccount =
     persona.accounts.find((account) => !account.minority) ??
@@ -113,9 +122,13 @@ function Brief({
                   item={item}
                   rank={index + 1}
                   account={minorityAccount(item.account)}
-                  selected={desktop && item.id === selectedId}
-                  onSelect={(id) => {
-                    if (desktop) setSelectedId(id);
+                  selected={(desktop || sheetOpen) && item.id === selectedId}
+                  onSelect={(id, trigger) => {
+                    setSelectedId(id);
+                    if (!desktop || id !== selectedId)
+                      setSelectionRevision((value) => value + 1);
+                    setReturnFocus(trigger);
+                    if (!desktop) setSheetOpen(true);
                   }}
                 />
               ))}
@@ -138,14 +151,45 @@ function Brief({
           {desktop && selected && (
             <div className={styles.detail}>
               <DetailPanel
+                key={selected.id + ':' + selectionRevision}
                 item={selected}
                 position={items.indexOf(selected) + 1}
                 total={counts.needs}
-                account={minorityAccount(selected.account)}
+                account={accountFor(selected.account)}
+                initialFactId={
+                  !startClean && selectionRevision === 0
+                    ? selected.facts[
+                        persona.demo.initialSelection.openFactIndex
+                      ]?.id
+                    : undefined
+                }
+                initialReasonOpen={
+                  !startClean &&
+                  selectionRevision === 0 &&
+                  persona.demo.initialSelection.reasonOpen
+                }
               />
             </div>
           )}
         </div>
+      )}
+      {!desktop && selected && !children && (
+        <DetailSheet
+          open={sheetOpen}
+          onClose={() => setSheetOpen(false)}
+          returnFocus={returnFocus}
+          label={selected.name}
+        >
+          <DetailPanel
+            key={selected.id + ':' + selectionRevision}
+            item={selected}
+            position={items.indexOf(selected) + 1}
+            total={counts.needs}
+            account={accountFor(selected.account)}
+            mobile
+            onClose={() => setSheetOpen(false)}
+          />
+        </DetailSheet>
       )}
     </main>
   );
@@ -154,12 +198,14 @@ function Brief({
 export function App({
   personaId,
   children,
+  startClean = false,
 }: {
   personaId: PersonaId;
   children?: ReactNode;
+  startClean?: boolean;
 }) {
   return (
-    <Brief key={personaId} personaId={personaId}>
+    <Brief key={personaId} personaId={personaId} startClean={startClean}>
       {children}
     </Brief>
   );

@@ -47,7 +47,13 @@ export function DemoApp({
         onPersonaChange={changePersona}
         onLevelChange={setLevel}
       />
-      <App personaId={personaId}>
+      <App
+        personaId={personaId}
+        startClean={
+          syncUrl &&
+          new URLSearchParams(window.location.search).get('start') === 'clean'
+        }
+      >
         {level !== 3 ? (
           <TextLevels persona={getPersona(personaId)} level={level} />
         ) : undefined}
