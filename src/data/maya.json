@@ -286,7 +286,14 @@
         {
           "q": "Who else is on this thread?",
           "found": true,
-          "a": "Only Ana Ruiz and you."
+          "a": "Only Ana Ruiz and you.",
+          "source": {
+            "from": "Ana Ruiz",
+            "when": "Tue, Nov 3, 4:20 PM",
+            "pre": "From: Ana Ruiz · ",
+            "hl": "To: you · Cc: none",
+            "post": ""
+          }
         }
       ]
     },

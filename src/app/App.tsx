@@ -100,6 +100,8 @@ function Brief({
   const detailActions = (id: string) => ({
     busy: !!life.pending,
     checkedSteps: life.checks[id] ?? [],
+    askedQuestions: life.asked[id] ?? [],
+    onAskQuestion: (index: number) => life.ask(id, index),
     onChecksChange: (values: boolean[]) => life.check(id, values),
     onDone: () => act(id, { kind: 'done', note: 'marked done in Glance' }),
     onMoveAside: () =>

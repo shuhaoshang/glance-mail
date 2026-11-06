@@ -10,6 +10,7 @@ import { SourcePanel } from '../SourcePanel/SourcePanel';
 import { ReasonPill } from '../ReasonPill/ReasonPill';
 import { ReasonPanel } from '../ReasonPanel/ReasonPanel';
 import { ordinal } from '../ReasonPanel/reasonText';
+import { AskThread } from '../AskThread/AskThread';
 import { EmailView } from '../EmailView/EmailView';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
@@ -26,13 +27,15 @@ interface DetailPanelProps {
   onClose?: () => void;
   initialFactId?: string;
   initialReasonOpen?: boolean;
+  askedQuestions?: number[];
+  onAskQuestion?: (index: number) => void;
   onDone?: () => void;
   onSnooze?: (label: string) => void;
   onMoveAside?: () => void;
   busy?: boolean;
   checkedSteps?: boolean[];
   onChecksChange?: (values: boolean[]) => void;
-  initialTab?: 'details' | 'email';
+  initialTab?: 'details' | 'email' | 'ask';
 }
 function Content({
   item,
@@ -44,6 +47,8 @@ function Content({
   initialFactId,
   initialReasonOpen = false,
   initialTab = 'details',
+  askedQuestions,
+  onAskQuestion,
   onDone,
   onSnooze,
   onMoveAside,
@@ -56,6 +61,7 @@ function Content({
     reasonId = prefix + '-reason';
   const detailsId = prefix + '-details',
     emailId = prefix + '-email';
+  const askId = prefix + '-ask';
   const root = useRef<HTMLElement>(null);
   const [tab, setTab] = useState(initialTab);
   const [localChecks, setLocalChecks] = useState<boolean[]>([]);
@@ -85,11 +91,22 @@ function Content({
       options={[
         { value: 'details', label: 'Details', panelId: detailsId },
         { value: 'email', label: 'Original email', panelId: emailId },
+        { value: 'ask', label: 'Ask', panelId: askId },
       ]}
       value={tab}
-      onValueChange={(value) => setTab(value as 'details' | 'email')}
+      onValueChange={(value) => {
+        setSnoozeOpen(false);
+        setTab(value as 'details' | 'email' | 'ask');
+      }}
     />
   );
+  function showAsk() {
+    setSnoozeOpen(false);
+    setTab('ask');
+    requestAnimationFrame(() =>
+      document.getElementById(askId + '-tab')?.focus(),
+    );
+  }
   function showEmail() {
     setTab('email');
     requestAnimationFrame(() =>
@@ -246,6 +263,20 @@ function Content({
             onHighlightedChange={setHighlighted}
           />
         </div>
+        <div
+          role="tabpanel"
+          id={askId}
+          aria-labelledby={askId + '-tab'}
+          hidden={tab !== 'ask'}
+          tabIndex={0}
+          className={styles.tabPanel}
+        >
+          <AskThread
+            item={item}
+            askedQuestions={askedQuestions}
+            onAskQuestion={onAskQuestion}
+          />
+        </div>
       </div>
       <div className={styles.actionArea}>
         {snoozeOpen && !complete && onSnooze && (
@@ -276,6 +307,16 @@ function Content({
           >
             Open in {account.app}
           </Button>
+          {tab !== 'ask' && (
+            <Button
+              variant="tint"
+              size={mobile ? 'touch' : undefined}
+              leadingIcon="message"
+              onClick={showAsk}
+            >
+              Ask
+            </Button>
+          )}
           {!complete && onSnooze && (
             <Button
               ref={snoozeTrigger}

@@ -405,6 +405,8 @@ A neutral card with an icon tile, a title and a body. It may hold one primary Bu
 - A **found** answer shows the ✦ Glance label, the answer, and a nested source (judgment ink).
 - A **not found** answer shows a box with a `--border-hairline` dashed `--color-border-strong` outline, titled “Not in your email”.
 - Suggestions use the `outline` Button.
+- Asked questions are stored per item for the whole demo session. They survive tab changes, item switches, and closing/reopening the phone sheet. Changing persona or reloading the page resets the history.
+- Choosing a suggestion moves focus to its answer because the suggestion disappears. The thread is not a live region, so screen readers announce the focused answer once.
 - New questions and answers appear with the enter motion (§2).
 - **In the demo there is no input.** Answers are prepared in advance, so a dashed note replaces it: “**Demo:** answers are prepared in advance, so pick a question above. In the product you type your own.” When every question has been asked: “**Demo:** that’s every prepared question for this item.” An input that never answers would be a dead control (D39).
 - In the product, the input row has a tint send button. It is not the primary, because the view already has one.
