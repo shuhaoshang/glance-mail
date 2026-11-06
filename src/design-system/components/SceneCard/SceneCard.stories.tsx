@@ -39,6 +39,7 @@ const meta = {
     account,
     initialField,
     narrow,
+    mobile,
     onSelectFact,
     onChecklistCompleteChange,
   }) => (
@@ -49,6 +50,7 @@ const meta = {
         account,
         initialField,
         narrow,
+        mobile,
         onSelectFact,
         onChecklistCompleteChange,
       }}
@@ -226,5 +228,10 @@ export const PhoneChecklist: Story = {
     ...sceneSamples.Checklist,
     initialField: { fieldKey: 'steps.1', factId: 'f2' },
   },
+  parameters: { layout: 'fullscreen', phoneCanvas: true },
+};
+
+export const PhoneDecision: Story = {
+  args: { ...sceneSamples.Decision, mobile: true },
   parameters: { layout: 'fullscreen', phoneCanvas: true },
 };

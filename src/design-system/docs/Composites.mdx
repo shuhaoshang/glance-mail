@@ -8,13 +8,23 @@ import { section } from './section';
 
 [Composite specifications](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#4-composites)
 
+## Brief lists
+
 [Explore brief lists](?path=/story/composites-gallery-brief-lists--overview)
 
 [BriefRow](?path=/docs/composites-briefrow--docs) · [SectionCard](?path=/docs/composites-sectioncard--docs) · [KnowRow](?path=/docs/composites-knowrow--docs) · [CollapsedGroup](?path=/docs/composites-collapsedgroup--docs) · [DoneRow](?path=/docs/composites-donerow--docs) · [NewMailRow](?path=/docs/composites-newmailrow--docs)
 
-[DetailPanel](?path=/docs/composites-detailpanel--docs)
+## Detail views
 
-[ReasonPill](?path=/docs/primitives-reasonpill--docs)
+[DetailPanel](?path=/docs/composites-detailpanel--docs) · [DetailSheet](?path=/docs/composites-detailsheet--docs) · [EmailView](?path=/docs/composites-emailview--docs) · [ReasonPanel](?path=/docs/composites-reasonpanel--docs)
+
+The desktop DetailPanel extends the existing detail card with Details and Original email tabs. Details composes the selected item's SceneCard, exact fact sources, and the ReasonPill disclosure. ReasonPanel separates Glance's ranking and judgments from the sender's words, with supporting email excerpts where the data provides them.
+
+DetailSheet presents the same content as a modal on phone. It supports closing with its close button, the scrim, Escape, or a downward handle drag. Focus stays inside while the sheet is open and returns to the row that opened it. The sheet follows the handle during a drag, then dismisses at the documented distance or velocity threshold or returns over `--duration-fast`. With reduced motion, direct dragging remains available and automatic motion is instant.
+
+EmailView renders the supplied subject, metadata, and exact email paragraphs. Its legend identifies only the highlight types present in that email, and the Highlighter switch draws or clears the ink. Highlight labels are available on hover and keyboard focus.
+
+[ReasonPill](?path=/docs/primitives-reasonpill--docs) · [SourcePanel](?path=/docs/primitives-sourcepanel--docs) · [Scene cards](?path=/docs/scene-cards-overview--docs)
 
 ## Component reference
 

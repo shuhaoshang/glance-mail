@@ -8,9 +8,21 @@
   background: var(--color-surface);
   overflow-wrap: anywhere;
 }
+.body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-24);
+  min-inline-size: 0;
+}
+.navigation {
+  display: grid;
+  gap: var(--space-12);
+}
 .topRow {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  gap: var(--space-12);
   min-block-size: calc(var(--size-touch-compact) + var(--space-4) * 2);
 }
 .panel .meta {
@@ -30,6 +42,18 @@
   flex-wrap: wrap;
   gap: var(--space-8);
 }
+.tabPanel {
+  display: grid;
+  gap: var(--space-24);
+  min-inline-size: 0;
+}
+.tabPanel[hidden] {
+  display: none;
+}
+.tabPanel:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-brand);
+  outline-offset: var(--focus-ring-offset);
+}
 .requestGroup {
   display: grid;
   gap: var(--space-4);
@@ -37,6 +61,66 @@
 .panel .request {
   font-size: var(--font-size-24);
   line-height: var(--line-height-24);
+}
+.sources,
+.reason {
+  display: grid;
+  gap: var(--space-12);
+  min-inline-size: 0;
+}
+.reason {
+  justify-items: start;
+}
+.reason > section {
+  inline-size: 100%;
+}
+.actions {
+  display: flex;
+  border-block-start: var(--border-hairline) solid var(--color-border);
+  padding-block-start: var(--space-24);
+}
+.panel.mobile {
+  padding: 0;
+  gap: 0;
+  border-radius: 0;
+  flex: 1;
+  min-block-size: 0;
+  block-size: 100%;
+}
+.mobile .body {
+  padding: var(--space-24) var(--space-20) var(--space-24);
+  overflow-y: auto;
+  min-block-size: 0;
+  flex: 1;
+}
+.mobile .topRow {
+  min-block-size: var(--space-24);
+  block-size: var(--space-24);
+}
+.mobile .close {
+  flex: none;
+}
+.mobile .navigation > [role='tablist'] {
+  display: flex;
+}
+.mobile .navigation > [role='tablist'] > button {
+  flex: 1;
+}
+.mobile .title {
+  font-size: var(--font-size-18);
+  line-height: var(--line-height-18);
+}
+.mobile .request {
+  font-size: var(--font-size-20);
+  line-height: var(--line-height-20);
+}
+.mobile .actions {
+  padding: var(--space-12) var(--space-20) var(--space-20);
+  background: var(--color-surface);
+  flex: none;
+}
+.mobile .actions > a {
+  inline-size: 100%;
 }
 .preview {
   inline-size: calc(

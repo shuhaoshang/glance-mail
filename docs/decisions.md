@@ -288,6 +288,7 @@ Each entry records one decision: what was decided, what else was considered, and
 ### D44 · The phone sheet behaves like a real sheet
 
 - **Decision:** The detail sheet slides up and down, closes with the close button, the scrim, Escape or a drag on the handle, and traps focus while open. After Done, Mark done, Snooze or Move to Set aside it closes and the brief shows the result; on desktop the panel moves to the next item.
+- **Drag behavior:** The sheet follows the finger on the handle. Release dismisses it after at least 25% of its height or downward velocity greater than 0.5 px/ms; otherwise it returns over `--duration-fast`. Reduced motion preserves direct dragging and makes the return instant. The thresholds are named constants in DetailSheet.
 - **Considered:** A decorative handle; keeping the sheet open on the next item after an action.
 - **Why:** A handle that cannot be dragged is a dead control. Closing after an action lets Sarah see the done row and the new progress, which is the point of Close in her story (user flows, Sarah 5).
 

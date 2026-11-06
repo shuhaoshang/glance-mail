@@ -13,6 +13,7 @@ export function SceneExample({
   account,
   initialField,
   narrow = false,
+  mobile = false,
   onSelectFact,
   onChecklistCompleteChange,
 }: {
@@ -20,6 +21,7 @@ export function SceneExample({
   account: Account;
   initialField?: { fieldKey: string; factId: string };
   narrow?: boolean;
+  mobile?: boolean;
   onSelectFact?: (selection: SceneFieldSelection) => void;
   onChecklistCompleteChange?: (complete: boolean) => void;
 }) {
@@ -43,6 +45,7 @@ export function SceneExample({
     >
       <SceneCard
         item={item}
+        mobile={mobile}
         selectedField={selection?.fieldKey}
         sourcePanelId={panelId}
         onChecklistCompleteChange={onChecklistCompleteChange}

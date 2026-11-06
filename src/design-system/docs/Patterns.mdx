@@ -12,7 +12,15 @@ import { section } from './section';
 
 [Maya](?path=/story/patterns-brief--maya) · [Daniel](?path=/story/patterns-brief--daniel) · [Sarah](?path=/story/patterns-brief--sarah)
 
-The brief uses persona data at desktop, tablet, and phone widths. Desktop uses a header-only DetailPanel card; the full detail view follows in task 08. Narrow layouts have no selected row, and Set aside remains a static card until task 12.
+The brief uses persona data at desktop, tablet, and phone widths. Desktop keeps the selected item's DetailPanel alongside the list. On phone, selecting a row opens its DetailSheet; closing the sheet returns focus to that row and removes the selected appearance. Set aside remains a static card until task 12.
+
+## Reading and verifying an item
+
+[DetailPanel](?path=/docs/composites-detailpanel--docs) · [DetailSheet](?path=/docs/composites-detailsheet--docs) · [EmailView](?path=/docs/composites-emailview--docs) · [ReasonPanel](?path=/docs/composites-reasonpanel--docs)
+
+Details and Original email stay inside the same detail card or sheet. Selecting an underlined SceneCard value opens the corresponding SourcePanel. Its Open email link switches to Original email, where the Highlighter control reveals the facts Glance used. Glance's reasoning remains a separate disclosure so its judgments are not presented as the sender's words.
+
+Open in Gmail, Outlook, or Yahoo Mail opens the corresponding web inbox in a new tab. Ask and lifecycle actions belong to their later tasks and are not shown as inactive controls.
 
 ## Demo controls and levels
 

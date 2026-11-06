@@ -1,5 +1,6 @@
 .pill {
   --pill-height: var(--size-touch-compact);
+  --pill-line-height: var(--line-height-14);
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -31,8 +32,24 @@
   font-weight: var(--font-weight-semibold);
   transition: background-color var(--duration-fast) var(--ease-standard);
 }
+.icon {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+.mobile .visual {
+  display: inline-grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  align-content: center;
+  text-align: start;
+}
+.mobile .icon {
+  block-size: var(--pill-line-height);
+}
 .small {
   --pill-height: calc(var(--line-height-12) + var(--space-4) * 2);
+  --pill-line-height: var(--line-height-12);
 }
 .small .visual {
   padding: var(--space-4) var(--space-12) var(--space-4) var(--space-8);
