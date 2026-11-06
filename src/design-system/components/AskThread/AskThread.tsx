@@ -9,14 +9,20 @@ import styles from './AskThread.module.css';
 function Content({
   item,
   initialAsked = [],
+  askedQuestions,
+  onAskQuestion,
 }: {
   item: Item;
   initialAsked?: number[];
+  askedQuestions?: number[];
+  onAskQuestion?: (index: number) => void;
 }) {
-  const [asked, setAsked] = useState(initialAsked);
+  const [localAsked, setAsked] = useState(initialAsked);
+  const asked = askedQuestions ?? localAsked;
   const prefix = useId();
   const root = useRef<HTMLElement>(null);
   function ask(index: number) {
+    onAskQuestion?.(index);
     setAsked((current) =>
       current.includes(index) ? current : [...current, index],
     );
@@ -32,14 +38,7 @@ function Content({
         Answers come only from your email. When something isn’t there, Glance
         says so instead of guessing.
       </Text>
-      <div
-        id={prefix + '-history'}
-        role="log"
-        aria-label="Questions and answers"
-        aria-live="polite"
-        aria-relevant="additions"
-        className={styles.history}
-      >
+      <div id={prefix + '-history'} className={styles.history}>
         {asked.map((index) => {
           const qa = item.qa[index];
           return (

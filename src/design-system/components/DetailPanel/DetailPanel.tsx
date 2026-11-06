@@ -27,6 +27,8 @@ interface DetailPanelProps {
   onClose?: () => void;
   initialFactId?: string;
   initialReasonOpen?: boolean;
+  askedQuestions?: number[];
+  onAskQuestion?: (index: number) => void;
   onDone?: () => void;
   onSnooze?: (label: string) => void;
   onMoveAside?: () => void;
@@ -45,6 +47,8 @@ function Content({
   initialFactId,
   initialReasonOpen = false,
   initialTab = 'details',
+  askedQuestions,
+  onAskQuestion,
   onDone,
   onSnooze,
   onMoveAside,
@@ -267,7 +271,11 @@ function Content({
           tabIndex={0}
           className={styles.tabPanel}
         >
-          <AskThread item={item} />
+          <AskThread
+            item={item}
+            askedQuestions={askedQuestions}
+            onAskQuestion={onAskQuestion}
+          />
         </div>
       </div>
       <div className={styles.actionArea}>

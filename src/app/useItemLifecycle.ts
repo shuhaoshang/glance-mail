@@ -10,19 +10,31 @@ interface State {
   records: Record<string, Resolution>;
   pending: { id: string; result: Resolution } | null;
   checks: Record<string, boolean[]>;
+  asked: Record<string, number[]>;
 }
 type Action =
   | { type: 'begin'; id: string; result: Resolution; instant: boolean }
   | { type: 'settle'; id: string }
   | { type: 'undo'; id: string }
-  | { type: 'check'; id: string; values: boolean[] };
+  | { type: 'check'; id: string; values: boolean[] }
+  | { type: 'ask'; id: string; index: number };
 const initial: State = {
   started: false,
   records: {},
   pending: null,
   checks: {},
+  asked: {},
 };
 function reducer(state: State, action: Action): State {
+  if (action.type === 'ask') {
+    const asked = state.asked[action.id] ?? [];
+    return asked.includes(action.index)
+      ? state
+      : {
+          ...state,
+          asked: { ...state.asked, [action.id]: [...asked, action.index] },
+        };
+  }
   if (action.type === 'check')
     return {
       ...state,
@@ -90,6 +102,7 @@ export function useItemLifecycle(persona: Persona) {
     active,
     counts,
     finish,
+    ask: (id: string, index: number) => dispatch({ type: 'ask', id, index }),
     settle: (id: string) => dispatch({ type: 'settle', id }),
     undo: (id: string) => dispatch({ type: 'undo', id }),
     check: (id: string, values: boolean[]) =>

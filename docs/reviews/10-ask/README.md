@@ -30,13 +30,15 @@ Phone action bar: [default light](phone-phone-actions-light.jpg), [default dark]
 
 The only Ask image present in `docs/screens/` is [desktop-maya-ask.png](../../screens/desktop-maya-ask.png). No `phone-ask.png` exists. Phone composition follows the written AskThread specification and the existing sheet; phone tab/action typography also follows the supplied phone detail prototypes.
 
-Conversation state remains within the selected item detail, as with the existing detail states. No real AI or email request is made, and the supplied data is unchanged.
+Conversation history is stored per item for the full demo session, surviving item switches, tab changes, and phone sheet reopening. Persona changes and page reloads reset it. No real AI or email request is made, and the supplied data is unchanged.
 
-## Open questions
+## Review follow-up
 
-The specification does not define whether Ask history should survive switching items or reopening a phone sheet. It currently follows the existing detail-view lifetime and persists across tab changes. Proposed follow-up: retain asked questions per item for the demo session, including after closing the sheet. Please confirm before extending that lifetime.
+Brightline’s recipient answer now includes the exact designer-supplied email-header source. No other data changed.
 
-In `src/data/maya.json`, Brightline's “Who else is on this thread?” is marked found but has no source. It renders the supplied answer without inventing evidence. Please provide a source or confirm that this metadata answer may omit the source.
+| Brightline | Light | Dark |
+| --- | --- | --- |
+| Desktop | [Light](desktop-brightline-light.jpg) | [Dark](desktop-brightline-dark.jpg) |
+| Phone | [Light](phone-brightline-light.jpg) | [Dark](phone-brightline-dark.jpg) |
 
-Only `desktop-maya-ask.png` exists among the supplied Ask screenshots; phone composition follows the written specification and existing phone detail prototypes.
-
+History lifetime, persona reset, actual page reload, and newly focused answers were verified. The thread has no live region, so focus is the single announcement mechanism. All review questions are resolved.
