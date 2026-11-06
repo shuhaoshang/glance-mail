@@ -436,7 +436,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 **Selection rules:**
 
 1. The type comes from the data (`item.scene.type`). Components never infer it.
-2. If the data has no scene, render `text`. Knowing when _not_ to use a component is part of the system.
+2. If the data has no scene or its type is unknown, render `text`. Knowing when _not_ to use a component is part of the system.
 3. Checklist ticks are local progress. They do not mark the item done; only Done or an auto-detected reply does.
    - When every step is ticked: steps are struck through (inline fact values stay readable and tappable), the note `scene.doneNote` appears under the card, and the action bar swaps (see DetailPanel).
 4. New scene types need a design-system PR first, with a story for each state.

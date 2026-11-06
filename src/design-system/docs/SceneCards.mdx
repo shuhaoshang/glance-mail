@@ -8,4 +8,18 @@ import { section } from './section';
 
 [Scene card specifications](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#5-scene-cards)
 
+[Try every scene](?path=/story/scene-cards-gallery--overview)
+
+[Deal](?path=/story/scene-cards-scenecard--deal) · [Decision](?path=/story/scene-cards-scenecard--decision) · [Approval](?path=/story/scene-cards-scenecard--approval) · [Payment](?path=/story/scene-cards-scenecard--payment)
+
+[Mismatch](?path=/story/scene-cards-scenecard--mismatch) · [Event](?path=/story/scene-cards-scenecard--event) · [Range](?path=/story/scene-cards-scenecard--range) · [Checklist](?path=/story/scene-cards-scenecard--checklist) · [Text fallback](?path=/story/scene-cards-scenecard--text-fallback)
+
+[Selected field](?path=/story/scene-cards-scenecard--field-selected) · [Completed checklist](?path=/story/scene-cards-scenecard--completed-checklist) · [Long values](?path=/story/scene-cards-scenecard--long-values) · [Missing scene](?path=/story/scene-cards-scenecard--missing-scene) · [Unknown scene](?path=/story/scene-cards-scenecard--unknown-scene) · [Phone checklist](?path=/story/scene-cards-scenecard--phone-checklist)
+
+## Composition
+
+`SceneCard` accepts the supplied item and controlled `selectedField` / `onSelectFact` props. A selection includes the field key, fact, and triggering element so the caller can show a SourcePanel and restore focus on close. Field keys distinguish values that share the same source fact.
+
+Checklist progress stays inside the card and resets when the item ID changes. The optional completion callback reports progress without marking the item done. The completed note appears outside the card. The phone checklist story uses the reading-panel padding from the phone reference.
+
 <Markdown>{section(system, '5. Scene cards')}</Markdown>

@@ -20,6 +20,6 @@
 }
 .day {
   font-size: var(--font-size-24);
-  line-height: var(--line-height-24);
+  line-height: var(--line-height-20);
   font-weight: var(--font-weight-bold);
 }
