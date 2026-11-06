@@ -11,6 +11,7 @@ interface DemoBarProps {
   onPersonaChange: (id: PersonaId) => void;
   onLevelChange: (level: DemoLevel) => void;
   extraControls?: ReactNode;
+  simulation?: { label: string; disabled: boolean; onClick: () => void };
 }
 const personas = [
   { id: 'maya', label: 'Maya · Sales', shortLabel: 'Maya' },
@@ -29,6 +30,7 @@ export function DemoBar({
   onPersonaChange,
   onLevelChange,
   extraControls,
+  simulation,
 }: DemoBarProps) {
   const desktop = useDesktopLayout();
   const phone = usePhoneLabels();
@@ -107,6 +109,16 @@ export function DemoBar({
                 </button>
               ))}
             </div>
+            {simulation && (
+              <button
+                type="button"
+                className={[styles.choice, styles.simulate].join(' ')}
+                disabled={simulation.disabled}
+                onClick={simulation.onClick}
+              >
+                {simulation.label}
+              </button>
+            )}
             {extraControls && (
               <div className={styles.extra}>{extraControls}</div>
             )}

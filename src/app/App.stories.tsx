@@ -108,9 +108,7 @@ const verifyBrief: NonNullable<Story['play']> = async ({ canvas, args }) => {
   const link = detail.getByRole('link', { name: 'Open in ' + account.app });
   await expect(link).toHaveAttribute('target', '_blank');
   await expect(link).not.toHaveAttribute('href', '#');
-  await expect(
-    detail.queryByRole('button', { name: /^Done$/ }),
-  ).not.toBeInTheDocument();
+  await expect(detail.getByRole('button', { name: /^Done$/ })).toBeVisible();
   if (dialog) {
     await expect(dialog.contains(document.activeElement)).toBe(true);
     // Native Escape is checked in the browser; exercise its cancel event here.

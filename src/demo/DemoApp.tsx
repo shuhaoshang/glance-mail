@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useItemLifecycle } from '../app/useItemLifecycle';
 import { App } from '../app/App';
 import { personaFromSearch } from '../app/briefData';
 import { getPersona, type PersonaId } from '../data';
@@ -40,15 +41,49 @@ export function DemoApp({
     setPersonaId(next);
   }
   return (
+    <PersonaDemo
+      key={personaId}
+      personaId={personaId}
+      level={level}
+      changePersona={changePersona}
+      setLevel={setLevel}
+      syncUrl={syncUrl}
+    />
+  );
+}
+function PersonaDemo({
+  personaId,
+  level,
+  changePersona,
+  setLevel,
+  syncUrl,
+}: {
+  personaId: PersonaId;
+  level: DemoLevel;
+  changePersona: (id: PersonaId) => void;
+  setLevel: (level: DemoLevel) => void;
+  syncUrl: boolean;
+}) {
+  const session = useItemLifecycle(getPersona(personaId));
+  return (
     <>
       <DemoBar
         personaId={personaId}
         level={level}
         onPersonaChange={changePersona}
-        onLevelChange={setLevel}
+        onLevelChange={(next) => {
+          if (next !== 3 && session.pending) session.settle(session.pending.id);
+          setLevel(next);
+        }}
+        simulation={{
+          label: session.simulateLabel,
+          disabled: session.simulateDisabled,
+          onClick: () => session.simulate(level !== 3),
+        }}
       />
       <App
         personaId={personaId}
+        session={session}
         startClean={
           syncUrl &&
           new URLSearchParams(window.location.search).get('start') === 'clean'

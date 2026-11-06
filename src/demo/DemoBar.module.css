@@ -124,3 +124,18 @@
     animation: none;
   }
 }
+
+.simulate {
+  border: var(--border-hairline) dashed var(--color-demo-muted);
+  min-block-size: var(--size-touch);
+}
+.desktop .simulate {
+  margin-inline-start: auto;
+}
+.simulate:disabled {
+  cursor: default;
+}
+.simulate:disabled:hover,
+.simulate:disabled:active {
+  background: transparent;
+}

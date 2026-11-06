@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 import { Button } from '../Button/Button';
 import { Icon } from '../Icon/Icon';
 import motion from '../ListMotion.module.css';
@@ -8,8 +9,17 @@ interface DoneRowProps {
   note: string;
   kind?: 'done' | 'snoozed' | 'moved';
   onUndo?: () => void;
+  undoDisabled?: boolean;
+  undoRef?: Ref<HTMLButtonElement>;
 }
-export function DoneRow({ name, note, kind = 'done', onUndo }: DoneRowProps) {
+export function DoneRow({
+  name,
+  note,
+  kind = 'done',
+  onUndo,
+  undoRef,
+  undoDisabled,
+}: DoneRowProps) {
   return (
     <div role="listitem" className={[styles.row, motion.enter].join(' ')}>
       <Icon
@@ -28,6 +38,8 @@ export function DoneRow({ name, note, kind = 'done', onUndo }: DoneRowProps) {
       </span>
       {onUndo && (
         <Button
+          ref={undoRef}
+          disabled={undoDisabled}
           variant="text"
           size="compact"
           onClick={onUndo}

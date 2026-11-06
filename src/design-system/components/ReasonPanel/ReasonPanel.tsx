@@ -1,4 +1,5 @@
 import type { Item } from '../../../data/types';
+import { Button } from '../Button/Button';
 import { Text } from '../Text/Text';
 import { Highlight } from '../Highlight/Highlight';
 import { ordinal } from './reasonText';
@@ -8,9 +9,17 @@ interface ReasonPanelProps {
   item: Item;
   position: number;
   id?: string;
+  onMoveAside?: () => void;
+  disabled?: boolean;
 }
 
-export function ReasonPanel({ item, position, id }: ReasonPanelProps) {
+export function ReasonPanel({
+  item,
+  position,
+  id,
+  onMoveAside,
+  disabled,
+}: ReasonPanelProps) {
   return (
     <section id={id} aria-label="Glance’s read" className={styles.panel}>
       <Text as="p" variant="meta" className={styles.label}>
@@ -45,6 +54,21 @@ export function ReasonPanel({ item, position, id }: ReasonPanelProps) {
           )}
         </div>
       ))}
+      {onMoveAside && (
+        <footer className={styles.correction}>
+          <Text as="p" variant="meta">
+            Not for you? Glance will rank emails like this lower.
+          </Text>
+          <Button
+            variant="outline"
+            leadingIcon="tray-arrow"
+            disabled={disabled}
+            onClick={onMoveAside}
+          >
+            Move to Set aside
+          </Button>
+        </footer>
+      )}
     </section>
   );
 }

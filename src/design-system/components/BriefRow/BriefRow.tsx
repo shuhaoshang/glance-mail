@@ -57,6 +57,7 @@ export function BriefRow({
       <div className={motion.content}>
         <button
           type="button"
+          data-brief-item={item.id}
           aria-pressed={selected}
           onClick={(event) => onSelect(item.id, event.currentTarget)}
           className={[control.control, row.button, selected && row.selected]

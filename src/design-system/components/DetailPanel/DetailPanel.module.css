@@ -117,14 +117,48 @@
 .mobile .actions {
   padding: var(--space-12) var(--space-20) var(--space-20);
   background: var(--color-surface);
-  flex: none;
 }
-.mobile .actions > a {
-  inline-size: 100%;
-}
+
 .preview {
   inline-size: calc(
     var(--content-max) - var(--column-list) - var(--gap-column)
   );
   max-inline-size: 100%;
+}
+
+.actionArea {
+  position: relative;
+  flex: none;
+}
+.actions {
+  gap: var(--space-8);
+  align-items: center;
+  flex-wrap: wrap;
+}
+.snoozeTrigger {
+  margin-inline-start: auto;
+}
+.complete .done {
+  margin-inline-start: auto;
+}
+.snooze {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 100%;
+  padding-block-end: var(--space-12);
+  z-index: 2;
+}
+.mobile .actions .inbox {
+  inline-size: 100%;
+}
+.mobile .complete .done {
+  order: -1;
+  inline-size: 100%;
+  margin: 0;
+}
+.mobile .complete .inbox {
+  inline-size: auto;
+}
+.mobile .snooze {
+  inset-inline: var(--space-20);
 }

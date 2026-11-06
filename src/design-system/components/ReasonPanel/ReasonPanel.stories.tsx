@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { expect, fn } from 'storybook/test';
 import { getPersona } from '../../../data';
 import { ReasonPanel } from './ReasonPanel';
 import styles from './ReasonPanel.module.css';
@@ -42,3 +42,5 @@ export const Evidence: Story = {
     await expect(canvas.queryByRole('button')).not.toBeInTheDocument();
   },
 };
+
+export const Correction: Story = { args: { onMoveAside: fn() } };

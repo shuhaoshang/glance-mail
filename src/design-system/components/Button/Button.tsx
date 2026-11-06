@@ -2,6 +2,7 @@ import type {
   AnchorHTMLAttributes,
   ButtonHTMLAttributes,
   ReactNode,
+  Ref,
 } from 'react';
 import { Icon, type IconName } from '../Icon/Icon';
 import control from '../Control.module.css';
@@ -19,10 +20,12 @@ interface Appearance {
 type ButtonProps = Appearance &
   (
     | (ButtonHTMLAttributes<HTMLButtonElement> & {
+        ref?: Ref<HTMLButtonElement>;
         href?: never;
         external?: never;
       })
     | (AnchorHTMLAttributes<HTMLAnchorElement> & {
+        ref?: Ref<HTMLAnchorElement>;
         href: string;
         external?: boolean;
       })
