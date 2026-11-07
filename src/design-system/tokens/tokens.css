@@ -170,6 +170,7 @@
   --duration-collapse: 320ms;       /* done and snooze rows */
   --duration-highlight: 360ms;      /* highlighter switch */
   --duration-sweep: 480ms;          /* highlighter sweep on a source */
+  --duration-shimmer: 1600ms;      /* first brief skeleton */
   --ease-standard: ease;
   --ease-sweep: cubic-bezier(0.2, 0.7, 0.2, 1);
 
@@ -298,5 +299,6 @@
     --duration-collapse: 1ms;
     --duration-highlight: 1ms;
     --duration-sweep: 1ms;
+    --duration-shimmer: 1ms;
   }
 }

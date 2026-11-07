@@ -328,6 +328,7 @@ The same row for every item, whatever its type.
 - Selected: `--color-brand-tint` fill and `aria-pressed`; the rank turns brand. Selected and hovered: `--color-brand-tint-hover`. Selected and pressed: `--color-brand-tint-pressed`.
 - Leaving: collapses over `--duration-collapse` (320 ms).
 - New: shows the `New` Badge and enters with the enter motion (§2).
+- Revealed rows use the same button and phone chevron, accept list fields without detail data, and can enter without showing the `New` Badge.
 
 On phone, adjacent BriefRows have a `--border-hairline` divider in `--color-border` that starts at the content edge, after the rank and gap. Desktop BriefRows have no dividers between them.
 
@@ -350,7 +351,9 @@ At most one panel is open in a SectionCard: a fact source or a judgment. Opening
 
 A card button: “31 set aside” plus a breakdown (“18 newsletters · 9 CC’d · 4 promotions”) and a chevron. It is selected while the Set aside view is open. It uses the same hover, pressed and selected fills as BriefRow. When selected, the category breakdown uses `--color-text-secondary` in the resting, hovered, and pressed states to preserve text contrast.
 
-Until the Set aside view exists, `CollapsedGroup` can render as a static card: count and category breakdown, no chevron, no interactive states, and no tab stop.
+The label defaults to “set aside” and can be “good to know.” An optional summary replaces the count breakdown. In the edge-state stories the summary rows retain the chevron and log an open action.
+
+`CollapsedGroup` can also render as a static card without a chevron, interactive states, or a tab stop.
 
 ### SetAsideList
 
@@ -465,7 +468,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 | Item lifecycle     | **Done** (manual or reply detected), **snoozed** (comes back at a time), **leaving** (collapse), then a done row with Undo. When nothing is left: “Nothing else needs you right now” if any snoozed items will come back later; otherwise “Nothing else needs you today”.                                                                                                                           |
 | New mail           | NewMailRow. Adding it puts new items at the end of the ranking and adds the rest to Set aside.                                                                                                                                                                                                              |
 | Show in brief      | A Set aside row moves to Good to know, marked “Moved by you”; the counts update; it can be undone.                                                                                                                                                                                                          |
-| First brief        | Connected inboxes with checks, reading progress (“312 of 480 emails”), a skeleton of the brief, and “Read-only” reassurance.                                                                                                                                                                                |
+| First brief        | Connected inboxes with checks, reading progress (“312 of 480 emails”), a skeleton of the brief, and “Read-only” reassurance. “Notify me when it’s ready” calls `onNotify` and is replaced by a check icon and “Glance will notify you when it’s ready.” The reading view stays visible. Notification delivery remains open in design rules §15.                                                                                                                                                                                |
 | Disconnected inbox | Say what is missing in three places: the coverage line, a Notice with Reconnect (the one primary), and the section header (“From Gmail only”).                                                                                                                                                              |
 | Quiet hours        | Phone, evening: the greeting changes (“Good evening, Daniel”), the coverage line says which inbox is shown (“Personal inbox only.”), a moon label says until when, and a calm card says what is waiting with “Show work email anyway” (text button). Good to know and Set aside show only allowed accounts. |
 | Overload           | Needs you shows what fits one screen (phone: top 4), then “Show 8 more, ranked the same way”; the revealed rows enter with the enter motion and the button is removed. Good to know and Set aside collapse into rows.                                                                                                                                                                |

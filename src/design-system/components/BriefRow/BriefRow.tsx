@@ -1,4 +1,4 @@
-import type { Item, Account } from '../../../data/types';
+import type { Item, Account, Fact } from '../../../data/types';
 import { FactChip } from '../FactChip/FactChip';
 import { AccountLabel } from '../AccountLabel/AccountLabel';
 import { Badge } from '../Badge/Badge';
@@ -10,11 +10,17 @@ import row from '../ListRow.module.css';
 import motion from '../ListMotion.module.css';
 import styles from './BriefRow.module.css';
 
+export type BriefRowItem = Pick<Item, 'id' | 'name' | 'isNew'> & {
+  request: Pick<Item['request'], 'type' | 'text'>;
+  facts: readonly Pick<Fact, 'id' | 'kind' | 'label' | 'urgent'>[];
+};
+
 interface BriefRowProps {
-  item: Item;
+  item: BriefRowItem;
   rank: number;
   account?: Account;
   selected?: boolean;
+  entering?: boolean;
   leaving?: boolean;
   onSelect: (itemId: string, trigger: HTMLButtonElement) => void;
   onLeaveComplete?: () => void;
@@ -24,6 +30,7 @@ export function BriefRow({
   rank,
   account,
   selected = false,
+  entering = false,
   leaving = false,
   onSelect,
   onLeaveComplete,
@@ -44,7 +51,7 @@ export function BriefRow({
       className={[
         motion.shell,
         !desktop && styles.phone,
-        item.isNew && motion.enter,
+        (item.isNew || entering) && motion.enter,
         leaving && motion.leaving,
       ]
         .filter(Boolean)
