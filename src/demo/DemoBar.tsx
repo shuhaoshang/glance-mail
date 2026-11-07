@@ -77,68 +77,74 @@ export function DemoBar({
               <strong>Demo controls</strong>
               <span>Not part of the product</span>
             </div>
-            <div
-              role="group"
-              aria-label="Demo persona"
-              className={styles.group}
-            >
-              {personas.map((persona) => (
-                <button
-                  key={persona.id}
-                  type="button"
-                  aria-label={persona.label}
-                  aria-pressed={personaId === persona.id}
-                  className={styles.choice}
-                  onClick={() => onPersonaChange(persona.id)}
-                >
-                  {phone ? persona.shortLabel : persona.label}
-                </button>
-              ))}
-            </div>
-            <div role="group" aria-label="Demo level" className={styles.group}>
-              {levels.map((item) => (
-                <button
-                  key={item.value}
-                  type="button"
-                  aria-label={item.value + ' ' + item.label}
-                  aria-pressed={level === item.value}
-                  className={styles.choice}
-                  onClick={() => onLevelChange(item.value)}
-                >
-                  <span className={styles.number}>{item.value}</span>
-                  {' ' + (phone ? item.shortLabel : item.label)}
-                </button>
-              ))}
-            </div>
-            {theme && (
+            <div className={styles.controls}>
               <div
                 role="group"
-                aria-label="Demo theme"
+                aria-label="Demo persona"
                 className={styles.group}
               >
-                {themeOptions.map(({ value, label }) => (
+                {personas.map((persona) => (
                   <button
-                    key={value}
+                    key={persona.id}
                     type="button"
-                    aria-pressed={theme.value === value}
+                    aria-label={persona.label}
+                    aria-pressed={personaId === persona.id}
                     className={styles.choice}
-                    onClick={() => theme.onChange(value)}
+                    onClick={() => onPersonaChange(persona.id)}
                   >
-                    {label}
+                    {phone ? persona.shortLabel : persona.label}
                   </button>
                 ))}
               </div>
-            )}
-            {simulation && (
-              <button
-                type="button"
-                className={[styles.choice, styles.simulate].join(' ')}
-                disabled={simulation.disabled}
-                onClick={simulation.onClick}
+              <div
+                role="group"
+                aria-label="Demo level"
+                className={styles.group}
               >
-                {simulation.label}
-              </button>
-            )}
+                {levels.map((item) => (
+                  <button
+                    key={item.value}
+                    type="button"
+                    aria-label={item.value + ' ' + item.label}
+                    aria-pressed={level === item.value}
+                    className={styles.choice}
+                    onClick={() => onLevelChange(item.value)}
+                  >
+                    <span className={styles.number}>{item.value}</span>
+                    {' ' + (phone ? item.shortLabel : item.label)}
+                  </button>
+                ))}
+              </div>
+              {theme && (
+                <div
+                  role="group"
+                  aria-label="Demo theme"
+                  className={styles.group}
+                >
+                  {themeOptions.map(({ value, label }) => (
+                    <button
+                      key={value}
+                      type="button"
+                      aria-pressed={theme.value === value}
+                      className={styles.choice}
+                      onClick={() => theme.onChange(value)}
+                    >
+                      {label}
+                    </button>
+                  ))}
+                </div>
+              )}
+              {simulation && (
+                <button
+                  type="button"
+                  className={[styles.choice, styles.simulate].join(' ')}
+                  disabled={simulation.disabled}
+                  onClick={simulation.onClick}
+                >
+                  {simulation.label}
+                </button>
+              )}
+            </div>
           </div>
         )}
       </div>

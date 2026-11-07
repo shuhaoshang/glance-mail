@@ -11,6 +11,7 @@ export interface ThemeControl {
   onChange: (value: ThemePreference) => void;
 }
 
+// Keep this key in sync with the pre-paint script in index.html.
 const storageKey = 'glance-theme';
 
 export function readThemePreference(): ThemePreference {
