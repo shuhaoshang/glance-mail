@@ -31,8 +31,10 @@ Failure screenshots and traces are in test-results/; the HTML report is in playw
 
 Tests use auto-waiting assertions. The collapse check verifies the configured duration (320 ms, or 1 ms with reduced motion) and waits for the row to leave through Playwright assertions.
 
-## Pending flow clarification
+## Viewport checks
 
-Sarah 1 currently checks that the entire Set aside row is visible in the initial phone viewport. That assertion fails in all four projects because about 58% of the row is visible. It is a soft assertion so Sarah 2–7 still execute, but the spec and CI job remain failed. Its screenshot is attached immediately to the step.
+One-screen checks measure from the top of the product's main landmark to the bottom of the required content, and require the full distance to fit within the configured viewport height. Demo controls above the product are excluded.
 
-See [the review evidence](../docs/reviews/16-persona-e2e/README.md) and the PR's Open questions before changing either the test expectation or the layout.
+Sarah 1 includes the entire Set aside row. Sarah 7 includes the entire Needs you section, including Show 8 more, as required by the overload flow. The assertions use bounding boxes and Playwright polling, so scrolling cannot turn a partial-row measurement into a pass.
+
+See [the review evidence](../docs/reviews/16-persona-e2e/README.md) for the viewport context.

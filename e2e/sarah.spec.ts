@@ -6,6 +6,7 @@ import {
   detail,
   exact,
   expectNeeds,
+  expectProductFits,
   expectInk,
   field,
   needs,
@@ -58,16 +59,10 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
       'background-color',
       await tokenColor(urgent, '--color-urgent'),
     );
-    // Keep this layout requirement visible even if the rest of the journey passes.
-    await expect
-      .soft(page.getByRole('button', { name: /^18 set aside/ }))
-      .toBeInViewport({ ratio: 1 });
-    if (test.info().errors.length) {
-      await test.info().attach('Sarah 1 viewport', {
-        body: await page.screenshot(),
-        contentType: 'image/png',
-      });
-    }
+    await expectProductFits(
+      page,
+      page.getByRole('button', { name: /^18 set aside/ }),
+    );
   });
 
   await test.step('Sarah 2 · Verify: Checks the fee', async () => {
@@ -269,6 +264,6 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
         .nth(4)
         .getByText('Ranked the same way, most urgent first', { exact: true }),
     ).toBeVisible();
-    await expect(section).toBeInViewport({ ratio: 1 });
+    await expectProductFits(page, section);
   });
 });

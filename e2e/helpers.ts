@@ -137,3 +137,28 @@ export async function pattern(page: Page, name: string, colorScheme: string) {
       colorScheme,
   );
 }
+
+export async function expectProductFits(page: Page, lastElement: Locator) {
+  const product = page.getByRole('main');
+  await expect(product).toBeVisible();
+  await expect(lastElement).toBeVisible();
+  const viewport = page.viewportSize();
+  expect(viewport).not.toBeNull();
+
+  await expect
+    .poll(
+      async () => {
+        const [productBox, lastBox] = await Promise.all([
+          product.boundingBox(),
+          lastElement.boundingBox(),
+        ]);
+        if (!productBox || !lastBox) return Infinity;
+        return lastBox.y + lastBox.height - productBox.y;
+      },
+      {
+        message:
+          'The full required content must fit within one product viewport',
+      },
+    )
+    .toBeLessThanOrEqual(viewport!.height);
+}

@@ -6,22 +6,24 @@ The suite runs against production Vite and Storybook builds in Playwright's bund
 | --- | --- | --- |
 | Maya | 8 | Passed in all four projects |
 | Daniel | 8 | Passed in all four projects |
-| Sarah | 7 | Sarah 1 fails the full-row viewport check in all four projects; Sarah 2–7 pass |
+| Sarah | 7 | Passed in all four projects |
 
-## Sarah 1 viewport evidence
+## Product viewport measurement
 
-The app at 390 × 844 exposes about 58% of the Set aside row on the initial screen.
+The designer clarified that one-screen checks measure the product only. The shared assertion measures from the main landmark's top to the bottom of the full required content and requires that distance to be no greater than the viewport height.
 
-[Light screenshot](sarah-first-screen-light.png) · [Dark screenshot](sarah-first-screen-dark.png)
+Sarah 1 includes the entire Set aside row at 390 × 844. Sarah 7 uses the same product origin and includes the entire Needs you section, including Show 8 more.
 
-The test interprets “everything up to the Set aside row fits on one screen” as including the full row. The screenshots show the current app, including the Demo bar. The failing assertion is retained, and no application layout or fixture copy is changed in this PR.
+[Light viewport context](sarah-first-screen-light.png) · [Dark viewport context](sarah-first-screen-dark.png)
+
+These viewport screenshots include the Demo bar above the product. They provide context for the measurement origin; the strict assertion measures through the bottom of the entire row.
 
 ## Open questions
 
-Should Sarah 1 require the entire Set aside row in the 390 × 844 viewport, or only require all preceding content and the beginning of that row? Propose keeping the full-row requirement and addressing the layout in a separate approved fix. If the intent excludes the demo chrome or permits a partial Set aside row, clarify the flow before changing the assertion.
+None.
 
 ## Review and CI
 
-Open the GitHub Actions artifact named playwright-report for per-step assertions, failure screenshots, and traces. The report attaches the initial Sarah 1 screenshot before continuing the remaining steps. The test job remains red while this flow question is unresolved.
+Open the GitHub Actions artifact named playwright-report for per-step assertions, failure screenshots, and traces. Playwright automatically attaches screenshots on failure.
 
 The new dev dependency, @playwright/test, provides the requested Chromium runner, browser contexts, user-facing locators, automatic assertions, and failure artifacts. Browser preferences and viewport are emulated within Playwright.
