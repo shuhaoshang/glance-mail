@@ -8,7 +8,11 @@ type CollapsedGroupProps = {
   groups: readonly Pick<SetAsideGroup, 'count' | 'short'>[];
 } & (
   | { static: true; selected?: never; onSelect?: never }
-  | { static?: false; selected?: boolean; onSelect: () => void }
+  | {
+      static?: false;
+      selected?: boolean;
+      onSelect: (trigger: HTMLButtonElement) => void;
+    }
 );
 
 export function CollapsedGroup(props: CollapsedGroupProps) {
@@ -39,7 +43,7 @@ export function CollapsedGroup(props: CollapsedGroupProps) {
     <button
       type="button"
       aria-pressed={props.selected ?? false}
-      onClick={props.onSelect}
+      onClick={(event) => props.onSelect(event.currentTarget)}
       className={[
         control.control,
         row.button,

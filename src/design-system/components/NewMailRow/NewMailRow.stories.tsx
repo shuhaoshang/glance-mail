@@ -24,3 +24,7 @@ export const AddToBrief: Story = {
     await expect(args.onAdd).toHaveBeenCalledOnce();
   },
 };
+
+export const Added: Story = {
+  args: { label: maya.newMail!.added, added: true },
+};
