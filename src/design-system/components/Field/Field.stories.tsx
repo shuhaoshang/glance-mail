@@ -163,3 +163,31 @@ export const Inline: Story = {
     </span>
   ),
 };
+
+export const InvisibleHitArea: Story = {
+  render: (args) => (
+    <Field
+      value="$12"
+      size="small"
+      fact={args.fact!}
+      kind="money"
+      onSelect={args.onSelect!}
+    />
+  ),
+  play: async ({ canvas, args }) => {
+    const field = canvas.getByRole('button', {
+      name: /Show where the email says so/,
+    });
+    const bounds = field.getBoundingClientRect();
+    const target = getComputedStyle(field, '::after');
+    await expect(bounds.height).toBeLessThan(44);
+    await expect(parseFloat(target.height)).toBeGreaterThanOrEqual(44);
+    const hit = document.elementFromPoint(
+      bounds.x + bounds.width / 2,
+      bounds.y - 4,
+    );
+    await expect(hit).toBe(field);
+    await userEvent.click(hit!);
+    await expect(args.onSelect).toHaveBeenCalledWith(args.fact);
+  },
+};

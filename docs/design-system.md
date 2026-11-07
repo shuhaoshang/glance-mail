@@ -399,7 +399,7 @@ A neutral card with an icon tile, a title and a body. It may hold one primary Bu
 
 - Subject (20/28) and meta.
 - A legend with a highlighter Switch, showing only the ink types that appear in the current email. Keep the order Money · Time · People · Glance’s read, omitting absent types. Maya’s first email shows four; Sarah’s museum email shows three because it has no judgment ink. Filtering depends on the email content, so switching the highlighter off does not remove the legend.
-- The body in `Reading` style, with every fact Glance used highlighted by type. A type label appears on hover or focus (as a `title`), not inline.
+- The body in `Reading` style, with every fact Glance used highlighted by type. A type label appears on hover (as a title) and is read by screen readers. Highlights are not focusable, since they don’t act.
 - Toggling the switch draws the ink in or wipes it out (360 ms).
 
 ### AskThread
@@ -485,7 +485,7 @@ The narrow demo panel opens with `--duration-enter`, moving downward by `--space
 
 ## 7. Accessibility checklist (part of done)
 
-On phone (below 600 px), every control has at least a 44 × 44 hit area, including inline Fields and compact controls. This takes precedence over compact 40 px examples elsewhere in this document. Inline Field targets can increase the surrounding line height.
+Every control has a hit area of at least 44 × 44. A control that looks smaller extends its hit area invisibly (D46); its look, line height and focus ring don't change.
 
 Escape closes an open source or reasoning panel before the surrounding detail sheet and returns focus to its trigger.
 

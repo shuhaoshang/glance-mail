@@ -5,6 +5,7 @@ import type { DemoLevel } from './DemoApp';
 import { usePhoneLabels } from './usePhoneLabels';
 import { themeOptions, type ThemeControl } from './themePreference';
 import styles from './DemoBar.module.css';
+import hitTarget from '../design-system/components/HitTarget.module.css';
 
 interface DemoBarProps {
   personaId: PersonaId;
@@ -63,7 +64,9 @@ export function DemoBar({
           <button
             ref={trigger}
             type="button"
-            className={[styles.choice, styles.trigger].join(' ')}
+            className={[styles.choice, styles.trigger, hitTarget.target].join(
+              ' ',
+            )}
             aria-expanded={expanded}
             aria-controls={id}
             onClick={() => setExpanded((value) => !value)}
@@ -89,7 +92,7 @@ export function DemoBar({
                     type="button"
                     aria-label={persona.label}
                     aria-pressed={personaId === persona.id}
-                    className={styles.choice}
+                    className={[styles.choice, hitTarget.target].join(' ')}
                     onClick={() => onPersonaChange(persona.id)}
                   >
                     {phone ? persona.shortLabel : persona.label}
@@ -107,7 +110,7 @@ export function DemoBar({
                     type="button"
                     aria-label={item.value + ' ' + item.label}
                     aria-pressed={level === item.value}
-                    className={styles.choice}
+                    className={[styles.choice, hitTarget.target].join(' ')}
                     onClick={() => onLevelChange(item.value)}
                   >
                     <span className={styles.number}>{item.value}</span>
@@ -126,7 +129,7 @@ export function DemoBar({
                       key={value}
                       type="button"
                       aria-pressed={theme.value === value}
-                      className={styles.choice}
+                      className={[styles.choice, hitTarget.target].join(' ')}
                       onClick={() => theme.onChange(value)}
                     >
                       {label}
@@ -137,7 +140,11 @@ export function DemoBar({
               {simulation && (
                 <button
                   type="button"
-                  className={[styles.choice, styles.simulate].join(' ')}
+                  className={[
+                    styles.choice,
+                    styles.simulate,
+                    hitTarget.target,
+                  ].join(' ')}
                   disabled={simulation.disabled}
                   onClick={simulation.onClick}
                 >

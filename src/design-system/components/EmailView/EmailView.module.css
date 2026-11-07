@@ -93,12 +93,6 @@
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
 }
-.segment:focus-visible {
-  position: relative;
-  z-index: 1;
-  outline: var(--focus-ring-width) solid var(--color-brand);
-  outline-offset: var(--focus-ring-offset);
-}
 .segment > mark {
   background-size: 0% 100%;
   transition: background-size var(--duration-highlight) var(--ease-sweep);
@@ -119,4 +113,15 @@
   padding: var(--space-24) var(--space-32) var(--space-32);
   border-radius: var(--radius-card);
   background: var(--color-surface);
+}
+
+.srOnly {
+  position: absolute;
+  inline-size: var(--border-hairline);
+  block-size: var(--border-hairline);
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }

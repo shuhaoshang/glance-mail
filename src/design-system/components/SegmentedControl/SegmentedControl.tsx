@@ -1,5 +1,6 @@
 import type { KeyboardEvent } from 'react';
 import control from '../Control.module.css';
+import hitTarget from '../HitTarget.module.css';
 import styles from './SegmentedControl.module.css';
 
 export interface Segment {
@@ -74,7 +75,7 @@ export function SegmentedControl({
           aria-selected={option.value === value}
           tabIndex={option === entry ? 0 : -1}
           disabled={option.disabled}
-          className={[control.control, styles.tab].join(' ')}
+          className={[control.control, hitTarget.target, styles.tab].join(' ')}
           onClick={() => {
             if (option.value !== value) onValueChange(option.value);
           }}

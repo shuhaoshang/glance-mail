@@ -1,0 +1,45 @@
+/* Parent groups can bound extensions at half the gap between neighbors. */
+.target {
+  position: relative;
+}
+
+/* Keep the visible control above neighboring transparent extensions. */
+.target::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  z-index: 1;
+}
+
+.target::after {
+  content: '';
+  position: absolute;
+  inset-block-start: var(
+    --hit-target-block-start,
+    min(
+      0%,
+      max(
+        calc((100% - var(--size-touch)) / 2),
+        calc(var(--hit-target-block-gap, var(--size-touch)) / -2)
+      )
+    )
+  );
+  inset-block-end: var(
+    --hit-target-block-end,
+    min(
+      0%,
+      max(
+        calc((100% - var(--size-touch)) / 2),
+        calc(var(--hit-target-block-gap, var(--size-touch)) / -2)
+      )
+    )
+  );
+  inset-inline: min(
+    0%,
+    max(
+      calc((100% - var(--size-touch)) / 2),
+      calc(var(--hit-target-inline-gap, var(--size-touch)) / -2)
+    )
+  );
+}

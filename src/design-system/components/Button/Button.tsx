@@ -6,6 +6,7 @@ import type {
 } from 'react';
 import { Icon, type IconName } from '../Icon/Icon';
 import control from '../Control.module.css';
+import hitTarget from '../HitTarget.module.css';
 import styles from './Button.module.css';
 
 interface Appearance {
@@ -44,6 +45,7 @@ export function Button({
   const resolvedSize = size ?? (variant === 'outline' ? 'compact' : 'default');
   const classes = [
     control.control,
+    resolvedSize === 'compact' && hitTarget.target,
     styles.button,
     styles[variant],
     resolvedSize !== 'default' && styles[resolvedSize],

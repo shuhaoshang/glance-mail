@@ -97,7 +97,6 @@ export function EmailView({
                 <span
                   key={segmentIndex}
                   title={segment.tag}
-                  tabIndex={0}
                   className={styles.segment}
                 >
                   <Highlight
@@ -106,6 +105,10 @@ export function EmailView({
                   >
                     {segment.t}
                   </Highlight>
+                  <span className={styles.srOnly}>
+                    {', ' +
+                      (segment.kind === 'judg' ? 'judgment' : segment.kind)}
+                  </span>
                 </span>
               ),
             )}

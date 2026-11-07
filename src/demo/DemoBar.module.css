@@ -53,6 +53,7 @@
   color: var(--color-demo-muted);
 }
 .group {
+  --hit-target-inline-gap: var(--space-4);
   display: flex;
   min-inline-size: 0;
   gap: var(--space-4);
@@ -136,9 +137,4 @@
 .simulate:disabled:hover,
 .simulate:disabled:active {
   background: transparent;
-}
-
-.phone .choice {
-  min-inline-size: var(--size-touch);
-  min-block-size: var(--size-touch);
 }
