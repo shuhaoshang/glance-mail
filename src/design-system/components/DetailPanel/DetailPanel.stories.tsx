@@ -123,3 +123,32 @@ export const PreserveChecklist: Story = {
     await expect(canvas.getAllByRole('checkbox')[1]).not.toBeChecked();
   },
 };
+
+export const EscapeDisclosures: Story = {
+  play: async ({ canvas }) => {
+    const field = canvas.getAllByRole('button', {
+      name: /Show where the email says so/,
+    })[0];
+    field.focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(
+      canvas.getByRole('region', { name: /^Source from/ }),
+    ).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await expect(
+      canvas.queryByRole('region', { name: /^Source from/ }),
+    ).not.toBeInTheDocument();
+    await expect(field).toHaveFocus();
+    const reason = canvas.getByRole('button', { name: /^Glance’s read:/ });
+    reason.focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(
+      canvas.getByRole('region', { name: 'Glance’s read' }),
+    ).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await expect(
+      canvas.queryByRole('region', { name: 'Glance’s read' }),
+    ).not.toBeInTheDocument();
+    await expect(reason).toHaveFocus();
+  },
+};

@@ -63,3 +63,10 @@
   font-weight: var(--font-weight-medium);
   box-shadow: inset 0 0 0 var(--border-hairline) var(--color-border-strong);
 }
+
+@media (max-width: 599px) {
+  .button.compact {
+    min-inline-size: var(--size-touch);
+    min-block-size: var(--size-touch);
+  }
+}

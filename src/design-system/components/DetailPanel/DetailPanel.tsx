@@ -79,12 +79,23 @@ function Content({
   }
 
   const [highlighted, setHighlighted] = useState(true);
+  const reasonTrigger = useRef<HTMLButtonElement>(null);
   const [reasonOpen, setReasonOpen] = useState(initialReasonOpen);
   const [selection, setSelection] = useState<SceneFieldSelection | null>(() => {
     const fact = item.facts.find((entry) => entry.id === initialFactId);
     const fieldKey = firstFieldForFact(item, initialFactId);
     return fact && fieldKey ? { fact, fieldKey, trigger: null } : null;
   });
+  function closeSource() {
+    if (!selection) return;
+    const trigger =
+      selection.trigger ??
+      root.current?.querySelector<HTMLButtonElement>(
+        'button[aria-expanded="true"][aria-controls="' + sourceId + '"]',
+      );
+    setSelection(null);
+    trigger?.focus();
+  }
   const tabs = (
     <SegmentedControl
       aria-label="Item views"
@@ -118,10 +129,16 @@ function Content({
       ref={root}
       aria-label="Selected item"
       onKeyDown={(event) => {
-        if (snoozeOpen && event.key === 'Escape') {
+        if (event.key !== 'Escape') return;
+        if (snoozeOpen || (tab === 'details' && (selection || reasonOpen))) {
           event.preventDefault();
           event.stopPropagation();
-          closeSnooze();
+          if (snoozeOpen) closeSnooze();
+          else if (selection) closeSource();
+          else {
+            setReasonOpen(false);
+            reasonTrigger.current?.focus();
+          }
         }
       }}
       className={[styles.panel, mobile && styles.mobile]
@@ -212,21 +229,14 @@ function Content({
                 animate={selection.trigger !== null}
                 onOpenEmail={showEmail}
                 onClose={() => {
-                  const trigger =
-                    selection.trigger ??
-                    root.current?.querySelector<HTMLButtonElement>(
-                      'button[aria-expanded="true"][aria-controls="' +
-                        sourceId +
-                        '"]',
-                    );
-                  setSelection(null);
-                  trigger?.focus();
+                  closeSource();
                 }}
               />
             )}
           </div>
           <div className={styles.reason}>
             <ReasonPill
+              ref={reasonTrigger}
               mobile={mobile}
               label={[
                 'Glance’s read: Ranked ' + ordinal(position),

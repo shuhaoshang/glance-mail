@@ -30,3 +30,10 @@
   --pressed-ink: var(--color-text);
   box-shadow: var(--shadow-tab);
 }
+
+@media (max-width: 599px) {
+  .tab {
+    min-inline-size: var(--size-touch);
+    min-block-size: var(--size-touch);
+  }
+}

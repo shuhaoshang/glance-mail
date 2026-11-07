@@ -51,7 +51,17 @@ export function KnowRow({ item, account, onOpenEmail }: KnowRowProps) {
   const factOpen = active === factKey,
     reasonOpen = active === reasonKey;
   return (
-    <div role="listitem" className={styles.row}>
+    <div
+      role="listitem"
+      className={styles.row}
+      onKeyDown={(event) => {
+        if (event.key !== 'Escape' || (!factOpen && !reasonOpen)) return;
+        event.preventDefault();
+        event.stopPropagation();
+        close();
+        (factOpen ? fieldRef : reasonRef).current?.focus();
+      }}
+    >
       <div className={styles.main}>
         <span className={[styles.tile, styles[item.tone]].join(' ')}>
           <Icon name={item.icon} />

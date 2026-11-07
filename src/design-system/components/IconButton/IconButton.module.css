@@ -15,3 +15,10 @@
   inline-size: var(--size-touch-compact);
   block-size: var(--size-touch-compact);
 }
+
+@media (max-width: 599px) {
+  .button.compact {
+    min-inline-size: var(--size-touch);
+    min-block-size: var(--size-touch);
+  }
+}

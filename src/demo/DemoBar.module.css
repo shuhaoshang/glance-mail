@@ -137,3 +137,8 @@
 .simulate:disabled:active {
   background: transparent;
 }
+
+.phone .choice {
+  min-inline-size: var(--size-touch);
+  min-block-size: var(--size-touch);
+}

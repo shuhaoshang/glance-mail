@@ -485,6 +485,10 @@ The narrow demo panel opens with `--duration-enter`, moving downward by `--space
 
 ## 7. Accessibility checklist (part of done)
 
+On phone (below 600 px), every control has at least a 44 × 44 hit area, including inline Fields and compact controls. This takes precedence over compact 40 px examples elsewhere in this document. Inline Field targets can increase the surrounding line height.
+
+Escape closes an open source or reasoning panel before the surrounding detail sheet and returns focus to its trigger.
+
 - Contrast:
   - Text is AA in both themes (checked: muted text ≥ 4.97:1, white on brand ≥ 4.98:1).
   - Non-text elements (chevrons, switch off) are ≥ 3:1.

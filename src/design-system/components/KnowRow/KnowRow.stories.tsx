@@ -84,3 +84,21 @@ export const MovedByYou: Story = {
     },
   },
 };
+
+export const EscapeSource: Story = {
+  play: async ({ canvas }) => {
+    const field = canvas.getByRole('button', {
+      name: /Show where the email says so/,
+    });
+    field.focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(
+      canvas.getByRole('region', { name: /^Source from/ }),
+    ).toBeVisible();
+    await userEvent.keyboard('{Escape}');
+    await expect(
+      canvas.queryByRole('region', { name: /^Source from/ }),
+    ).not.toBeInTheDocument();
+    await expect(field).toHaveFocus();
+  },
+};

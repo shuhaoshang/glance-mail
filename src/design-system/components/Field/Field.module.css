@@ -60,3 +60,10 @@
   line-height: inherit;
   font-weight: inherit;
 }
+
+@media (max-width: 599px) {
+  .traceable {
+    min-inline-size: var(--size-touch);
+    min-block-size: var(--size-touch);
+  }
+}
