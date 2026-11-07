@@ -185,3 +185,20 @@
   display: inline-block;
   font-weight: var(--font-weight-semibold);
 }
+
+/* Adjacent source targets divide the existing gap without changing row layout. */
+.fallback {
+  --hit-target-block-gap: var(--space-8);
+}
+.fallback li:first-child:not(:last-child) {
+  --hit-target-block-start: min(
+    0%,
+    calc(100% - var(--size-touch) + var(--space-4))
+  );
+}
+.fallback li:last-child:not(:first-child) {
+  --hit-target-block-end: min(
+    0%,
+    calc(100% - var(--size-touch) + var(--space-4))
+  );
+}

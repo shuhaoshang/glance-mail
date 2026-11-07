@@ -3,6 +3,7 @@ import type { FactKind } from '../../../data/types';
 import { Text } from '../Text/Text';
 import tones from '../factStyles.module.css';
 import styles from './Field.module.css';
+import hitTarget from '../HitTarget.module.css';
 
 interface Appearance {
   label?: string;
@@ -43,6 +44,7 @@ export function Field({
     styles.value,
     styles[size],
     source.fact !== undefined && styles.traceable,
+    source.fact !== undefined && hitTarget.target,
     source.kind && tones[source.kind],
     source.fact !== undefined && selected && styles.selected,
   ]

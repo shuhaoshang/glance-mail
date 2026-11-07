@@ -97,7 +97,13 @@ export const KeyboardHighlighter: Story = {
     const body = canvas.getByTestId('email-body');
     const expected = args.item.email.paras
       .flat()
-      .map((segment) => (typeof segment === 'string' ? segment : segment.t))
+      .map((segment) =>
+        typeof segment === 'string'
+          ? segment
+          : segment.t +
+            ', ' +
+            (segment.kind === 'judg' ? 'judgment' : segment.kind),
+      )
       .join('');
     await expect(body.textContent).toBe(expected);
     const marks = Array.from(body.querySelectorAll('mark'));
@@ -113,7 +119,7 @@ export const KeyboardHighlighter: Story = {
     });
     await expect(body.textContent).toBe(expected);
     const annotated = body.querySelector<HTMLElement>('[title]');
-    await expect(annotated).toHaveAttribute('tabindex', '0');
+    await expect(body.querySelector('[tabindex]')).not.toBeInTheDocument();
     await expect(annotated?.getAttribute('title')).toBeTruthy();
     await userEvent.keyboard(' ');
     await waitFor(async () => {
@@ -123,7 +129,6 @@ export const KeyboardHighlighter: Story = {
       await expect(getComputedStyle(marks[0]).backgroundSize).toBe('100% 100%');
     });
     await expect(body.textContent).toBe(expected);
-    annotated?.focus();
-    await expect(annotated).toHaveFocus();
+    await expect(control).toHaveFocus();
   },
 };

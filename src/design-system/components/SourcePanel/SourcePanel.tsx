@@ -29,6 +29,12 @@ export function SourcePanel({
   return (
     <section
       id={id}
+      onKeyDown={(event) => {
+        if (event.key !== 'Escape') return;
+        event.preventDefault();
+        event.stopPropagation();
+        onClose();
+      }}
       role="region"
       aria-label={'Source from ' + from}
       className={[styles.panel, animate && styles.reveal]
