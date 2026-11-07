@@ -16,7 +16,9 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test:e2e": "npm run build && npm run build-storybook && playwright test",
+    "test:e2e:report": "playwright show-report"
   },
   "dependencies": {
     "react": "19.3.1",
@@ -24,6 +26,7 @@
   },
   "devDependencies": {
     "@eslint/js": "10.0.1",
+    "@playwright/test": "1.65.0",
     "@storybook/addon-docs": "10.6.5",
     "@storybook/addon-themes": "10.6.5",
     "@storybook/react-vite": "10.6.5",

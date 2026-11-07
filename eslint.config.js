@@ -6,16 +6,27 @@ import reactRefresh from 'eslint-plugin-react-refresh';
 
 export default tseslint.config(
   {
-    ignores: ['dist/**', 'storybook-static/**', 'docs/prototype/**'],
+    ignores: [
+      'dist/**',
+      'storybook-static/**',
+      'docs/prototype/**',
+      'playwright-report/**',
+      'test-results/**',
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {
-    files: ['**/*.{js,mjs}', 'vite.config.ts', '.storybook/main.ts'],
+    files: [
+      '**/*.{js,mjs}',
+      'vite.config.ts',
+      'playwright.config.ts',
+      '.storybook/main.ts',
+    ],
     languageOptions: { globals: globals.node },
   },
   {
-    files: ['src/**/*.{ts,tsx}', '.storybook/preview.ts'],
+    files: ['src/**/*.{ts,tsx}', 'e2e/**/*.ts', '.storybook/preview.ts'],
     languageOptions: { globals: globals.browser },
   },
   {

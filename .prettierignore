@@ -6,3 +6,6 @@ AGENTS.md
 /docs
 src/data/*.json
 src/design-system/tokens/tokens.css
+
+playwright-report
+test-results
