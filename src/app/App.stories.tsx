@@ -48,13 +48,10 @@ const verifyBrief: NonNullable<Story['play']> = async ({ canvas, args }) => {
       'listitem',
     ),
   ).toHaveLength(persona.goodToKnow.length);
-  const asideRegion = canvas.getByRole('region', { name: 'Set aside' });
-  await expect(
-    within(asideRegion).getByText(aside + ' set aside', { exact: true }),
-  ).toBeVisible();
-  await expect(
-    within(asideRegion).queryByRole('button'),
-  ).not.toBeInTheDocument();
+  const asideTrigger = canvas.getByRole('button', {
+    name: new RegExp('^' + aside + ' set aside'),
+  });
+  await expect(asideTrigger).toHaveAttribute('aria-pressed', 'false');
   const hasDetail = !!canvas.queryByRole('region', { name: 'Selected item' });
 
   await expect(
@@ -70,7 +67,11 @@ const verifyBrief: NonNullable<Story['play']> = async ({ canvas, args }) => {
   const rows = items.map((item) =>
     needs.getByRole('button', { name: new RegExp(item.name) }),
   );
-  await expect(needs.getAllByRole('button')).toEqual(rows);
+  await expect(
+    needs
+      .getAllByRole('button')
+      .filter((button) => button.hasAttribute('data-brief-item')),
+  ).toEqual(rows);
   for (const item of persona.items.filter((item) => item.isNew)) {
     await expect(
       needs.queryByRole('button', { name: new RegExp(item.name) }),
@@ -131,7 +132,11 @@ const verifyBrief: NonNullable<Story['play']> = async ({ canvas, args }) => {
       detail.getByRole('switch', { name: 'Highlighter' }),
     ).not.toBeChecked();
   }
-  await expect(needs.getAllByRole('button')).toEqual(rows);
+  await expect(
+    needs
+      .getAllByRole('button')
+      .filter((button) => button.hasAttribute('data-brief-item')),
+  ).toEqual(rows);
 };
 export const Maya: Story = {};
 export const Daniel: Story = { args: { personaId: 'daniel' } };

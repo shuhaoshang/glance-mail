@@ -12,7 +12,7 @@ import { section } from './section';
 
 [Maya](?path=/story/patterns-brief--maya) · [Daniel](?path=/story/patterns-brief--daniel) · [Sarah](?path=/story/patterns-brief--sarah)
 
-The brief uses persona data at desktop, tablet, and phone widths. Desktop keeps the selected item's DetailPanel alongside the list. On phone, selecting a row opens its DetailSheet; closing the sheet returns focus to that row and removes the selected appearance. Set aside remains a static card until task 12.
+The brief uses persona data at desktop, tablet, and phone widths. Desktop keeps the selected item's DetailPanel alongside the list. On phone, selecting a row opens its DetailSheet; closing the sheet returns focus to that row and removes the selected appearance. Set aside opens grouped mail in the desktop detail area or the same phone sheet.
 
 ## Reading and verifying an item
 
@@ -37,3 +37,7 @@ The narrow layout uses a Demo disclosure below the existing desktop breakpoint. 
 [Item lifecycle](?path=/story/patterns-item-lifecycle--maya) includes Done, Snooze, Undo, simulated replies, checklist completion, and the empty brief. The Maya, Daniel, and Sarah flow stories verify their documented counts. A snoozed item remains an unfinished action; a moved item leaves the action total and increases Set aside.
 
 [All done](?path=/docs/composites-alldone--docs) · [Snooze menu](?path=/docs/composites-snoozemenu--docs)
+
+## Set aside and new mail
+
+[Set aside flows](?path=/story/patterns-set-aside--maya) verify keeping mail, undoing, restoring Needs you items, and Maya’s explicit new-mail update. New items append without reordering the existing list. Kept whole emails appear in Good to know with “Moved by you”.

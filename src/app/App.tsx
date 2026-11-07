@@ -18,6 +18,8 @@ import {
   type ItemLifecycle,
   type Resolution,
 } from './useItemLifecycle';
+import { SetAsideList } from '../design-system/components/SetAsideList/SetAsideList';
+import { NewMailRow } from '../design-system/components/NewMailRow/NewMailRow';
 import { AllDone } from '../design-system/components/AllDone/AllDone';
 import styles from './App.module.css';
 
@@ -49,6 +51,8 @@ function Brief({
     items[persona.demo.initialSelection.itemIndex]?.id ?? items[0]?.id,
   );
   const desktop = useDesktopLayout();
+  const [view, setView] = useState<'item' | 'aside'>('item');
+  const [sheetView, setSheetView] = useState<'item' | 'aside'>('item');
   const [sheetOpen, setSheetOpen] = useState(false);
   const [returnFocus, setReturnFocus] = useState<HTMLElement | null>(null);
   const [selectionRevision, setSelectionRevision] = useState(0);
@@ -116,6 +120,38 @@ function Brief({
             .replace(/^Tomorrow/, 'tomorrow'),
       }),
   });
+  function openAside(trigger: HTMLButtonElement) {
+    setView('aside');
+    setSheetView('aside');
+    setReturnFocus(trigger);
+    if (!desktop) setSheetOpen(true);
+  }
+  function backToBrief() {
+    setView('item');
+    setSheetOpen(false);
+    if (desktop)
+      requestAnimationFrame(() =>
+        (returnFocus?.isConnected
+          ? returnFocus
+          : document.querySelector<HTMLButtonElement>('[data-review-set-aside]')
+        )?.focus({ preventScroll: true }),
+      );
+  }
+  const aside = (
+    <SetAsideList
+      groups={life.groups}
+      moved={life.movedItems}
+      kept={life.kept}
+      apps={[...new Set(persona.accounts.map((account) => account.app))]}
+      onKeep={life.keep}
+      onUndoKeep={life.undoKeep}
+      onRestore={life.undo}
+      busy={!!life.pending}
+      onBack={backToBrief}
+      mobile={!desktop}
+      onClose={() => setSheetOpen(false)}
+    />
+  );
   const empty = (
     <AllDone
       done={counts.done}
@@ -123,6 +159,7 @@ function Brief({
       know={counts.know}
       aside={counts.aside}
       snoozed={counts.snoozed}
+      onReviewAside={openAside}
     />
   );
 
@@ -179,6 +216,7 @@ function Brief({
                   <Text
                     variant="meta"
                     role="status"
+                    aria-label="Brief progress"
                     aria-live="polite"
                     aria-atomic="true"
                   >
@@ -192,16 +230,45 @@ function Brief({
                 </div>
               }
             >
+              {persona.newMail && (
+                <NewMailRow
+                  label={
+                    life.newAdded
+                      ? persona.newMail.added
+                      : persona.newMail.label
+                  }
+                  added={life.newAdded}
+                  onAdd={() => {
+                    life.addMail();
+                    const id = persona.items.find((item) => item.isNew)?.id;
+                    requestAnimationFrame(() =>
+                      Array.from(
+                        document.querySelectorAll<HTMLButtonElement>(
+                          '[data-brief-item]',
+                        ),
+                      )
+                        .find((button) => button.dataset.briefItem === id)
+                        ?.focus({ preventScroll: true }),
+                    );
+                  }}
+                />
+              )}
               {items.map((item, index) => (
                 <BriefRow
                   key={item.id}
                   item={item}
                   rank={index + 1}
                   account={minorityAccount(item.account)}
-                  selected={(desktop || sheetOpen) && item.id === selected?.id}
+                  selected={
+                    view === 'item' &&
+                    (desktop || (sheetOpen && sheetView === 'item')) &&
+                    item.id === selected?.id
+                  }
                   leaving={life.pending?.id === item.id}
                   onLeaveComplete={() => life.settle(item.id)}
                   onSelect={(id, trigger) => {
+                    setView('item');
+                    setSheetView('item');
                     setSelectedId(id);
                     setSheetItem(items.find((item) => item.id === id)!);
                     setSheetPosition(
@@ -246,20 +313,33 @@ function Brief({
                   onOpenEmail={() => openInbox(accountFor(item.account))}
                 />
               ))}
+              {life.keptRows.map((row) => (
+                <KnowRow
+                  key={row.id}
+                  item={{ title: row.title, sub: row.sub, movedByUser: true }}
+                />
+              ))}
             </SectionCard>
             <CollapsedGroup
               groups={
                 movedCount
                   ? [
                       { count: movedCount, short: 'moved by you' },
-                      ...persona.setAside,
+                      ...life.groups,
                     ]
-                  : persona.setAside
+                  : life.groups
               }
-              static
+              selected={
+                view === 'aside' &&
+                (desktop || (sheetOpen && sheetView === 'aside'))
+              }
+              onSelect={openAside}
             />
           </div>
-          {desktop && selected && (
+          {desktop && view === 'aside' && (
+            <div className={styles.detail}>{aside}</div>
+          )}
+          {desktop && view === 'item' && selected && (
             <div className={styles.detail}>
               <DetailPanel
                 key={selected.id + ':' + selectionRevision}
@@ -284,28 +364,32 @@ function Brief({
               />
             </div>
           )}
-          {desktop && !items.length && (
+          {desktop && view === 'item' && !items.length && (
             <div className={styles.detail}>{empty}</div>
           )}
         </div>
       )}
-      {!desktop && sheetItem && !children && (
+      {!desktop && (sheetItem || sheetView === 'aside') && !children && (
         <DetailSheet
           open={sheetOpen}
           onClose={() => setSheetOpen(false)}
           returnFocus={returnFocus}
-          label={sheetItem.name}
+          label={sheetView === 'aside' ? 'Set aside' : sheetItem.name}
         >
-          <DetailPanel
-            key={sheetItem.id + ':' + selectionRevision}
-            {...detailActions(sheetItem.id)}
-            item={sheetItem}
-            position={sheetPosition}
-            total={sheetTotal}
-            account={accountFor(sheetItem.account)}
-            mobile
-            onClose={() => setSheetOpen(false)}
-          />
+          {sheetView === 'aside' ? (
+            aside
+          ) : (
+            <DetailPanel
+              key={sheetItem.id + ':' + selectionRevision}
+              {...detailActions(sheetItem.id)}
+              item={sheetItem}
+              position={sheetPosition}
+              total={sheetTotal}
+              account={accountFor(sheetItem.account)}
+              mobile
+              onClose={() => setSheetOpen(false)}
+            />
+          )}
         </DetailSheet>
       )}
     </main>
