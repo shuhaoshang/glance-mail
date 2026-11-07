@@ -38,34 +38,46 @@ export function SetAsideList({
   mobile = false,
   busy,
 }: Props) {
+  const root = useRef<HTMLElement>(null);
   const back = useRef<HTMLButtonElement>(null);
   const total = groups.reduce((n, g) => n + g.count, 0) + moved.length;
   return (
     <section
+      ref={root}
       aria-label="Set aside view"
       className={[styles.panel, mobile && styles.mobile]
         .filter(Boolean)
         .join(' ')}
     >
       <div className={styles.header}>
-        <div className={styles.navigation}>
-          <Button ref={back} variant="text" size="touch" onClick={onBack}>
-            <Icon name="chevron" className={styles.backIcon} />
-            Back to brief
-          </Button>
-          {mobile && (
-            <IconButton
-              icon="close"
-              aria-label="Close Set aside"
-              data-sheet-autofocus
-              onClick={onClose ?? onBack}
-            />
-          )}
-        </div>
+        {!mobile && (
+          <div className={styles.navigation}>
+            <Button
+              ref={back}
+              variant="text"
+              size="compact"
+              className={styles.action}
+              onClick={onBack}
+            >
+              <Icon name="chevron" className={styles.backIcon} />
+              Back to brief
+            </Button>
+          </div>
+        )}
         <header className={styles.intro}>
-          <Text as="h2" variant="title" className={styles.title}>
-            Set aside <span>{total}</span>
-          </Text>
+          <div className={styles.navigation}>
+            <Text as="h2" variant="title" className={styles.title}>
+              Set aside <span>{total}</span>
+            </Text>
+            {mobile && (
+              <IconButton
+                icon="close"
+                aria-label="Close Set aside"
+                data-sheet-autofocus
+                onClick={onClose ?? onBack}
+              />
+            )}
+          </div>
           <Text as="p" variant="body" className={styles.description}>
             <GlanceMark /> Glance set these aside because none of them asks
             anything of you. Nothing is deleted; they all stay in{' '}
@@ -102,7 +114,14 @@ export function SetAsideList({
                   disabled={busy}
                   onClick={() => {
                     onRestore(item.id);
-                    requestAnimationFrame(() => back.current?.focus());
+                    requestAnimationFrame(() =>
+                      (
+                        back.current ??
+                        root.current?.querySelector<HTMLElement>(
+                          '[data-sheet-autofocus]',
+                        )
+                      )?.focus(),
+                    );
                   }}
                 >
                   Back to Needs you

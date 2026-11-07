@@ -1,9 +1,10 @@
+import type { ComponentProps } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn, expect, userEvent, waitFor } from 'storybook/test';
 import { KnowRow } from './KnowRow';
 import { SectionCard } from '../SectionCard/SectionCard';
 import { maya, sarah, upsell } from '../listSamples';
-const meta = {
+const meta: Meta<typeof KnowRow> = {
   title: 'Composites/KnowRow',
   component: KnowRow,
   args: { item: maya.goodToKnow[0], onOpenEmail: fn() },
@@ -14,21 +15,22 @@ const meta = {
       </SectionCard>
     ),
   ],
-} satisfies Meta<typeof KnowRow>;
+};
 export default meta;
-type Story = StoryObj<typeof meta>;
+type Props = ComponentProps<typeof KnowRow>;
+type Story = StoryObj<{
+  item?: Props['item'];
+  onOpenEmail?: Props['onOpenEmail'];
+}>;
 export const Default: Story = {};
 export const Time: Story = { args: { item: sarah.goodToKnow[0] } };
 export const PeopleAndJudgment: Story = { args: { item: upsell } };
-export const MovedByYou: Story = {
-  render: () => <KnowRow item={maya.items[2]} onOpenEmail={fn()} />,
-};
 export const OnePanelPerCard: Story = {
   decorators: [],
   render: (args) => (
     <SectionCard title="Good to know" count={2}>
-      <KnowRow item={maya.goodToKnow[0]} onOpenEmail={args.onOpenEmail} />
-      <KnowRow item={upsell} onOpenEmail={args.onOpenEmail} />
+      <KnowRow item={maya.goodToKnow[0]} onOpenEmail={args.onOpenEmail!} />
+      <KnowRow item={upsell} onOpenEmail={args.onOpenEmail!} />
     </SectionCard>
   ),
   play: async ({ canvas, args }) => {
@@ -72,8 +74,9 @@ export const OnePanelPerCard: Story = {
   },
 };
 
-export const KeptMail: Story = {
+export const MovedByYou: Story = {
   args: {
+    onOpenEmail: undefined,
     item: {
       title: maya.setAside[0].rows.find((row) => !row.isNew)!.title,
       sub: maya.setAside[0].rows.find((row) => !row.isNew)!.sub,

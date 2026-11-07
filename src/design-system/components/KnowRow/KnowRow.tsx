@@ -1,5 +1,5 @@
 import { useId, useRef } from 'react';
-import type { Account, Item, KnowItem } from '../../../data/types';
+import type { Account, KnowItem } from '../../../data/types';
 import { AccountLabel } from '../AccountLabel/AccountLabel';
 import { Icon } from '../Icon/Icon';
 import { Field } from '../Field/Field';
@@ -11,14 +11,14 @@ import { useSectionDisclosure } from '../SectionCard/disclosure';
 import motion from '../ListMotion.module.css';
 import styles from './KnowRow.module.css';
 
-interface KnowRowProps {
-  item:
-    | KnowItem
-    | Pick<Item, 'name' | 'request'>
-    | { title: string; sub: string; movedByUser: true };
-  account?: Account;
-  onOpenEmail: (source: KnowItem['fact']['source']) => void;
-}
+type OpenEmail = (source: KnowItem['fact']['source']) => void;
+type KnowRowProps =
+  | { item: KnowItem; account?: Account; onOpenEmail: OpenEmail }
+  | {
+      item: { title: string; sub: string; movedByUser: true };
+      account?: never;
+      onOpenEmail?: never;
+    };
 export function KnowRow({ item, account, onOpenEmail }: KnowRowProps) {
   const prefix = useId();
   const { active, toggle, close } = useSectionDisclosure();
@@ -39,34 +39,6 @@ export function KnowRow({ item, account, onOpenEmail }: KnowRowProps) {
             {': ' + item.sub}
           </div>
           <span className={styles.moved}>Moved by you</span>
-        </div>
-      </div>
-    );
-  if ('request' in item)
-    return (
-      <div role="listitem" className={styles.row}>
-        <div className={styles.main}>
-          <span className={[styles.tile, styles.neutral].join(' ')}>
-            <Icon name="mail" />
-          </span>
-          <div className={styles.text}>
-            <strong>{item.name}</strong>
-            {account && (
-              <>
-                {' '}
-                <AccountLabel account={account} />
-              </>
-            )}
-            <span className={styles.moved}>Moved by you</span>
-            <span>
-              {item.request.type === 'summary' && (
-                <>
-                  <GlanceMark />{' '}
-                </>
-              )}
-              {item.request.text}
-            </span>
-          </div>
         </div>
       </div>
     );
@@ -126,7 +98,7 @@ export function KnowRow({ item, account, onOpenEmail }: KnowRowProps) {
             {...item.fact.source}
             source={item.fact.source}
             kind={item.fact.kind}
-            onOpenEmail={() => onOpenEmail(item.fact.source)}
+            onOpenEmail={() => onOpenEmail!(item.fact.source)}
             onClose={() => {
               close();
               fieldRef.current?.focus();
@@ -148,7 +120,7 @@ export function KnowRow({ item, account, onOpenEmail }: KnowRowProps) {
             {...item.judgment.source}
             source={item.judgment.source}
             kind="judgment"
-            onOpenEmail={() => onOpenEmail(item.judgment!.source)}
+            onOpenEmail={() => onOpenEmail!(item.judgment!.source)}
             onClose={() => {
               close();
               reasonRef.current?.focus();

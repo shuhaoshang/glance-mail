@@ -13,7 +13,7 @@
   justify-content: space-between;
   min-inline-size: 0;
 }
-.navigation > button:first-child {
+.navigation > .action:first-child {
   padding-inline: 0;
 }
 .backIcon {
@@ -124,8 +124,11 @@
   min-block-size: 0;
   flex: 1;
 }
-.mobile .navigation {
-  min-block-size: var(--space-24);
+.mobile .subject {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: normal;
 }
 
 .header {
