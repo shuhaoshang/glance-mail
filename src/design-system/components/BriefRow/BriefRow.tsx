@@ -22,7 +22,7 @@ interface BriefRowProps {
   selected?: boolean;
   entering?: boolean;
   leaving?: boolean;
-  onSelect?: (itemId: string, trigger: HTMLButtonElement) => void;
+  onSelect: (itemId: string, trigger: HTMLButtonElement) => void;
   onLeaveComplete?: () => void;
 }
 export function BriefRow({
@@ -44,32 +44,6 @@ export function BriefRow({
       (a, b) =>
         Number(b.fact.urgent) - Number(a.fact.urgent) || a.index - b.index,
     );
-  const content = (
-    <>
-      <span className={row.rank}>{rank}</span>
-      <span className={row.content}>
-        <span className={row.heading}>
-          <span className={row.name}>{item.name}</span>
-          {account && <AccountLabel account={account} />}
-          {item.isNew && <Badge />}
-        </span>
-        <span className={row.request}>
-          {item.request.type === 'summary' && (
-            <>
-              <GlanceMark />{' '}
-            </>
-          )}
-          {item.request.text}
-        </span>
-        <span className={row.facts}>
-          {facts.map(({ fact }) => (
-            <FactChip key={fact.id} {...fact} />
-          ))}
-        </span>
-      </span>
-    </>
-  );
-
   return (
     <div
       role="listitem"
@@ -88,22 +62,38 @@ export function BriefRow({
       }}
     >
       <div className={motion.content}>
-        {onSelect ? (
-          <button
-            type="button"
-            data-brief-item={item.id}
-            aria-pressed={selected}
-            onClick={(event) => onSelect(item.id, event.currentTarget)}
-            className={[control.control, row.button, selected && row.selected]
-              .filter(Boolean)
-              .join(' ')}
-          >
-            {content}
-            {!desktop && <Icon name="chevron" className={row.chevron} />}
-          </button>
-        ) : (
-          <div className={row.button}>{content}</div>
-        )}
+        <button
+          type="button"
+          data-brief-item={item.id}
+          aria-pressed={selected}
+          onClick={(event) => onSelect(item.id, event.currentTarget)}
+          className={[control.control, row.button, selected && row.selected]
+            .filter(Boolean)
+            .join(' ')}
+        >
+          <span className={row.rank}>{rank}</span>
+          <span className={row.content}>
+            <span className={row.heading}>
+              <span className={row.name}>{item.name}</span>
+              {account && <AccountLabel account={account} />}
+              {item.isNew && <Badge />}
+            </span>
+            <span className={row.request}>
+              {item.request.type === 'summary' && (
+                <>
+                  <GlanceMark />{' '}
+                </>
+              )}
+              {item.request.text}
+            </span>
+            <span className={row.facts}>
+              {facts.map(({ fact }) => (
+                <FactChip key={fact.id} {...fact} />
+              ))}
+            </span>
+          </span>
+          {!desktop && <Icon name="chevron" className={row.chevron} />}
+        </button>
       </div>
     </div>
   );

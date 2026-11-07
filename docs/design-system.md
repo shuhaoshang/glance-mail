@@ -328,7 +328,7 @@ The same row for every item, whatever its type.
 - Selected: `--color-brand-tint` fill and `aria-pressed`; the rank turns brand. Selected and hovered: `--color-brand-tint-hover`. Selected and pressed: `--color-brand-tint-pressed`.
 - Leaving: collapses over `--duration-collapse` (320 ms).
 - New: shows the `New` Badge and enters with the enter motion (§2).
-- A static row can use the fields needed by the list alone. Without an `onSelect` action, it has no button, chevron, or tab stop. Revealed rows can enter without showing the `New` Badge.
+- Revealed rows use the same button and phone chevron, accept list fields without detail data, and can enter without showing the `New` Badge.
 
 On phone, adjacent BriefRows have a `--border-hairline` divider in `--color-border` that starts at the content edge, after the rank and gap. Desktop BriefRows have no dividers between them.
 

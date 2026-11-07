@@ -152,8 +152,9 @@ export const SelectedPressed: Story = {
   parameters: { pseudo: { active: true } },
 };
 
-export const Static: Story = {
-  render: () => (
+export const Revealed: Story = {
+  args: { onSelect: fn() },
+  render: ({ onSelect }) => (
     <BriefRow
       item={{
         id: 'lincoln-class-party',
@@ -174,13 +175,17 @@ export const Static: Story = {
       rank={5}
       account={sarah.accounts[1]}
       entering
+      onSelect={onSelect}
     />
   ),
-  play: async ({ canvas }) => {
-    const item = canvas.getByRole('listitem');
-    await expect(item).toHaveTextContent('Lincoln Elementary');
-    await expect(item).toHaveTextContent('Fri, Nov 20');
-    await expect(canvas.queryByRole('button')).not.toBeInTheDocument();
-    await expect(item.querySelector('[tabindex]')).not.toBeInTheDocument();
+  play: async ({ canvas, args }) => {
+    const button = canvas.getByRole('button', { name: /Lincoln Elementary/ });
+    await expect(button).toHaveTextContent('Fri, Nov 20');
+    await expect(button).not.toHaveTextContent(/\bNew\b/);
+    await userEvent.click(button);
+    await expect(args.onSelect).toHaveBeenCalledWith(
+      'lincoln-class-party',
+      button,
+    );
   },
 };
