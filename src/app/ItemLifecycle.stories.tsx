@@ -38,9 +38,9 @@ async function progress(
         name: new RegExp('^Needs you\\s+' + needs + '$'),
       }),
     ).toBeVisible();
-    await expect(canvas.getByRole('status')).toHaveTextContent(
-      done + ' of ' + total + ' done',
-    );
+    await expect(
+      canvas.getByRole('status', { name: 'Brief progress' }),
+    ).toHaveTextContent(done + ' of ' + total + ' done');
   });
 }
 async function settled(canvas: Canvas, name: string) {
@@ -84,7 +84,7 @@ export const MayaFlow: Story = {
     await move(canvas, 'Halden Health');
     await progress(canvas, 2, 1, 3);
     await expect(
-      within(canvas.getByRole('region', { name: 'Set aside' })).getByText(
+      within(canvas.getByRole('button', { name: /^32 set aside/ })).getByText(
         /32 set aside/,
       ),
     ).toBeVisible();
@@ -95,6 +95,7 @@ export const MayaFlow: Story = {
     await expect(
       within(canvas.getByRole('list', { name: 'Needs you' }))
         .getAllByRole('button')
+        .filter((el) => el.hasAttribute('data-brief-item'))
         .map((el) => el.dataset.briefItem),
     ).toEqual(['fernway', 'brightline', 'halden']);
   },
