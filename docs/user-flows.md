@@ -11,7 +11,7 @@ Each persona’s story, walked end to end on the real screens. Design used these
 - **One step = one screen state.** Each step names the screen, what the person does and thinks, what Glance does, and the rule it proves.
 - **Screenshots:** the part that matters is outlined in purple; the rest is dimmed. Files are in [`screens/flows/`](screens/flows/).
 - **Given / When / Then** blocks are acceptance criteria. [Issue 16](handoff/issues/16-e2e-flows.md) turns them into Playwright tests. Text in quotes is exact copy from `src/data/*.json` or the named pattern.
-- **Start state:** every flow starts clean. `/?persona=<id>&start=clean` ignores `demo.initialSelection`, so no source or reason is open. Desktop flows run at 1280 × 800, phone flows at 390 × 844.
+- **Start state:** every flow starts clean. `/?persona=<id>&start=clean` ignores `demo.initialSelection`, so no source or reason is open. Desktop flows run at 1280 × 800, phone flows at 390 × 844. Viewport checks measure the product only; the Demo controls above it are not part of the product.
 - **Patterns:** steps marked *pattern* (quiet hours, disconnected, overload) are Storybook stories from issue 13, not app routes.
 - **Branches** are other paths through the same moment. They are tested like steps.
 
