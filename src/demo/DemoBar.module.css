@@ -96,18 +96,10 @@
   min-block-size: var(--size-touch);
   background: var(--color-demo-control);
 }
-.desktop .extra {
-  margin-inline-start: auto;
-}
 .phone .choice {
   flex: 1 0 auto;
   padding-inline: var(--space-8);
   white-space: nowrap;
-}
-.extra {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-8);
 }
 @keyframes panelEnter {
   from {

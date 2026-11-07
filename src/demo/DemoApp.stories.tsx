@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, userEvent, waitFor, within } from 'storybook/test';
 import { getPersona, type PersonaId } from '../data';
 import { DemoApp, type DemoLevel } from './DemoApp';
+import type { ThemePreference } from './themePreference';
 
 const meta = {
   title: 'Patterns/Demo',
@@ -20,6 +22,7 @@ const meta = {
     },
     initialLevel: { control: 'inline-radio', options: [1, 2, 3] },
     syncUrl: { control: false, table: { disable: true } },
+    theme: { control: false, table: { disable: true } },
   },
   render: (args) => (
     <DemoApp
@@ -222,5 +225,37 @@ export const PersonaAndLevelSelection: Story = {
         canvas.queryByRole('group', { name: 'Demo level' }),
       ).not.toBeInTheDocument();
     }
+  },
+};
+
+export const ThemeSelection: Story = {
+  render: function ThemeSelectionStory(args) {
+    const [value, onChange] = useState<ThemePreference>('system');
+    return <DemoApp {...args} syncUrl={false} theme={{ value, onChange }} />;
+  },
+  play: async (context) => {
+    await openControls(context);
+    const group = within(
+      context.canvas.getByRole('group', { name: 'Demo theme' }),
+    );
+    await expect(group.getByRole('button', { name: 'System' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    const light = group.getByRole('button', { name: 'Light' });
+    light.focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(light).toHaveAttribute('aria-pressed', 'true');
+    const dark = group.getByRole('button', { name: 'Dark' });
+    await userEvent.click(dark);
+    await expect(dark).toHaveAttribute('aria-pressed', 'true');
+    await expect(group.getAllByRole('button', { pressed: true })).toHaveLength(
+      1,
+    );
+    await userEvent.click(group.getByRole('button', { name: 'System' }));
+    await expect(group.getByRole('button', { name: 'System' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
   },
 };

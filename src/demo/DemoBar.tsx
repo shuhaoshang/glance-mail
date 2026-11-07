@@ -1,8 +1,9 @@
-import { useId, useRef, useState, type ReactNode } from 'react';
+import { useId, useRef, useState } from 'react';
 import type { PersonaId } from '../data';
 import { useDesktopLayout } from '../design-system/components/useDesktopLayout';
 import type { DemoLevel } from './DemoApp';
 import { usePhoneLabels } from './usePhoneLabels';
+import { themeOptions, type ThemeControl } from './themePreference';
 import styles from './DemoBar.module.css';
 
 interface DemoBarProps {
@@ -10,7 +11,7 @@ interface DemoBarProps {
   level: DemoLevel;
   onPersonaChange: (id: PersonaId) => void;
   onLevelChange: (level: DemoLevel) => void;
-  extraControls?: ReactNode;
+  theme?: ThemeControl;
   simulation?: { label: string; disabled: boolean; onClick: () => void };
 }
 const personas = [
@@ -29,7 +30,7 @@ export function DemoBar({
   level,
   onPersonaChange,
   onLevelChange,
-  extraControls,
+  theme,
   simulation,
 }: DemoBarProps) {
   const desktop = useDesktopLayout();
@@ -109,6 +110,25 @@ export function DemoBar({
                 </button>
               ))}
             </div>
+            {theme && (
+              <div
+                role="group"
+                aria-label="Demo theme"
+                className={styles.group}
+              >
+                {themeOptions.map(({ value, label }) => (
+                  <button
+                    key={value}
+                    type="button"
+                    aria-pressed={theme.value === value}
+                    className={styles.choice}
+                    onClick={() => theme.onChange(value)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
             {simulation && (
               <button
                 type="button"
@@ -118,9 +138,6 @@ export function DemoBar({
               >
                 {simulation.label}
               </button>
-            )}
-            {extraControls && (
-              <div className={styles.extra}>{extraControls}</div>
             )}
           </div>
         )}

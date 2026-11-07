@@ -5,18 +5,21 @@ import { personaFromSearch } from '../app/briefData';
 import { getPersona, type PersonaId } from '../data';
 import { DemoBar } from './DemoBar';
 import { TextLevels } from './TextLevels';
+import type { ThemeControl } from './themePreference';
 
 export type DemoLevel = 1 | 2 | 3;
 interface DemoAppProps {
   initialPersonaId?: PersonaId;
   initialLevel?: DemoLevel;
   syncUrl?: boolean;
+  theme?: ThemeControl;
 }
 
 export function DemoApp({
   initialPersonaId,
   initialLevel = 3,
   syncUrl = false,
+  theme,
 }: DemoAppProps) {
   const [personaId, setPersonaId] = useState<PersonaId>(
     () =>
@@ -48,6 +51,7 @@ export function DemoApp({
       changePersona={changePersona}
       setLevel={setLevel}
       syncUrl={syncUrl}
+      theme={theme}
     />
   );
 }
@@ -57,12 +61,14 @@ function PersonaDemo({
   changePersona,
   setLevel,
   syncUrl,
+  theme,
 }: {
   personaId: PersonaId;
   level: DemoLevel;
   changePersona: (id: PersonaId) => void;
   setLevel: (level: DemoLevel) => void;
   syncUrl: boolean;
+  theme?: ThemeControl;
 }) {
   const session = useItemLifecycle(getPersona(personaId));
   return (
@@ -75,6 +81,7 @@ function PersonaDemo({
           if (next !== 3 && session.pending) session.settle(session.pending.id);
           setLevel(next);
         }}
+        theme={theme}
         simulation={{
           label: session.simulateLabel,
           disabled: session.simulateDisabled,
