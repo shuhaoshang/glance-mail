@@ -50,6 +50,9 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
       ).toHaveCount(0);
     }
     await expect(row(page, lincoln.name)).toContainText(lincoln.request.text);
+    await expect(
+      row(page, lincoln.name).getByRole('img', exact('Glance’s summary')),
+    ).toBeVisible();
     const urgent = chip(row(page, lincoln.name), lincoln.facts[0]);
     await expect(urgent).toHaveCSS(
       'background-color',

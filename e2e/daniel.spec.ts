@@ -112,6 +112,10 @@ test('Daniel — unblock the team, keep the evening', async ({
     await expect(
       reasoning.getByText(blocked.source!.hl, { exact: true }),
     ).toBeVisible();
+    await expectInk(
+      reasoning.getByText(blocked.source!.hl, { exact: true }),
+      '--color-judgment-ink',
+    );
     await expect(
       reasoning.getByText(
         'Based on · ' + blocked.source!.from + ' · ' + blocked.source!.when,
