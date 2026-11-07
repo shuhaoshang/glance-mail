@@ -5,6 +5,8 @@ import row from '../ListRow.module.css';
 import styles from './CollapsedGroup.module.css';
 
 type CollapsedGroupProps = {
+  label?: 'good to know' | 'set aside';
+  summary?: string;
   groups: readonly Pick<SetAsideGroup, 'count' | 'short'>[];
 } & (
   | { static: true; selected?: never; onSelect?: never }
@@ -16,15 +18,21 @@ type CollapsedGroupProps = {
 );
 
 export function CollapsedGroup(props: CollapsedGroupProps) {
+  const label = props.label ?? 'set aside';
+  const count = props.groups.reduce((sum, group) => sum + group.count, 0);
+  const card = [styles.card, props.summary !== undefined && styles.withSummary]
+    .filter(Boolean)
+    .join(' ');
   const content = (
-    <span className={row.content}>
-      <span className={row.name}>
-        {props.groups.reduce((sum, group) => sum + group.count, 0)} set aside
+    <span className={[row.content, styles.content].join(' ')}>
+      <span className={[row.name, styles.name].join(' ')}>
+        {count} {label}
       </span>
       <span className={styles.breakdown}>
-        {props.groups
-          .map((group) => group.count + ' ' + group.short)
-          .join(' · ')}
+        {props.summary ??
+          props.groups
+            .map((group) => group.count + ' ' + group.short)
+            .join(' · ')}
       </span>
     </span>
   );
@@ -32,8 +40,8 @@ export function CollapsedGroup(props: CollapsedGroupProps) {
   if (props.static)
     return (
       <section
-        aria-label="Set aside"
-        className={[styles.card, styles.static].join(' ')}
+        aria-label={label === 'set aside' ? 'Set aside' : 'Good to know'}
+        className={[card, styles.static].join(' ')}
       >
         {content}
       </section>
@@ -47,14 +55,17 @@ export function CollapsedGroup(props: CollapsedGroupProps) {
       className={[
         control.control,
         row.button,
-        styles.card,
+        card,
         props.selected && row.selected,
       ]
         .filter(Boolean)
         .join(' ')}
     >
       {content}
-      <Icon name="chevron" className={row.chevron} />
+      <Icon
+        name="chevron"
+        className={[row.chevron, styles.chevron].join(' ')}
+      />
     </button>
   );
 }

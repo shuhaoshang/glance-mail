@@ -80,11 +80,11 @@ export const KeyboardSelection: Story = {
     const button = canvas.getByRole('button');
     button.focus();
     await userEvent.keyboard('{Enter}');
-    await expect(args.onSelect).toHaveBeenCalledWith(args.item.id);
+    await expect(args.onSelect).toHaveBeenCalledWith(args.item.id, button);
     await expect(canvas.getByText(args.item.request.text)).toBeVisible();
-    await expect(
-      canvas.getAllByLabelText(/^(time|money|people):/),
-    ).toHaveLength(Math.min(2, args.item.facts.length));
+    await expect(canvas.getAllByText(/^(time|money|people):$/)).toHaveLength(
+      Math.min(2, args.item.facts.length),
+    );
     await expect(
       canvas.queryByRole('button', { name: 'New' }),
     ).not.toBeInTheDocument();
@@ -150,4 +150,37 @@ export const LongRequest: Story = {
 export const SelectedPressed: Story = {
   args: { selected: true },
   parameters: { pseudo: { active: true } },
+};
+
+export const Static: Story = {
+  render: () => (
+    <BriefRow
+      item={{
+        id: 'lincoln-class-party',
+        name: 'Lincoln Elementary',
+        request: {
+          type: 'summary',
+          text: 'Send a snack for Friday’s class party',
+        },
+        facts: [
+          {
+            id: 'party-date',
+            kind: 'time',
+            label: 'Fri, Nov 20',
+            urgent: false,
+          },
+        ],
+      }}
+      rank={5}
+      account={sarah.accounts[1]}
+      entering
+    />
+  ),
+  play: async ({ canvas }) => {
+    const item = canvas.getByRole('listitem');
+    await expect(item).toHaveTextContent('Lincoln Elementary');
+    await expect(item).toHaveTextContent('Fri, Nov 20');
+    await expect(canvas.queryByRole('button')).not.toBeInTheDocument();
+    await expect(item.querySelector('[tabindex]')).not.toBeInTheDocument();
+  },
 };

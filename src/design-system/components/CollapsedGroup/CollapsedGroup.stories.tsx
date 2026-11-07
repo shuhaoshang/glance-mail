@@ -50,3 +50,48 @@ export const Static: Story = {
     await expect(summary.querySelector('svg')).not.toBeInTheDocument();
   },
 };
+
+export const GoodToKnow: Story = {
+  args: {
+    label: 'good to know',
+    groups: [{ count: 14, short: 'good to know' }],
+    summary: 'Schedule changes, deliveries and receipts',
+    onSelect: fn(),
+  },
+  play: async ({ canvas, args }) => {
+    const button = canvas.getByRole('button', {
+      name: '14 good to know Schedule changes, deliveries and receipts',
+    });
+    await expect(button.querySelector('svg')).toBeInTheDocument();
+    await userEvent.click(button);
+    await expect(args.onSelect).toHaveBeenCalledWith(button);
+  },
+};
+
+export const SetAsideSummary: Story = {
+  args: {
+    groups: [{ count: 8, short: 'set aside' }],
+    summary: 'Newsletters, promotions and CC’d',
+  },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole('button', {
+        name: '8 set aside Newsletters, promotions and CC’d',
+      }),
+    ).toBeVisible();
+  },
+};
+
+export const OverloadSetAside: Story = {
+  args: {
+    ...SetAsideSummary.args,
+    groups: [{ count: 210, short: 'set aside' }],
+  },
+};
+
+export const QuietHoursSetAside: Story = {
+  args: {
+    groups: [{ count: 3, short: 'set aside' }],
+    summary: 'Newsletters and promotions',
+  },
+};
