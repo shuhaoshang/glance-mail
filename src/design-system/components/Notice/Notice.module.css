@@ -1,0 +1,40 @@
+.notice {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  padding: var(--space-16);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+}
+
+.content {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-12);
+}
+
+.tile {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--size-tile);
+  block-size: var(--size-tile);
+  border-radius: var(--radius-tile);
+  background: var(--color-surface-sunken);
+  color: var(--color-text-secondary);
+}
+
+.copy {
+  display: grid;
+  gap: var(--space-4);
+  min-inline-size: 0;
+}
+
+.title {
+  font-weight: var(--font-weight-semibold);
+}
+
+.body {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-regular);
+}
