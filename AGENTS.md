@@ -90,8 +90,9 @@ docs/
 
 ## Local testing
 
-- Do not change the user's computer system settings during development or testing.
-- Prefer testing reduced motion in an isolated browser environment that simulates `prefers-reduced-motion`. If that environment cannot simulate the preference, report the testing limitation instead of changing system settings.
+- Do not change system settings on the designer's computer, such as Appearance (light or dark), Reduce motion, Increase contrast, display scaling or text size.
+- Emulate color scheme and reduced motion in the browser, for example with Playwright's `colorScheme` and `reducedMotion` options or the Rendering panel in Chrome DevTools.
+- Do not link to localhost or 127.0.0.1 in pull requests or comments. Those links only work on the designer's computer. Name the Storybook story (for example, Composites/SetAsideList) or the app URL path instead.
 
 ## Language
 
