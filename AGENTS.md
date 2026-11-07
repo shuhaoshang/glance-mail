@@ -88,6 +88,11 @@ docs/
 - **No dead controls.** If something can't act yet, render plain text, not a button.
 - **Nothing reshuffles while the user reads.** New mail waits in a “2 new · Add to brief” row.
 
+## Local testing
+
+- Do not change the user's computer system settings during development or testing.
+- Prefer testing reduced motion in an isolated browser environment that simulates `prefers-reduced-motion`. If that environment cannot simulate the preference, report the testing limitation instead of changing system settings.
+
 ## Language
 
 - **American English only, everywhere public.** Code, comments, docs, data, commit messages, branch names, and the titles, descriptions and comments of pull requests and issues use US spelling and vocabulary. This includes the product brief, prototypes, Storybook, the design system, screenshots, and review replies. Use forms such as “color,” “gray,” “behavior,” “labeled,” and “organization.” Preserve standard API names and verbatim source quotations.
