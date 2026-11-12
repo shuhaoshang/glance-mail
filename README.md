@@ -2,6 +2,8 @@
 
 **An AI briefing layer for email. Components make it fast. Sources make it trustworthy.**
 
+**[Try the live demo](https://shuhaoshang.github.io/glance-mail/)** · **[Browse the components in Storybook](https://shuhaoshang.github.io/glance-mail/storybook/)** · **[Open the design prototype](https://shuhaoshang.github.io/glance-mail/prototype/)**
+
 AI email summaries were supposed to save time, but people can't check them, so they read the original anyway and then ask the AI again. Glance turns an inbox into a short morning brief instead:
 
 - What **needs you**, ranked by urgency.
