@@ -38,6 +38,8 @@ All three flows use the same stages. Not every persona needs every stage.
 3. [Sarah — clear the family’s to-dos before getting up](#3-sarah--clear-the-familys-to-dos-before-getting-up)
 4. [What walking the flows changed](#4-what-walking-the-flows-changed)
 
+
+> **Visual 2.0.** The stories are the same; the screens they run on changed (decisions D47 to D61). Section “Visual 2.0” at the end rewrites the steps that changed and adds new ones. Where it disagrees with a step above, it wins. The step images above show the earlier design.
 ---
 
 ## 1. Maya — protect a renewal before Friday
@@ -604,3 +606,79 @@ Walking each story on the real screens found three states that had no design, an
 - **Maya between meetings on her phone** and **Sarah’s weekend batch on a laptop.** Both use the same screens as the flows above; there is no new state to design.
 - **Carried-over items and a time simulator** (the brief the next morning). Out of scope for the demo; see issue 09.
 - **First brief** and **new mail on the phone** are designed (`docs/screens/phone-first-brief.png`, `phone-new-mail.png`) and covered by issue 13, but no persona story needs them.
+
+---
+
+## Visual 2.0
+
+Read every step above with these replacements: **Good to know** is the **Heads-up** tab, **Set aside** is the **Other mail** tab, and each tier is a tab instead of a section. The numbers on the tabs are the counts the steps name (Maya opens to Needs you 3, Heads-up 3, Other mail 31, Watchlist 8, Memory 5).
+
+### Steps that changed
+
+**Every persona, step 1 (the brief opens)**
+
+- Given the brief opens on desktop, then the Needs you tab is selected, its first row is selected and shown in the detail panel, and the other four tabs show their counts.
+- Given the brief opens on the phone, then the three email tabs fill the width, Watchlist and Memory are header buttons, and no row is open.
+- Then the Watchlist tab (or header button) shows a dot when any watched item has news.
+
+**Maya 3 (why is this first?)**
+
+- When she selects “✦ Why it’s first: Renewal risk”, then the panel titled “Glance’s reasoning · not stated in the email” opens with the same judgments and evidence as before.
+- Then the panel ends with “Based on Watchlist: Fernway renewal”; selecting it opens the Watchlist tab.
+- Then there is no “Move to Set aside” in the panel.
+
+**Maya 7 (new mail)**
+
+- When she selects “Add to brief”, then Okto Freight joins the end of Needs you (count 4), “Revenue Ops Digest” joins the end of Other mail (count 32), and the row reads “2 new added: 1 here, 1 in Other mail”.
+
+**Maya 8 (tidy)**
+
+- Given she opens the Other mail tab, then she sees four rows, each with Glance’s reason, and “27 more like these”.
+- When she selects “SaaS Sales Weekly”, then the detail shows the email, the line “Glance put this in Other mail: Newsletter you haven’t opened since September”, and the sentence Glance used highlighted in purple.
+- When she selects Move to and then Heads-up, then the row leaves Other mail (count 30), the Heads-up count reads 4, and a toast reads “Moved to Heads-up. Glance will sort emails like this into Heads-up.” with Undo.
+- When she opens Heads-up, then “SaaS Sales Weekly: Five renewal plays for Q4” is the last row, marked “Moved by you”.
+- When she selects Undo in the toast, then the email is back in Other mail in its old place and both counts are as before.
+
+**Anyone, correcting a false alarm (replaces “Move to Set aside”)**
+
+- Given a Needs you detail is open, when the person selects Move to and then Other mail, then the email leaves Needs you, the next email is selected (on the phone the sheet closes), the counts and progress update, and the toast offers Undo.
+- Then the email is the last row in Other mail, marked “Moved by you”, and its detail still shows its facts and sources and says “You moved this here. Glance will sort emails like it the same way.”
+- The current tab is checked in the Move to menu and cannot be chosen.
+
+**Done and Snooze** work as written: the email leaves the list and a row with Undo stays under it. There is no toast for them.
+
+**The action bar** no longer has Ask; Ask is the third tab of a Needs you detail.
+
+### New steps
+
+**Heads-up**
+
+- Given Maya opens Heads-up, then the first row is selected and the detail shows “Fernway: 15% discount approved by Lena Ortiz, Finance” as Glance’s summary, the source sentence from Lena Ortiz with “15%” highlighted, “Part of Watchlist: Fernway renewal”, “Open in Outlook” and Move to.
+- When she selects Original email, then she sees Lena’s email with the same value highlighted.
+- Given Daniel opens Heads-up, then only “Car service” carries the label “Personal”, and its primary button reads “Open in Gmail”.
+
+**Watchlist**
+
+- Given Maya opens Watchlist, then she sees 8 topics; three show “2 new”, “1 new”, “1 new” and the rest “Nothing new”.
+- When she selects “2 new” on Fernway renewal, then the Needs you tab opens with Fernway Logistics selected.
+- When she selects Add, types “Okto renewal” and selects Add (or presses Enter), then the topic is first in the list with “Nothing yet”, the tab count reads 9, and the toast reads “Added to Watchlist. Emails about it will go to the top.”
+- When she selects Remove on a topic, then it leaves the list and the toast offers Undo.
+- Add is disabled while the input is empty; Escape or Cancel closes the row.
+
+**Memory**
+
+- Given Maya opens Memory, then she sees “Your instructions 2” and “Learned 3”.
+- When she edits a learned pattern and saves, then it moves to the end of Your instructions with “Was learned · edited just now”, the two counts read 3 and 2, and the toast reads “Saved as your instruction. Your instructions always win.”
+- When she adds an instruction, then it joins Your instructions with “Added today”.
+- When she removes one, then the toast offers Undo and Undo restores it in place.
+
+**Theme and account**
+
+- When the person opens the avatar menu and selects Dark, then the whole app turns dark at once and stays dark after a reload. System follows the device.
+- When they select Settings, then the Settings page opens with the same choice shown under Appearance; “Back to brief” returns to the tab they left.
+- When they select Log out, then the signed-out page opens; either sign-in button returns to the brief.
+
+**Phone**
+
+- When the person taps a row in any email tab, then the detail opens in the bottom sheet with underline tabs; the sheet closes as before (close button, scrim, Escape, dragging the handle).
+- When they tap the Watchlist or Memory button in the header, then that view replaces the brief and “‹ Brief” returns to it.

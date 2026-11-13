@@ -245,6 +245,8 @@ Each entry records one decision: what was decided, what else was considered, and
 
 ### D37 · “Move to Set aside”: the user can correct a false alarm
 
+> Partly replaced by D53 (Visual 2.0).
+
 - **Decision:** At the end of Glance’s reasoning, a Needs you item offers “Not for you? Glance will rank emails like this lower.” and “Move to Set aside”. The item leaves Needs you, is not counted as an action or as done, appears in Set aside under “Moved by you”, and comes back with Undo or “Back to Needs you”.
 - **Considered:** Leaving it undecided; a “Not important” button in the action bar; letting Done cover it.
 - **Why:** A review of the whole product found the correction loop only ran one way: “Show in brief” told Glance what it missed, but nothing told it what it over-flagged. The only exits were Done, which made progress dishonest, or Snooze, which brought the item back. Placing the action in Glance’s read keeps the action bar to one primary and puts the correction where the user is already questioning the ranking.
@@ -303,3 +305,97 @@ Each entry records one decision: what was decided, what else was considered, and
 - **Decision:** Controls that look small keep a hit area of at least 44 × 44 without changing their look: the small ReasonPill (24 tall) and the Checkbox (box 24). The Checkbox target grows from the earlier 40 to 44.
 - **Considered:** Making the pill 44 tall; keeping the Checkbox at 40.
 - **Why:** A 44-tall pill would outweigh the fact it explains, and ticking a step is the main action in a checklist. Extending the target keeps the visual hierarchy and meets the touch target rule in `design-rules.md` §13.
+
+## Visual 2.0 (handoff 2)
+
+Decisions D47 to D61 came out of a redesign round on a clickable prototype. Where one of them replaces an earlier decision, it says so. The work order is in `docs/handoff/v2/README.md`.
+
+### D47 · The brief is five tabs in two groups
+
+- **Decision:** The long page becomes tabs. Left group, the person's email: **Needs you**, **Heads-up**, **Other mail**. Right group, what Glance keeps for them: **Watchlist**, **Memory**. Every tab is a name and a count. A small dot on Watchlist means something new. On the phone the three email tabs fill the width, and Watchlist and Memory are icon buttons in the header.
+- **Replaces:** The stacked sections on one page and the collapsed Set aside row. The three tiers (D4) and list and detail (D11) stay.
+- **Considered:** Keeping one page with anchors; one row of five equal tabs.
+- **Why:** On one page the lower sections were below the fold and read as children of the section above. Two groups say what is email and what is Glance's own; equal name-plus-count labels stop the right group from looking like a different control.
+
+### D48 · New names: Heads-up, Other mail, Watchlist, Memory
+
+- **Decision:** “Good to know” becomes **Heads-up**. “Set aside” becomes **Other mail**. The two new places are **Watchlist** and **Memory**. Data keys keep their names where they exist (`goodToKnow`).
+- **Considered:** FYI, Everything else, Watching, What Glance knows (all used in earlier rounds).
+- **Why:** Tab labels sit side by side, so they need similar lengths: FYI was three letters next to a four-word label. The new set is one or two words each and still says what is inside.
+
+### D49 · Depth comes from the page, not from purple fills
+
+- **Decision:** The page is a deeper tint (`--color-bg` `#E9E8F0`) with two soft brand glows. Panels are solid white with a 28 px radius and `--shadow-panel`. What is selected is ink (`--color-ink`): the selected tab and the selected segment. The selected row is white with a 1 px `--color-brand-stroke` ring and `--shadow-row-selected`.
+- **Replaces:** The brand-tint fill for the selected row. Purple still marks the primary button and everything Glance wrote.
+- **Considered:** Translucent panels on the tinted page; a purple fill for the selected row.
+- **Why:** Gray-violet labels on a gray-violet page were hard to tell apart, and translucent panels made it worse. White on a deeper page separates foreground from background without adding color. A filled purple row competed with the primary button.
+
+### D50 · Dates are amber; only urgent is red
+
+- **Decision:** The time tokens move from pink to amber (`--color-time` `#CF6F06` and its family). `--color-urgent` stays rose-red and is the only red on screen.
+- **Replaces:** The pink time color in D10 and D20.
+- **Why:** Pink dates sat next to red urgent chips and every date looked like an alarm.
+
+### D51 · List chips are tinted by kind
+
+- **Decision:** In list rows, a fact chip is filled with its kind's tint and uses its kind's text color: money, time or people. The urgent chip stays solid `--color-urgent` with a white dot.
+- **Replaces:** The neutral chip with a colored dot (part of D10).
+- **Why:** On white rows the neutral chips disappeared, and the colored dot was too small to carry the kind. Two tinted chips per row stay calm because the rows themselves are now plain white.
+
+### D52 · Other mail shows the original email, with what Glance used
+
+- **Decision:** Other mail is a list and a detail, like the other email tabs. Each row carries Glance's one-line reason. The detail is the original email with highlights: purple for what Glance used to sort it, yellow for amounts, amber for dates, and a one-line legend below. The count on the tab is every email sorted there; the list shows a few and ends with “N more like these” as plain text.
+- **Replaces:** The grouped Set aside list. D16 still holds: nothing disappears silently, and now every row says why it is there.
+- **Considered:** A plain list with no detail; a Glance summary for each email.
+- **Why:** There is nothing to extract from a newsletter, so a summary would be padding. Showing the email and marking the sentence Glance relied on is the honest version of “why is this here.”
+
+### D53 · One “Move to” for every email
+
+- **Decision:** Every email detail has a **Move to** button in the action bar. Its menu lists the three email tabs with a short description; the current one is checked and is not a button. A moved email joins the end of the destination list, marked “Moved by you,” and a toast says where it went, what Glance will do with similar email, and offers Undo.
+- **Replaces:** “Move to Set aside” inside the reasoning panel (D37), “Show in brief,” and “Back to Needs you.”
+- **Considered:** Keeping the control inside the reasoning panel.
+- **Why:** With three places, one control that works the same everywhere is easier to learn than three differently named ones. The action bar keeps one primary button; Move to is an outline button like Snooze and Done.
+
+### D54 · Done and Snooze keep their receipt rows; the toast is for moves and edits
+
+- **Decision:** Done and Snooze behave as built: the email leaves the list and a row with Undo stays under it. The toast is used only where the change happens somewhere the person is not looking: Move to, and adding, editing or removing something in Watchlist or Memory.
+- **Considered:** A toast for every action.
+- **Why:** A row that stays where the email was is a better receipt than a message that disappears. Two feedback patterns for one action would be noise.
+
+### D55 · Watchlist: what the person is waiting on
+
+- **Decision:** Watchlist is a list of topics the person asked Glance to keep an eye on. Each row has a name, a status line and, when this brief has news, an “N new” link that opens the related email. Rows can be added, renamed and removed. An email that relates to a watched topic says so: “Based on Watchlist: …” in Glance's reasoning, “Part of Watchlist: …” in a Heads-up detail.
+- **Why:** Ranking by deadline and amount cannot know what the person cares about this month. A visible list they control is the explainable way to let that in.
+
+### D56 · Memory: instructions and what Glance learned
+
+- **Decision:** Memory has two lists. **Your instructions** are rules in the person's own words. **Learned** are patterns Glance found in what they read and move. Both can be edited and removed, and instructions can be added. Editing a learned pattern turns it into an instruction.
+- **Considered:** Hiding learned behavior; a settings form.
+- **Why:** Glance sorts email, so the person must be able to see and correct the rules it sorts by. “Glance learns from every move” in the Move to menu is only credible if the result is visible somewhere.
+
+### D57 · The theme switch lives in the product
+
+- **Decision:** System, Light and Dark are chosen in the account menu and in Settings. The demo bar no longer has a theme control.
+- **Replaces:** The theme control in the demo bar (D19). The system default and the saved choice stay (D32).
+- **Why:** A visitor could not find dark mode, and a real product would offer it in its own settings.
+
+### D58 · Account menu, Settings and a signed-out page
+
+- **Decision:** The avatar opens a menu: who is signed in, Inboxes, Settings, Appearance and Log out. Settings is one page with Inboxes, Brief, Notifications, Quiet hours, Appearance and Account. Log out leads to a signed-out page whose two buttons return to the brief. Controls in Settings keep their state for the session; only Appearance changes anything else on screen.
+- **Why:** Without them the avatar was a dead control, and Daniel's quiet hours and the connected inboxes had nowhere to live.
+
+### D59 · The greeting is larger and lighter
+
+- **Decision:** The desktop greeting is 40/48 at medium weight. The phone greeting is 28/32, also medium.
+- **Replaces:** 32/40 bold on desktop.
+- **Why:** With the sections gone, the greeting is the only headline on the page. Larger and lighter reads as a welcome, not as a title bar.
+
+### D60 · When the prototype and the built app differ, the built app wins unless a decision says otherwise
+
+- **Decision:** The Visual 2.0 prototype was drawn to settle structure and look. It simplifies things the app already does well. These carry over as built and only pick up the new tokens: the eight scene cards and the text fallback, the source panel with “Open email,” the Ask thread, the new-mail row, the done and snoozed rows (D54), account labels, the coverage note, the phone bottom sheet with its gestures (D44), the demo bar with its levels and Simulate reply, and all keyboard and focus behavior.
+- **Why:** Rebuilding working, tested behavior from a simplified drawing would trade real quality for a closer match to a picture.
+
+### D61 · Ask is a tab, not a button in the action bar
+
+- **Decision:** The Ask button leaves the action bar. Ask stays as the third tab of a Needs you detail.
+- **Why:** With Move to added, the bar would hold five buttons, and four on the phone's second row. Ask is a view of the email, like Details and Original email, so the tabs are where it belongs.

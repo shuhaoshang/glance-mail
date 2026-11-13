@@ -24,6 +24,8 @@ Ten rounds of design are now reflected here; the reasoning for each change is in
 - **Edge states are designed** (§14), and the open question on L1/L2/L3 is answered: it is a demo control (§18).
 - **Visual language is defined:** white and gray surfaces, Inter, purple for Glance, pastel ink for facts, light and dark tokens.
 
+
+> **Visual 2.0.** A later round changed the structure and look (decisions D47 to D61). Section “23. Visual 2.0” at the end of this document lists what changed here. Where it disagrees with the text above it, that section wins.
 ---
 
 ## Contents
@@ -511,3 +513,26 @@ If Glance were a real product:
 - How visible should uncertainty flags be without breaking principle 2?
 - Default brief language when emails arrive in several languages?
 - ~~Visual language~~ **Defined:** see [design-system.md](design-system.md).
+
+---
+
+## 23. Visual 2.0
+
+What changed in the product, in short. The design system (§9 there) has the detail; `docs/decisions.md` D47 to D61 has the reasons.
+
+| Before | Now |
+| --- | --- |
+| One page with three sections | Five tabs: **Needs you**, **Heads-up**, **Other mail**, and on the right **Watchlist** and **Memory** |
+| Good to know | **Heads-up**: selectable rows; the detail shows the summary, the source and a link to Watchlist when it applies |
+| Set aside, collapsed, grouped | **Other mail**: a list with Glance's reason on every row; the detail is the original email with highlights |
+| “Move to Set aside”, “Show in brief”, “Back to Needs you” | One **Move to** on every email, with Undo |
+| Ranking by deadline and amount only | Also what the person is waiting on (**Watchlist**) and their rules (**Memory**), both visible and editable |
+| Theme switch in the demo bar | Theme in the **account menu** and in **Settings** |
+| Avatar with no action | Account menu, a Settings page, a signed-out page |
+| Pink dates | Amber dates; only urgent is red |
+
+**In scope now:** the five tabs for the three personas on desktop and phone, in light and dark; Move to; Watchlist and Memory with add, edit and remove for the session; the account menu, theme, Settings and signed-out pages.
+
+**Still out of scope:** real accounts, real learning (Memory is prepared content plus the person's own edits), notifications, and anything that sends or changes email.
+
+**Unchanged:** the thesis, the personas and their stories, the three levels in the demo bar, sources on every fact, scene cards, Ask, new mail waiting in a row, Done and Snooze.
