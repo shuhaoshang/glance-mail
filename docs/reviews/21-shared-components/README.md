@@ -38,7 +38,8 @@ The small-segment images are 1280-wide crops of the top 160 pixels, captured fro
 - Composites/ReasonPanel: Evidence and Watchlist. The Watchlist example uses the supplied version 2 name and a verified callback; product wiring belongs to task 28.
 - Composites/DetailPanel: Actions, ActionsHover, ActionsPressed, ActionsFocus, Busy, SnoozeOpen, ChecklistComplete, VerifySources, and EscapeDisclosures.
 - Patterns/Ask and Patterns/Item lifecycle: verify Ask through the third tab, the pinned phone actions, Done, Snooze, Undo, and checklist completion.
-- Composites/SectionCard, CollapsedGroup, Notice, and SnoozeMenu: the panel shadow changes; their existing structure and behavior remain.
+- Composites/SectionCard, CollapsedGroup, and Notice: the panel shadow changes; their existing structure and behavior remain.
+- Composites/SnoozeMenu: keeps `--shadow-popover`, matching the menu rule in section 9.7 and the upcoming MoveMenu, as clarified in the PR review.
 
 ## Validation
 
@@ -57,3 +58,14 @@ The existing section layout remains until the later tab-layout task. Scene cards
 ## Open questions
 
 None. This issue explicitly defines the temporary removal of the old correction entry point and defers Move to and Watchlist wiring to later tasks.
+
+## SnoozeMenu review correction
+
+The review clarified that SnoozeMenu is a popover. It keeps `--shadow-popover` instead of the page-panel shadow, with its existing inset border and behavior. The images below are menu-area crops from a 1280-wide viewport.
+
+| Theme | Before review correction | After review correction |
+| --- | --- | --- |
+| Light | [Before](snooze-before-light.jpg) | [After](snooze-after-light.jpg) |
+| Dark | [Before](snooze-before-dark.jpg) | [After](snooze-after-dark.jpg) |
+
+The resolved popover shadow and Escape focus return were checked in both themes at 1280 and 390 widths using browser emulation.
