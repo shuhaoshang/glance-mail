@@ -1,0 +1,84 @@
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-16);
+  min-inline-size: 0;
+}
+.group {
+  --hit-target-inline-gap: var(--space-4);
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  padding: var(--space-4);
+  border-radius: var(--radius-pill);
+  background: var(--color-glass);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--color-glass-edge);
+  backdrop-filter: blur(var(--space-12));
+}
+.right {
+  margin-inline-start: auto;
+}
+.tab {
+  --control-fill: transparent;
+  --control-ink: var(--color-text-secondary);
+  --hover-fill: var(--color-glass-hover);
+  --pressed-fill: var(--color-glass-hover);
+  --hover-ink: var(--color-text);
+  --pressed-ink: var(--color-text);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-8);
+  min-inline-size: var(--size-touch);
+  block-size: var(--size-touch-compact);
+  padding: 0 var(--space-16);
+  border: 0;
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  white-space: nowrap;
+}
+.count {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+}
+.tab:not([aria-selected='true']):is(:hover, :active) .count {
+  color: var(--color-text);
+}
+.tab[aria-selected='true'] {
+  --control-fill: var(--color-ink);
+  --control-ink: var(--color-on-ink);
+  --hover-fill: var(--color-ink);
+  --pressed-fill: var(--color-ink);
+  --hover-ink: var(--color-on-ink);
+  --pressed-ink: var(--color-on-ink);
+  box-shadow: var(--shadow-tab-selected);
+}
+.tab[aria-selected='true'] .count {
+  color: var(--color-on-ink-muted);
+}
+.news {
+  position: absolute;
+  inset-block-start: var(--space-8);
+  inset-inline-end: var(--space-8);
+  inline-size: var(--size-dot);
+  block-size: var(--size-dot);
+  border-radius: var(--radius-pill);
+  background: var(--color-brand);
+  pointer-events: none;
+}
+.tab[aria-selected='true'] .news {
+  background: var(--color-on-ink);
+}
+.phone .group {
+  inline-size: 100%;
+  min-inline-size: 0;
+}
+.phone .tab {
+  flex: 1 1 0;
+  min-inline-size: 0;
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+}
