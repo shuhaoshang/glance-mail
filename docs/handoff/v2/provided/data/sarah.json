@@ -1,0 +1,705 @@
+{
+  "$schema": "../../docs/data-model.md",
+  "version": 2,
+  "id": "sarah",
+  "name": "Sarah",
+  "role": "Parent",
+  "initial": "S",
+  "email": "sarah@example.com",
+  "date": "Thursday, November 5",
+  "greeting": "Good morning, Sarah",
+  "coverage": {
+    "emails": 23,
+    "text": "{n} emails overnight from 2 inboxes.",
+    "note": null
+  },
+  "accounts": [
+    {
+      "id": "gmail",
+      "app": "Gmail",
+      "label": "Personal"
+    },
+    {
+      "id": "yahoo",
+      "app": "Yahoo Mail",
+      "label": "Family",
+      "minority": true
+    }
+  ],
+  "doneBefore": [],
+  "newMail": null,
+  "items": [
+    {
+      "id": "lincoln",
+      "name": "Lincoln Elementary",
+      "account": "yahoo",
+      "person": {
+        "name": "Ms. Rivera",
+        "role": "2nd grade teacher",
+        "initial": "R"
+      },
+      "request": {
+        "type": "summary",
+        "by": "",
+        "text": "Sign Ella’s trip slip and pay the fee"
+      },
+      "rank": "Due tomorrow, the soonest deadline in this brief.",
+      "from": "Ms. Rivera",
+      "when": "Wed, Nov 4, 6:05 PM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "time",
+          "label": "Due tomorrow",
+          "urgent": true,
+          "source": {
+            "pre": "Please return the signed permission slip and $12 ",
+            "hl": "by Friday, Nov 6",
+            "post": " so we can confirm numbers."
+          }
+        },
+        {
+          "id": "f2",
+          "kind": "money",
+          "label": "$12 fee",
+          "urgent": false,
+          "source": {
+            "pre": "Please return the signed permission slip and ",
+            "hl": "$12",
+            "post": " by Friday, Nov 6 so we can confirm numbers."
+          }
+        },
+        {
+          "id": "f3",
+          "kind": "time",
+          "label": "Trip Mon",
+          "urgent": false,
+          "source": {
+            "pre": "Our second graders visit the City Science Museum ",
+            "hl": "on Monday",
+            "post": "."
+          }
+        }
+      ],
+      "scene": {
+        "type": "checklist",
+        "label": "To do",
+        "urgent": "Due tomorrow",
+        "steps": [
+          {
+            "pre": "Sign the permission slip"
+          },
+          {
+            "pre": "Pay ",
+            "value": "$12",
+            "fact": "f2"
+          }
+        ],
+        "fields": [
+          {
+            "label": "Due",
+            "value": "Fri, Nov 6",
+            "fact": "f1"
+          },
+          {
+            "label": "Trip",
+            "value": "Mon, Nov 9",
+            "fact": "f3"
+          }
+        ],
+        "doneNote": "Both steps ticked. Mark it done, or keep it here until the school confirms."
+      },
+      "judgments": [],
+      "email": {
+        "subject": "Museum trip: permission slip",
+        "from": "Ms. Rivera",
+        "paras": [
+          [
+            "Dear families,"
+          ],
+          [
+            "Our second graders visit the City Science Museum ",
+            {
+              "t": "on Monday",
+              "kind": "time",
+              "tag": "Time · Trip Mon"
+            },
+            ". Please return the signed permission slip and ",
+            {
+              "t": "$12",
+              "kind": "money",
+              "tag": "Money · $12 fee"
+            },
+            " ",
+            {
+              "t": "by Friday, Nov 6",
+              "kind": "time",
+              "tag": "Time · Due Fri"
+            },
+            " so we can confirm numbers."
+          ],
+          [
+            "You can pay at the school office or online through the parent portal."
+          ],
+          [
+            "Thank you,\n",
+            {
+              "t": "Ms. Rivera",
+              "kind": "people",
+              "tag": "People · Ms. Rivera, 2nd grade teacher"
+            }
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "Can I pay online?",
+          "found": true,
+          "a": "Yes, through the parent portal, or at the school office.",
+          "source": {
+            "from": "Ms. Rivera",
+            "when": "Wed, Nov 4, 6:05 PM",
+            "pre": "You can pay at the school office or ",
+            "hl": "online through the parent portal",
+            "post": "."
+          }
+        },
+        {
+          "q": "Does Ella need a packed lunch?",
+          "found": false,
+          "a": "The email doesn’t mention lunch."
+        }
+      ],
+      "watch": "ellas-field-trip"
+    },
+    {
+      "id": "riverside",
+      "name": "Riverside Pediatrics",
+      "account": "gmail",
+      "person": {
+        "name": "Riverside Pediatrics",
+        "role": "front desk",
+        "initial": "R"
+      },
+      "request": {
+        "type": "quote",
+        "by": "The office asks",
+        "text": "“Reply C to confirm Ella’s checkup.”"
+      },
+      "rank": "The office asked for a quick reply, and the visit is Monday.",
+      "from": "Riverside Pediatrics",
+      "when": "Wed, Nov 4, 4:30 PM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "time",
+          "label": "Mon, 3:30 PM",
+          "urgent": false,
+          "source": {
+            "pre": "Ella has a checkup on ",
+            "hl": "Monday, Nov 9 at 3:30 PM",
+            "post": ". Reply C to confirm or call us to reschedule."
+          }
+        }
+      ],
+      "scene": {
+        "type": "event",
+        "label": "Appointment",
+        "urgent": null,
+        "tile": {
+          "month": "Nov",
+          "day": "9",
+          "weekday": "Mon"
+        },
+        "main": {
+          "label": "When",
+          "value": "Mon, 3:30 PM",
+          "fact": "f1"
+        },
+        "title": "Ella’s checkup",
+        "fields": [
+          {
+            "label": "To confirm",
+            "value": "Reply C"
+          }
+        ]
+      },
+      "judgments": [
+        {
+          "label": "Quick reply",
+          "why": "The office only needs one letter back.",
+          "source": null
+        }
+      ],
+      "email": {
+        "subject": "Appointment reminder",
+        "from": "Riverside Pediatrics",
+        "paras": [
+          [
+            "Hi Sarah,"
+          ],
+          [
+            "Ella has a checkup on ",
+            {
+              "t": "Monday, Nov 9 at 3:30 PM",
+              "kind": "time",
+              "tag": "Time · Mon, 3:30 PM"
+            },
+            ". Reply C to confirm or call us to reschedule."
+          ],
+          [
+            "Riverside Pediatrics"
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "Where is the office?",
+          "found": true,
+          "a": "200 Oak Street, Suite 4.",
+          "source": {
+            "from": "Riverside Pediatrics",
+            "when": "Oct 12, 2026",
+            "pre": "Our office is at ",
+            "hl": "200 Oak Street, Suite 4",
+            "post": "."
+          }
+        }
+      ],
+      "watch": "ellas-checkup"
+    },
+    {
+      "id": "water",
+      "name": "City Water",
+      "account": "gmail",
+      "person": {
+        "name": "City Water",
+        "role": "billing",
+        "initial": "C"
+      },
+      "request": {
+        "type": "summary",
+        "by": "",
+        "text": "Pay the November water bill"
+      },
+      "rank": "A bill with a due date next week.",
+      "from": "City Water",
+      "when": "Wed, Nov 4, 7:00 AM",
+      "facts": [
+        {
+          "id": "f1",
+          "kind": "money",
+          "label": "$68.40",
+          "urgent": false,
+          "source": {
+            "pre": "Amount due: ",
+            "hl": "$68.40",
+            "post": ""
+          }
+        },
+        {
+          "id": "f2",
+          "kind": "time",
+          "label": "Due Nov 12",
+          "urgent": false,
+          "source": {
+            "pre": "Due date: ",
+            "hl": "November 12",
+            "post": ""
+          }
+        }
+      ],
+      "scene": {
+        "type": "payment",
+        "label": "Bill",
+        "urgent": null,
+        "amount": {
+          "label": "Amount due",
+          "value": "$68.40",
+          "fact": "f1"
+        },
+        "fields": [
+          {
+            "label": "Due",
+            "value": "Nov 12",
+            "fact": "f2"
+          },
+          {
+            "label": "From",
+            "value": "City Water"
+          }
+        ]
+      },
+      "judgments": [],
+      "email": {
+        "subject": "Your November water bill",
+        "from": "City Water",
+        "paras": [
+          [
+            "Your November bill is ready."
+          ],
+          [
+            "Amount due: ",
+            {
+              "t": "$68.40",
+              "kind": "money",
+              "tag": "Money · $68.40"
+            },
+            "\nDue date: ",
+            {
+              "t": "November 12",
+              "kind": "time",
+              "tag": "Time · Due Nov 12"
+            }
+          ],
+          [
+            "Thank you for being a City Water customer."
+          ]
+        ]
+      },
+      "qa": [
+        {
+          "q": "How much was last month?",
+          "found": true,
+          "a": "$61.20 in October.",
+          "source": {
+            "from": "City Water",
+            "when": "Oct 5, 2026",
+            "pre": "Amount due: ",
+            "hl": "$61.20",
+            "post": ""
+          }
+        }
+      ],
+      "watch": "water-bill"
+    }
+  ],
+  "goodToKnow": [
+    {
+      "id": "h1",
+      "icon": "clock",
+      "tone": "time",
+      "title": "Soccer practice",
+      "text": " moved to Sat, 9:00 AM",
+      "fact": {
+        "value": "Sat, 9:00 AM",
+        "kind": "time",
+        "source": {
+          "from": "Coach Martinez",
+          "when": "Wed, Nov 4, 8:30 PM",
+          "pre": "Practice this week moves to ",
+          "hl": "Saturday at 9:00 AM",
+          "post": " because the field is closed on Thursday."
+        }
+      },
+      "summary": "Moved to Sat, 9:00 AM",
+      "email": {
+        "subject": "Practice change this week",
+        "from": "Coach Martinez",
+        "paras": [
+          [
+            "Hi families,"
+          ],
+          [
+            "Practice this week moves to ",
+            {
+              "t": "Saturday at 9:00 AM",
+              "kind": "time",
+              "tag": "Time · Sat, 9:00 AM"
+            },
+            " because the field is closed on Thursday."
+          ],
+          [
+            "See you there,\nCoach Martinez"
+          ]
+        ]
+      }
+    },
+    {
+      "id": "h2",
+      "icon": "package",
+      "tone": "neutral",
+      "title": "Package",
+      "text": " arrives today",
+      "fact": {
+        "value": "today",
+        "kind": "time",
+        "source": {
+          "from": "ShipFast",
+          "when": "Thu, Nov 5, 6:02 AM",
+          "pre": "Your package is out for delivery and arrives ",
+          "hl": "today by 8:00 PM",
+          "post": "."
+        }
+      },
+      "summary": "Arrives today",
+      "email": {
+        "subject": "Out for delivery",
+        "from": "ShipFast",
+        "paras": [
+          [
+            "Your package is out for delivery and arrives ",
+            {
+              "t": "today by 8:00 PM",
+              "kind": "time",
+              "tag": "Time · today"
+            },
+            "."
+          ],
+          [
+            "No signature is required."
+          ]
+        ]
+      }
+    }
+  ],
+  "setAside": [
+    {
+      "title": "Newsletters",
+      "short": "newsletters",
+      "count": 10,
+      "rows": [
+        {
+          "id": "n1",
+          "title": "PTA Weekly",
+          "sub": "Bake sale sign-ups are open"
+        },
+        {
+          "id": "n2",
+          "title": "Little Readers",
+          "sub": "Five picture books for November"
+        }
+      ]
+    },
+    {
+      "title": "Promotions",
+      "short": "promotions",
+      "count": 6,
+      "rows": [
+        {
+          "id": "p1",
+          "title": "ToyBarn",
+          "sub": "Holiday sale starts Friday"
+        }
+      ]
+    },
+    {
+      "title": "You were CC’d",
+      "short": "CC’d",
+      "count": 2,
+      "rows": [
+        {
+          "id": "c1",
+          "title": "Soccer parents → team",
+          "sub": "Carpool for Saturday"
+        }
+      ]
+    }
+  ],
+  "otherMail": {
+    "total": 18,
+    "rows": [
+      {
+        "id": "n1",
+        "sender": "PTA Weekly",
+        "subject": "Bake sale sign-ups are open",
+        "when": "Yesterday",
+        "reason": "PTA newsletter to all families",
+        "basis": null,
+        "paras": [
+          [
+            "Bake sale sign-ups are open for ",
+            {
+              "t": "Fri, Nov 20",
+              "kind": "time",
+              "tag": "Time · Fri, Nov 20"
+            },
+            ". Bring something homemade or store-bought."
+          ],
+          [
+            {
+              "t": "Sent to all school families.",
+              "kind": "judg",
+              "tag": "Why it’s here · PTA newsletter to all families"
+            }
+          ]
+        ]
+      },
+      {
+        "id": "n2",
+        "sender": "Little Readers",
+        "subject": "Five picture books for November",
+        "when": "6:30 AM",
+        "reason": "Newsletter you rarely open",
+        "basis": null,
+        "paras": [
+          [
+            "Five picture books for cold evenings, picked by our librarians."
+          ],
+          [
+            {
+              "t": "You subscribed in August and rarely open it.",
+              "kind": "judg",
+              "tag": "Why it’s here · Newsletter you rarely open"
+            }
+          ]
+        ]
+      },
+      {
+        "id": "p1",
+        "sender": "ToyBarn",
+        "subject": "Holiday sale starts Friday",
+        "when": "Yesterday",
+        "reason": "Store promotion",
+        "basis": "instruction",
+        "paras": [
+          [
+            {
+              "t": "Up to 40% off",
+              "kind": "judg",
+              "tag": "Why it’s here · Store promotion"
+            },
+            " toys and games, starting ",
+            {
+              "t": "Friday, Nov 6",
+              "kind": "time",
+              "tag": "Time · Friday, Nov 6"
+            },
+            "."
+          ],
+          [
+            "Free shipping on orders over ",
+            {
+              "t": "$35",
+              "kind": "money",
+              "tag": "Money · $35"
+            },
+            "."
+          ]
+        ]
+      },
+      {
+        "id": "c1",
+        "sender": "Soccer parents → team",
+        "subject": "Carpool for Saturday",
+        "when": "Yesterday",
+        "reason": "Sent to the whole team, and you drove last week",
+        "basis": null,
+        "paras": [
+          [
+            "Who can drive on ",
+            {
+              "t": "Saturday",
+              "kind": "time",
+              "tag": "Time · Saturday"
+            },
+            "? We need two more cars."
+          ],
+          [
+            {
+              "t": "Sent to the whole team list.",
+              "kind": "judg",
+              "tag": "Why it’s here · Sent to the whole team, and you drove last week"
+            },
+            " Thanks to Sarah for driving last week."
+          ]
+        ]
+      }
+    ]
+  },
+  "watchlist": [
+    {
+      "id": "ellas-field-trip",
+      "name": "Ella’s field trip",
+      "status": "Slip due tomorrow",
+      "news": 1,
+      "item": "lincoln"
+    },
+    {
+      "id": "ellas-checkup",
+      "name": "Ella’s checkup",
+      "status": "Mon, 3:30 PM",
+      "news": 1,
+      "item": "riverside"
+    },
+    {
+      "id": "water-bill",
+      "name": "Water bill",
+      "status": "Due Nov 12",
+      "news": 1,
+      "item": "water"
+    },
+    {
+      "id": "holiday-flights",
+      "name": "Holiday flights",
+      "status": "Watching prices",
+      "news": 0
+    }
+  ],
+  "memory": {
+    "instructions": [
+      {
+        "id": "i1",
+        "text": "Anything from Ella’s school needs me.",
+        "meta": "Added Sep 3"
+      },
+      {
+        "id": "i2",
+        "text": "Store promotions can wait.",
+        "meta": "Added Sep 10"
+      }
+    ],
+    "learned": [
+      {
+        "id": "l1",
+        "text": "Schedule changes from Coach Martinez go in Heads-up.",
+        "meta": "From 3 opens · Nov 2"
+      },
+      {
+        "id": "l2",
+        "text": "Delivery updates go in Heads-up unless something is late.",
+        "meta": "From 3 of your moves · Nov 2"
+      }
+    ]
+  },
+  "demo": {
+    "simulate": {
+      "item": "riverside",
+      "who": "Riverside",
+      "label": "Simulate reply to Riverside",
+      "detected": "Reply to Riverside detected ✓",
+      "already": "Riverside is already done",
+      "note": "reply detected in Gmail, 7:30 AM"
+    },
+    "levels": {
+      "l1": "Good morning! Here’s a summary of your inbox. Lincoln Elementary wrote about Ella’s trip to the City Science Museum on Monday. They’re asking you to return the signed permission slip along with a $12 payment by Friday, November 6, which is tomorrow, so they can confirm numbers. Riverside Pediatrics sent a reminder about Ella’s checkup on Monday at 3:30 PM and asked you to reply C to confirm. Your November water bill from City Water is ready; the amount due is $68.40, payable by November 12. In other news, soccer practice has moved to Saturday at 9:00 AM, and a package is scheduled to arrive today. You also received 18 other emails, mostly newsletters, promotions and messages you were CC’d on.",
+      "l2": {
+        "needs": [
+          [
+            "Lincoln Elementary:",
+            " sign Ella’s permission slip and pay $12 by Fri, Nov 6 (tomorrow). The trip is on Monday."
+          ],
+          [
+            "Riverside Pediatrics:",
+            " reply C to confirm Ella’s checkup, Mon 3:30 PM."
+          ],
+          [
+            "City Water:",
+            " bill of $68.40, due Nov 12."
+          ]
+        ],
+        "know": [
+          "Soccer practice moved to Sat, 9:00 AM.",
+          "A package arrives today."
+        ],
+        "done": [],
+        "otherMail": "18 emails in Other mail."
+      }
+    },
+    "initialSelection": {
+      "itemIndex": 0,
+      "openFactIndex": 1,
+      "reasonOpen": false
+    }
+  }
+}

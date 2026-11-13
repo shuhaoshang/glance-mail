@@ -6,6 +6,8 @@
 
 These rules turn the product principles into decisions that designers, engineers and AI agents can apply the same way every time. If a screen breaks a rule, either the screen changes or this document does, through a pull request.
 
+
+> **Visual 2.0.** A later round changed the structure and look (decisions D47 to D61). Section “16. Visual 2.0” at the end of this document lists what changed here. Where it disagrees with the text above it, that section wins.
 ---
 
 ## 1. Two kinds of content
@@ -210,3 +212,37 @@ These are designed in principle (product brief §11–14) but have no screens ye
 - **Connect inboxes and Settings** (product brief Phase 2).
 - **The morning notification:** how Glance tells the user the brief is ready (“3 need you · school form due tomorrow”), when it is sent, and how quiet hours apply to it.
 - **“Show work email anyway”** in quiet hours: what it shows and for how long.
+
+---
+
+## 16. Visual 2.0
+
+**Names (D48).** Good to know is now **Heads-up**. Set aside is now **Other mail**. Two new places: **Watchlist** and **Memory**. Read the old names above as the new ones.
+
+**Structure (D47, replaces the layout lines in §8 and §10).** The brief is five tabs in two groups: Needs you, Heads-up, Other mail on the left; Watchlist, Memory on the right. Each email tab is a list and a detail. On the phone the email tabs fill the width, Watchlist and Memory are header buttons, and the detail opens in the sheet.
+
+**Color (D49 to D51, replaces parts of §3).**
+
+- **Time is amber, not pink.** Only urgent is red. Money stays yellow and people stay blue.
+- **Depth, not fills.** The page is tinted; panels are white and cast a soft shadow; blocks inside a panel are a quiet gray. Never nest a panel in a panel.
+- **Ink marks what is selected** (the tab, the segment). A selected row is white with a light purple ring and shadow, never a purple fill.
+- **List chips are tinted by kind**; the urgent chip stays solid red.
+- Purple still means Glance: the ✦, links, and the one primary button.
+
+**Sources (D52, extends §5).** A Heads-up row no longer underlines a value; selecting the row opens a detail that always shows the source sentence. Every Other mail row gives Glance's reason, and its detail shows the email with the deciding sentence highlighted.
+
+**Corrections (D53, replaces “Show in brief” and “Move to Set aside” in §8).**
+
+- Every email detail has **Move to**, with the three email tabs. The email joins the end of the destination list, marked “Moved by you,” and can always be moved back.
+- A toast confirms a move and offers Undo. Done and Snooze keep their own rows with Undo (D54).
+- One primary button per view still holds: Move to, Snooze and Done are outline buttons. Ask is a tab, not a button (D61).
+
+**What Glance knows (D55, D56).**
+
+- Anything Glance uses to rank or sort beyond the email itself must be visible and editable: watched topics in Watchlist, rules and learned patterns in Memory.
+- When a watched topic affected an email, the email says so and links to Watchlist.
+- Editing a learned pattern makes it the person's instruction. Instructions always win.
+
+**Words.** Tab and section names are in sentence case and one or two words. “N more like these” and “Nothing new” are plain text, not controls (D29).
+
+**Edge states (§9).** First brief, disconnected inbox, quiet hours and overload keep their current design for now; placing them under the tabs is a later round.

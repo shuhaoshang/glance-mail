@@ -26,6 +26,7 @@ Read these before any task that touches screens, data, components or copy. They 
 | `docs/design-system.md`            | Every component, its props and states, and which scene card to use when          |
 | `docs/data-model.md`               | The shape of the mock data in `src/data/`                                        |
 | `docs/decisions.md`                | Why things are the way they are (read it before proposing to change one)         |
+| `docs/handoff/v2/README.md`        | Visual 2.0 ground rules and issue order                                          |
 | `docs/screens/`, `docs/prototype/` | What the result should look like; prototypes open in a browser and are clickable |
 
 If the screens and the documents disagree, the documents win. Note the difference under **Open questions** in the PR.
@@ -128,6 +129,8 @@ The human reviewer is a designer. Write PR descriptions for a designer, not only
 ## Where to start
 
 Work through `docs/handoff/issues/` in the order given in `docs/handoff/README.md`: 01, 02, 17, 03, 04, 05, 18, 06, 11, 07, 08, 09, 10, 12, 13, 14, 15, 16. Each file is one GitHub issue with acceptance criteria. Do one issue per PR unless the issue says otherwise.
+
+Handoff 2 lives in `docs/handoff/v2/`. Work through its issues 19 to 32 in the order given in `docs/handoff/v2/README.md`.
 
 ## Definition of done
 

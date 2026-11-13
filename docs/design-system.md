@@ -522,3 +522,274 @@ Patterns/           Brief (desktop, phone), Edge states, Levels (L1/L2/L3)
 Every story has a theme toggle (light and dark) and uses the persona data from `src/data/` where it can.
 
 Storybook is also the system's documentation site (D41): it carries the Glance theme, opens on Introduction, has a docs page at the top of each category, and an autodocs page for every component. See issue 17.
+
+---
+
+## 9. Visual 2.0
+
+This chapter describes what changed in the Visual 2.0 round (decisions D47 to D61). **Where it disagrees with an earlier section, this chapter wins.** Anything it does not mention stays as specified above and as built, and only picks up the new token values (D60).
+
+Reference: `docs/prototype/v2/` (static pages, one per state) and `docs/screens/v2/` (the same states as images). They show structure and look. Take values from this chapter and from `tokens.css`, never from the exported CSS.
+
+### 9.1 Tokens
+
+`tokens.css` is provided by design (`docs/handoff/v2/provided/tokens.css`). Changed values and new tokens:
+
+| Token | Light | Dark | Use |
+| --- | --- | --- | --- |
+| `--color-bg` (changed) | `#E9E8F0` | `#0F0F14` | Page |
+| `--color-glow-strong`, `--color-glow-soft` (new) | `#D9D3FB`, `#E2DEF9` | brand at 28% and 16% | The two page glows |
+| `--background-page` (new) | two radial glows over `--color-bg` | same | The page background, as one value |
+| `--color-glass`, `--color-glass-edge`, `--color-glass-hover` (new) | white 64%, `#FFFFFF`, `#FFFFFF` | white 6%, 6%, 8% | Tab groups and phone header buttons, which sit on the page |
+| `--color-ink`, `--color-on-ink`, `--color-on-ink-muted`, `--color-on-ink-link` (new) | `#16151C`, `#FFFFFF`, white 72%, `#EEECFD` | `#F2F1F7`, `#16151C`, ink 64%, `#4A3FD0` | Selected tab, selected segment, toast |
+| `--color-brand-stroke` (new) | `#CBC6F8` | `#B0AAFF` at 40% | Selected row ring, ReasonPill ring |
+| `--color-row-selected` (new) | `#FFFFFF` | `#24222F` | Selected row fill |
+| `--color-row-hover` (changed) | `#F4F4F7` | `#22222B` | Row hover inside a panel |
+| `--color-text-muted` (changed) | `#62606D` | `#A09EAD` | 5:1 on the new page |
+| `--color-time` and its family (changed) | amber: `#CF6F06`, text `#8F4A07`, tint `#FDEBD3`, ink `#FBDDB5`, selected `#FEF4E6` | `#F59E0B`, `#F7C268`, `#3A2A0E`, `#5A4012`, `#2E220C` | Dates (D50) |
+| `--color-danger-text` (new) | `#C2255C` | `#FF8FB3` | Destructive text buttons in Settings |
+| `--shadow-panel` (new) | two soft layers | a 1 px inner edge and a deep shadow | Every panel on the page |
+| `--shadow-row-selected`, `--shadow-tab-selected` (new) | see `tokens.css` | see `tokens.css` | Selected row, selected tab |
+| `--radius-card` (changed) | 28 | 28 | Panels on the page (was 20) |
+| `--radius-panel` (changed) | 20 | 20 | Inside panels: rows, scene card, reasoning, menus (was 16) |
+| `--radius-sheet` (changed) | 28 | 28 | Phone sheet (was 24) |
+| `--font-size-40` / `--line-height-40` (new) | 40 / 48 | same | Desktop greeting |
+| `--gap-column` (changed) | 12 | 12 | Between the list panel and the detail panel (was 32) |
+| `--size-menu`, `--size-toast-min` (new) | 288, 416 | same | Menus; desktop toast |
+
+Rules that follow from the tokens:
+
+- **Three layers.** The page (`--background-page`), panels on the page (`--color-surface`, `--radius-card`, `--shadow-panel`, no border), and blocks inside panels (`--color-surface-muted`, `--radius-panel`, no shadow). Never put a panel inside a panel.
+- **Glass is only for things that sit directly on the page**: tab groups and the phone header buttons. `--color-glass` fill, a `--border-hairline` inset ring in `--color-glass-edge`, `backdrop-filter: blur(12px)`.
+- **Ink marks what is selected**; brand marks what Glance wrote and the one primary button.
+- `--color-icon-muted` is for icons on surfaces. On the page, icons use `--color-text-secondary`.
+- `--shadow-tab` and `--color-brand-tint` as a row fill are no longer used by any component.
+
+### 9.2 Page structure
+
+Desktop, top to bottom inside `--content-max` (1120), page padding 32 top, 80 sides, 96 bottom:
+
+1. **Header:** the Glance mark, and the avatar button on the right (opens the account menu, 9.12).
+2. **Greeting block**, 24 below the header: date (14/20, secondary), greeting (`--font-size-40`/`--line-height-40`, medium, `--letter-spacing-tight`), coverage line (16/24, secondary), then the coverage note when the persona has one. Unchanged content.
+3. **Tab bar** (9.3), 32 below.
+4. **The selected tab's content**, 12 below:
+   - Needs you, Heads-up, Other mail: a list panel (`--column-list`, 416) and a detail panel (the rest), `--gap-column` apart, both aligned to the top. Each panel is as tall as its content.
+   - Watchlist, Memory: one panel, full width.
+
+Phone (below `--breakpoint-desktop`), page padding 8 top, 16 sides:
+
+1. **Header:** the mark; on the right three 40 × 40 round buttons, 8 apart: Watchlist (eye icon), Memory (✦ icon), avatar. The first two are glass with `--color-text-secondary` icons; the one whose view is open is ink with an on-ink icon. Watchlist carries the news dot (9.3) at its top right.
+2. **Greeting block:** date, greeting (28/32, medium), coverage (14/20).
+3. **Tab bar:** the three email tabs only, each a third of the width.
+4. **List panel:** full width, radius `--radius-card`, 8 padding. A row opens the detail in the DetailSheet (9.8).
+5. **Watchlist and Memory** replace everything below the header with one panel, under a “‹ Brief” text button (brand text, 16/24 semibold, 44 tall) that returns to the tabs.
+
+The demo bar stays above the header as built (D19), without the theme control (D57).
+
+### 9.3 TabBar (new)
+
+Two glass groups on one row: left `Needs you`, `Heads-up`, `Other mail`; right `Watchlist`, `Memory` (`justify-content: space-between`).
+
+- **Group:** glass (9.1), `--radius-pill`, 4 padding, 4 between tabs.
+- **Tab:** 40 tall, padding 0 16, `--radius-pill`, 14/20 semibold, 8 between the name and the count. Count: medium weight, `tabular-nums`.
+  - Default: transparent, `--color-text-secondary`; count `--color-text-muted`.
+  - Hover and pressed: `--color-glass-hover` fill, `--color-text`.
+  - Selected: `--color-ink` fill, `--color-on-ink` text, count `--color-on-ink-muted`, `--shadow-tab-selected`. No hover change.
+- **News dot** (Watchlist only, when any item has news): 8 × 8, 8 from the tab's top and right edges, `--color-brand`; on the selected tab `--color-on-ink`. The tab's accessible name adds “, new”.
+- **Counts:** Needs you = open items (not done, snoozed or moved away); Heads-up and Other mail = emails in that tab (Other mail uses `otherMail.total`, adjusted by moves); Watchlist = items; Memory = instructions plus learned.
+- **Roles:** each group is a `tablist` labeled “Email” or “Glance”; tabs are `tab` with `aria-selected`; arrow keys move within a group, Tab leaves it. The content region is a `tabpanel`.
+- **Phone:** one group, full width, tabs share it equally; 12/16 semibold if the labels do not fit at 14.
+
+The tab remembers its selected row for the session. Opening a tab for the first time selects its first row on desktop and nothing on the phone.
+
+### 9.4 List panel and rows
+
+**List panel:** `--color-surface`, `--radius-card`, `--shadow-panel`, 8 padding. Rows sit 4 apart. Desktop rows have no dividers; on the phone the built divider rule stays.
+
+**Panel head (Needs you only):** 8 12 4 padding. Left: “By deadline, then amount” (12/16, muted). Right: “1 of 4 done” (12/16, muted) and the ProgressBar. Replaces the SectionCard header.
+
+**BriefRow (changed):**
+
+- Radius `--radius-panel`, padding 16, a 16 chevron on the right (`--color-icon-muted`; `--color-brand` when selected), on desktop too.
+- Selected: `--color-row-selected` fill, a `--border-hairline` inset ring in `--color-brand-stroke`, `--shadow-row-selected`; the rank turns `--color-brand-text`. Selected rows do not change on hover or press.
+- Everything else as built, including AccountLabel, Badge and the two-line request.
+
+**FactChip (changed, D51):** padding 4 8, 12/16 semibold, `--radius-pill`. Not urgent: fill and text by kind (`--color-money-tint` + `--color-money-text`, `--color-time-tint` + `--color-time-text`, `--color-people-tint` + `--color-people-text`), no dot. Urgent: as built (solid `--color-urgent`, white text, white dot, padding 4 12 4 8).
+
+**HeadsUpRow (replaces KnowRow):** a button row, same radius, padding, chevron and states as BriefRow.
+
+- The 32 icon tile as built (kind tint, kind-text icon; neutral tile for moved items).
+- “**Title**” then the text, 14/20, title semibold in `--color-text`, text in `--color-text-secondary`. No underlined value in the row: the source is in the detail.
+- Optional AccountLabel after the text.
+
+**OtherMailRow (new):** a button row, same states.
+
+- Line 1: sender (14/20 semibold) and, right-aligned, the time (12/16, muted).
+- Line 2: subject (14/20, secondary), one line, ellipsis.
+- Line 3: ✦ (brand) and the reason (12/16, muted), one line, ellipsis.
+- After the last row: “N more like these” (12/16, muted, 12 16 padding), plain text, where N = total minus the rows listed. Hidden when N is 0.
+
+**Moved rows.** An email moved into a tab uses that tab's row and this content:
+
+| Email came from | Title | Line |
+| --- | --- | --- |
+| Needs you | `name` | the request text (with its quote marks if it is a quote) |
+| Heads-up | `title` | `text` without its leading “: ” |
+| Other mail | `sender` | `subject` |
+
+- In Needs you: BriefRow with the title as name and the line as request, no chips, the next rank number.
+- In Heads-up: “**Title**: line”, a neutral tile with the move icon.
+- In Other mail: title as sender, line as subject, no time.
+- In all three, the last line is “Moved by you” (12/16 semibold, `--color-brand-text`) in place of chips or the reason.
+
+**DoneRow** is unchanged and sits under the Needs you rows (D54). Its `moved` kind is no longer used.
+
+### 9.5 Detail panel
+
+`--color-surface`, `--radius-card`, `--shadow-panel`, padding 24 28 28.
+
+- **Top row:** position on the left (“Needs you · 1 of 3”, “Heads-up · 2 of 3”, “Other mail · 1 of 31”; 14/20 medium, muted) and the SegmentedControl on the right.
+- **SegmentedControl (changed):** track and sizes as built. Selected segment: `--color-ink` fill, `--color-on-ink` text, no shadow. A new `size="small"`: track padding 2, segments 24 tall, padding 4 8, 12/16 semibold; used for the theme control in the account menu on desktop.
+- **Needs you detail:** as built (title, Person, AccountLabel, request, GlanceMark, hint line, SceneCard, SourcePanel, ReasonPill and ReasonPanel), with the action bar in 9.6.
+- **Heads-up detail:** tabs `Details` and `Original email`.
+  - Details: title (20/28 semibold); Person line built from the source (“Lena Ortiz · Wed, Nov 4, 5:30 PM”) with AccountLabel when needed; GlanceMark with its label; `summary` as the headline (20/28 semibold); the SourcePanel for `fact.source`, always open, no close button; when the item has a `judgment`, a ReasonPill “Why it’s here: {label}” that opens the read and its source; when it has `watch`, “Part of **Watchlist: {name}**” (14/20, the name a brand text button that opens the Watchlist tab).
+  - Original email: EmailView with `email` and the date from `fact.source.when`.
+- **Other mail detail:** no tabs.
+  - Subject as the title (20/28 semibold); Person line “{sender} · {when}”.
+  - The reason line, 24 below: ✦, “Glance put this in Other mail: **{reason}**” (14/20; the reason semibold in `--color-text`), then a tag when `basis` is set: “Your instruction” or “Learned” (14/20 semibold, `--color-brand-text` on `--color-brand-tint`, padding 0 8, radius 8).
+  - The email body in a `--color-surface-muted` block, radius `--radius-panel`, padding 20 24, paragraphs in `Reading` style 16 apart, highlights as in EmailView (`judg` uses `--color-judgment-ink`).
+  - The legend, 12 below, 12/16 muted: a `judgment`-ink sample “Highlighted”, “what Glance used to sort it.”, then a money-ink sample “Amounts” “and” a time-ink sample “dates” “are marked too.” Show only the kinds that appear in the email; with only `judg`, the sentence ends after “sort it.”
+- **Moved emails** keep the detail of where they came from. Under the Person line they show “You moved this here. Glance will sort emails like it the same way.” (14/20, `--color-brand-text` on `--color-brand-tint`, padding 8 12, radius 12).
+- **Empty tab:** the list panel shows “Nothing here.” (16/24 semibold) and “Emails you move to {tab} will show up here.” (14/20, muted), centered, 40 padding; there is no detail panel. Needs you with everything done keeps the built AllDone.
+
+**ReasonPill (changed):** ring is `--border-hairline` in `--color-brand-stroke`. Label: “Why it’s {ordinal}” plus “: {first judgment label}” when the item has a judgment (“Why it’s first: Renewal risk”, “Why it’s second”). Ordinals are words up to tenth; after that “Why it’s ranked 11th”. A chevron at the end points down, and up while open. Moved items have no pill.
+
+**ReasonPanel (changed):** title and judgments as built. The “Not for you?” block and its button are removed (D53). When the item has `watch`, a last line under a hairline: “Based on **Watchlist: {name}**”, the name a brand text button that opens the Watchlist tab.
+
+### 9.6 Action bar
+
+One primary, then outline buttons (D12, D53). Ask is no longer in the bar; it is the third tab (D61).
+
+| Detail | Left | Right |
+| --- | --- | --- |
+| Needs you | Open in {app} (primary, external) | Snooze · Move to · Done (outline, `compact` on desktop) |
+| Needs you, checklist complete | Open in {app} (outline) | Move to (outline) · Mark done (primary) |
+| Heads-up, Other mail, and anything moved there | Open in {app} (primary) | Move to (outline) |
+
+- Icons: Snooze clock, Move to the move icon and a trailing chevron-down, Done check.
+- Phone: the primary is full width on its own row; the outline buttons share the second row equally (`touch` size, 44).
+- Outline buttons use the built states (`--color-sunken-hover`, `--color-sunken-pressed`); the button whose menu is open keeps the pressed fill.
+
+### 9.7 MoveMenu and Toast (new)
+
+**MoveMenu** opens above the Move to button, right-aligned, pushing nothing; on the phone it spans the action bar.
+
+- `--size-menu` wide, `--color-surface`, `--radius-panel`, `--border-hairline` inset ring in `--color-border`, `--shadow-popover`, 8 padding.
+- Head “Move to” (12/16 semibold, muted, padding 8 12 4).
+- Three items, each 52 tall, radius 12, padding 8 12: a 16 check slot, the tab name (14/20 semibold) and a description (12/16, muted): “You need to act”, “No action needed”, “Not for you”.
+- The tab the email is in shows the check in `--color-brand`, has `aria-disabled="true"` and no hover. The others hover with `--color-row-hover` and press with `--color-row-pressed`.
+- Foot, above a hairline: a bulb icon and “Glance learns from every move.” (12/16, muted).
+- `role="menu"` with `menuitem`s; focus moves to the first enabled item; Escape and an outside click close it and return focus to the button.
+
+**Choosing a tab:** the email leaves its list with the collapse motion, joins the end of the destination list as a moved row, the counts update, the next row in the source list becomes selected (on the phone the sheet closes), and the toast appears. Moving an email back to where it came from removes “Moved by you”.
+
+**Toast:**
+
+- Centered at the bottom of the viewport, 24 from the edge (16 on the phone, above the safe area). `--color-ink` fill, `--color-on-ink` text, `--radius-panel`, `--shadow-popover`, padding 12 16, 12 between parts. Desktop width between `--size-toast-min` and `--content-narrow`; phone full width minus 16 margins.
+- Parts: a check icon; the message (14/20: the first sentence semibold, the rest regular at 72% via `--color-on-ink-muted`); “Undo” (text button, `--color-on-ink-link`, semibold); a close IconButton.
+- One toast at a time; a new one replaces the old. It stays 6 seconds, pauses while hovered or focused, and enters with the enter motion.
+- `role="status"`. Undo restores the exact previous state, including selection.
+
+Messages:
+
+| Action | First sentence | Rest |
+| --- | --- | --- |
+| Move to | “Moved to {tab}.” | “Glance will sort emails like this into {tab}.” |
+| Add to Watchlist | “Added to Watchlist.” | “Emails about it will go to the top.” |
+| Rename a Watchlist item | “Saved.” | — |
+| Remove from Watchlist | “Removed from Watchlist.” | — |
+| Add an instruction | “Saved as your instruction.” | “Glance follows it from the next email.” |
+| Edit an instruction | “Saved.” | — |
+| Edit a learned pattern | “Saved as your instruction.” | “Your instructions always win.” |
+| Remove from Memory | “Removed from Memory.” | — |
+
+### 9.8 DetailSheet on the phone
+
+The sheet, its gestures, focus trap and closing rules stay as built (D44). Inside it:
+
+- First row: the position text and the close button. Below it the tabs become **underline tabs**: full-width row with a hairline along the bottom; each tab 16/24 medium, `--color-text-secondary`, 44 tall, 24 apart; the selected one is semibold `--color-text` with a 2 px `--color-brand` underline. Same roles and keys as SegmentedControl.
+- Content as in 9.5 with 20 side padding; the scene card fields are two per row.
+- The action bar stays pinned to the bottom of the sheet as built, with the layout in 9.6.
+- Other mail and Heads-up emails open in the same sheet.
+
+### 9.9 Watchlist (new)
+
+One panel, padding 32 40 40 (phone: 24 20).
+
+- **Head:** “Watchlist” (24/32 semibold); under it “Things you’re waiting on. Any email about them goes to the top of your brief.” (14/20, secondary, max 560). On the right an outline Button “+ Add” (`compact`).
+- **Add row** (shown after Add, 16 below the head): a TextInput and the buttons Add (primary, `compact`, disabled while the input is empty) and Cancel (outline, `compact`); below it “✦ Glance looks for emails about it and puts them at the top.” (12/16, muted). Enter adds, Escape cancels. The new item goes first with the status “Nothing yet” and no news. Focus returns to the Add button.
+- **WatchRow** (rows separated by hairlines, 12 16 padding, 64 min height): an eye icon (16, `--color-brand`); the name (16/24 semibold); the status (14/20, muted); then “N new” or “Nothing new”; then two IconButtons, Rename (pencil) and Remove (trash), `compact`, icon `--color-text-muted`.
+  - “N new”: a pill button, `--color-brand-tint` fill, `--color-brand-text`, 14/20 semibold, padding 4 8 4 12, a trailing chevron. It opens the tab that holds `item` and selects it (on the phone it opens the sheet).
+  - “Nothing new”: plain text, 14/20, muted.
+  - Desktop: one line, the name and status on the left sharing the free space, then the news, then the buttons. Phone: two lines; name and buttons on the first, status and news on the second. Long names wrap.
+- **Rename** turns the row into a TextInput with Save (primary, `compact`) and Cancel. **Remove** removes the row and shows the toast.
+- **Empty:** “Nothing on your Watchlist.” and “Add something you’re waiting on, like a contract or a reply.”
+
+### 9.10 Memory (new)
+
+One panel, same padding. Head: “Memory” (24/32 semibold) and “Glance sorts your email with what you tell it and what it learns. Change anything here.”
+
+Two sections, 32 apart:
+
+- **Your instructions {count}** (16/24 semibold; the count muted, regular), hint “Rules in your own words. They always win.” (14/20, muted), and “+ Add” on the right, which opens the same add row as Watchlist with the note “✦ Glance follows it from the next email.”
+- **Learned {count}**, hint “Patterns from what you read and move. Edit one and it becomes your instruction.”
+
+**MemoryRow** (hairline above, padding 16 0): a 16 mark (an opening quotation mark in `--color-brand` for instructions; a bulb icon in `--color-brand` for learned), the text (16/24, `--color-text`), under it the meta (14/20, muted: “Added Oct 28”, “From 4 opens · Oct 20”), and on the right Edit and Remove IconButtons. On the phone the two buttons sit on their own line under the meta, aligned right.
+
+- Edit turns the text into a TextInput with Save and Cancel. Saving an instruction keeps its place. Saving a learned pattern moves it to the end of Your instructions with the meta “Was learned · edited just now”.
+- New instructions get the meta “Added today”.
+- Remove removes the row and shows the toast.
+
+Watchlist and Memory changes last for the session and reset with the persona, like every other demo state.
+
+### 9.11 TextInput (new)
+
+48 tall, padding 0 16, radius 12, `--color-surface`, 16/24 `--color-text`, placeholder `--color-text-muted`. Ring: `--border-hairline` inset in `--color-border-strong`; focused: `--border-selected` in `--color-brand` and no extra outline. It always has a visible or `aria-label` label. Placeholders: “What are you waiting on?” (Watchlist), “Tell Glance a rule, in your own words” (Memory).
+
+### 9.12 Account menu and theme (new)
+
+The avatar is a 40 × 40 round button on desktop and phone (`--color-brand-tint`, `--color-brand-text` initial, 14/20 semibold). It opens a menu under it, right-aligned, 8 below:
+
+- `--size-menu` wide, `--color-surface`, `--radius-panel`, hairline ring, `--shadow-popover`, 8 padding.
+- Identity: the avatar (32), the name (14/20 semibold) and the email (12/16, muted). A hairline.
+- “Inboxes” with “{n} connected” on the right (12/16, muted) and “Settings”: 44-tall items with a 16 icon, 14/20 medium, radius 12, row-hover states. Both open Settings (Inboxes scrolls to that section).
+- “Appearance” with the theme control on the right: SegmentedControl `small` with System, Light, Dark. On the phone the label sits above a full-width regular SegmentedControl.
+- A hairline, then “Log out”, which opens the signed-out page.
+- Menu roles and closing as MoveMenu.
+
+The theme choice is stored as today (`themePreference`), applies at once, and is the same control in Settings.
+
+### 9.13 Settings and the signed-out page (new)
+
+**Settings** replaces the brief below the header. A “‹ Back to brief” text button, the title “Settings” (32/40 semibold), then a 200-wide section list on the left (Inboxes, Brief, Notifications, Quiet hours, Appearance, Account; anchor links, the current one `--color-text` semibold) and the sections on the right, each a panel (`--radius-card`, `--shadow-panel`, padding 24 28) with a 20/28 semibold title, 16 apart. On the phone there is no section list.
+
+| Section | Content |
+| --- | --- |
+| Inboxes | One row per `accounts` entry: the app name (16/24 semibold), “{email} · connected Oct 28” (14/20, muted), an outline “Disconnect”. Then “Connect another inbox” with “Gmail, Outlook or Yahoo Mail” and an outline “Connect”. Then the note “Glance reads your email to brief you. It never sends, deletes or changes anything in your inbox.” |
+| Brief | “Morning brief” with “Each brief covers the email since your last one.” and a time select showing “7:30 AM”. |
+| Notifications | Three Switch rows: “Brief is ready” (on), “Something on your Watchlist changes” (on), “A Needs you item is due today” (off). |
+| Quiet hours | A Switch row “Hold work email in the evening” with “Nothing from {work app} reaches you between these times.”, then From “7:00 PM” and Until “7:00 AM” selects. On for Daniel, off for the others. |
+| Appearance | “Theme” with the regular SegmentedControl: System, Light, Dark. |
+| Account | Avatar, name, email and an outline “Log out”. Below a hairline: “Delete Glance data”, “Removes your Memory: what you told Glance and what it learned. Your inbox isn’t touched.” and a text button “Delete” in `--color-danger-text`. |
+
+Demo behavior, so that nothing is a dead control (D29): switches and selects change and keep their value for the session. Disconnect, Connect and Delete each open a small confirmation panel in place (the SnoozeMenu surface) reading “This is a demo. Nothing was changed.” with one outline “OK”. Log out opens the signed-out page.
+
+**Signed out:** the mark, then a centered panel (max 416): “You’re signed out” (24/32 semibold), “Sign in to see your brief.” (16/24, secondary), two outline Buttons, full width, 48 tall: “Continue with Microsoft” and “Continue with Google”, and the same privacy note as Inboxes (12/16, muted). Either button returns to the brief.
+
+### 9.14 Components retired
+
+`CollapsedGroup`, `SetAsideList` and `SectionCard` are no longer used by the app. They stay in the library only while an edge-state story still uses them; edge states under tabs are a later round (see `docs/handoff/v2/README.md`).
+
+### 9.15 Storybook
+
+New and changed components get stories for every state named here, in light and dark, as before. Add a `Patterns/Brief with tabs` story per persona and one for the phone.

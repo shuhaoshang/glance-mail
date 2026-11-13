@@ -2,6 +2,8 @@
 
 The mock data lives in `src/data/maya.json`, `daniel.json` and `sarah.json`. All three files come from the same source as the design prototypes, so the screens and the data always match.
 
+> **Version 2.** Visual 2.0 adds Other mail, Watchlist and Memory to the data. Section “Version 2” at the end lists the changes; where it disagrees with the text above, it wins.
+
 The data is designer-owned content:
 - Change it through a pull request.
 - Don't rewrite the copy, especially quotes. A quote is the sender's exact words.
@@ -140,3 +142,74 @@ interface Demo {
   - `coverage.emails` = the items, `goodToKnow`, `setAside` counts and done items for that morning.
   - When the user adds `newMail`, `coverage.emails` grows by `newMail.emails`.
 - **Dates are US format** (“Thu, Nov 5”, “3:30 PM”). The demo's “today” is Thursday, November 5, 2026.
+
+---
+
+## Version 2
+
+The persona files move to `"version": 2`. The files and `types.ts` are provided by design in `docs/handoff/v2/provided/`.
+
+```ts
+interface Persona {
+  version: 2;
+  email: string;            // shown in the account menu, e.g. "maya@example.com"
+  goodToKnow: KnowItem[];   // shown as the Heads-up tab; the key keeps its name
+  otherMail: OtherMail;     // the Other mail tab
+  watchlist: WatchItem[];
+  memory: { instructions: MemoryNote[]; learned: MemoryNote[] };
+  setAside: SetAsideGroup[]; // deprecated; removed with the old view in the last issue
+  // everything else as in version 1
+}
+
+interface Item {
+  watch?: string;           // WatchItem.id: “Based on Watchlist: …” in Glance's reasoning
+}
+
+interface KnowItem {
+  id: string;               // "h1"
+  summary: string;          // the detail headline, Glance's words
+  email: { subject: string; from: string; paras: Segment[][] }; // date: fact.source.when
+  watch?: string;           // WatchItem.id: “Part of Watchlist: …”
+}
+
+interface OtherMail {
+  total: number;            // every email sorted here; `rows` lists only some
+  rows: OtherMailRow[];
+}
+
+interface OtherMailRow {
+  id: string;
+  sender: string;
+  subject: string;
+  when: string;
+  reason: string;           // why it is here, Glance's words
+  basis: 'instruction' | 'learned' | null; // tag: "Your instruction" / "Learned"
+  isNew?: boolean;          // arrives with newMail
+  paras: Segment[][];       // the body; 'judg' segments mark what Glance used
+}
+
+interface WatchItem {
+  id: string;
+  name: string;
+  status: string;
+  news: number;             // new emails about it in this brief
+  item?: string;            // Item.id or KnowItem.id that “N new” opens
+}
+
+interface MemoryNote {
+  id: string;
+  text: string;
+  meta: string;             // "Added Oct 28" · "From 4 opens · Oct 20"
+}
+```
+
+`demo.levels.l2.setAside` is renamed `otherMail`.
+
+Rules, enforced by `npm run check:data`:
+
+- `coverage.emails` = items not marked `isNew` + `goodToKnow` + `otherMail.total` + `doneBefore`.
+- `otherMail.total` is at least the number of rows not marked `isNew`.
+- Every `watch` names a `watchlist` id. Every `WatchItem.item` names an `items` or `goodToKnow` id, and is present exactly when `news` is greater than 0.
+- A KnowItem's source sentence (`pre` + `hl` + `post`) appears in its `email`.
+- Every OtherMailRow has at least one `judg` segment.
+- Ids are unique within a persona across `items`, `goodToKnow` and `otherMail.rows`.
