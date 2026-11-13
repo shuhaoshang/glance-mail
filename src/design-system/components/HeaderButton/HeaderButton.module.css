@@ -1,0 +1,42 @@
+.button {
+  --control-fill: var(--color-glass);
+  --control-ink: var(--color-brand);
+  --hover-fill: var(--color-glass-hover);
+  --pressed-fill: var(--color-glass-hover);
+  --hover-ink: var(--color-brand);
+  --pressed-ink: var(--color-brand);
+  display: inline-grid;
+  place-items: center;
+  inline-size: var(--size-touch-compact);
+  block-size: var(--size-touch-compact);
+  flex: none;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-pill);
+  box-shadow: inset 0 0 0 var(--border-hairline) var(--color-glass-edge);
+  backdrop-filter: blur(var(--space-12));
+}
+.button[aria-pressed='true'] {
+  --control-fill: var(--color-ink);
+  --control-ink: var(--color-on-ink);
+  --hover-fill: var(--color-ink);
+  --pressed-fill: var(--color-ink);
+  --hover-ink: var(--color-on-ink);
+  --pressed-ink: var(--color-on-ink);
+  box-shadow:
+    inset 0 0 0 var(--border-hairline) var(--color-glass-edge),
+    var(--shadow-tab-selected);
+}
+.news {
+  position: absolute;
+  inset-block-start: var(--space-4);
+  inset-inline-end: var(--space-4);
+  inline-size: var(--size-dot);
+  block-size: var(--size-dot);
+  border-radius: var(--radius-pill);
+  background: var(--color-brand);
+  pointer-events: none;
+}
+.button[aria-pressed='true'] .news {
+  background: var(--color-on-ink);
+}

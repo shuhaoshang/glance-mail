@@ -44,3 +44,5 @@ See [the review evidence](../docs/reviews/16-persona-e2e/README.md) for the view
 Task 21 changes the reasoning trigger to “Why it’s first” and keeps Ask in its view tab. Maya’s reasoning step verifies that the old correction footer is absent. Removing that entry point is intentional until task 27 introduces Move to; the remaining persona steps and their counts still run in every theme and motion mode.
 
 The shared-component spec also checks selection during real hover and press, compact-segment keyboard and touch behavior, the eleven-item reasoning example, the optional Watchlist callback, and desktop/phone action-bar geometry. Storybook interaction functions must finish without errors before assertions continue.
+
+Task 22 adds TabBar and HeaderButton checks for the two named keyboard groups, linked panels, news states, pointer states, and 44-pixel hit areas. The 390-pixel layout check verifies equal tab widths, single-line names/counts, and keyboard activation of the phone header buttons. These are isolated Storybook examples; the application remains on its current layout.

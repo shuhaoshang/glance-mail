@@ -562,7 +562,7 @@ Rules that follow from the tokens:
 - **Three layers.** The page (`--background-page`), panels on the page (`--color-surface`, `--radius-card`, `--shadow-panel`, no border), and blocks inside panels (`--color-surface-muted`, `--radius-panel`, no shadow). Never put a panel inside a panel.
 - **Glass is only for things that sit directly on the page**: tab groups and the phone header buttons. `--color-glass` fill, a `--border-hairline` inset ring in `--color-glass-edge`, `backdrop-filter: blur(12px)`.
 - **Ink marks what is selected**; brand marks what Glance wrote and the one primary button.
-- `--color-icon-muted` is for icons on surfaces. On the page, icons use `--color-text-secondary`.
+- `--color-icon-muted` is for icons on surfaces. On the page, icons use `--color-text-secondary`, except the header shortcuts specified in 9.2.
 - `--shadow-tab` and `--color-brand-tint` as a row fill are no longer used by any component.
 
 ### 9.2 Page structure
@@ -578,7 +578,7 @@ Desktop, top to bottom inside `--content-max` (1120), page padding 32 top, 80 si
 
 Phone (below `--breakpoint-desktop`), page padding 8 top, 16 sides:
 
-1. **Header:** the mark; on the right three 40 × 40 round buttons, 8 apart: Watchlist (eye icon), Memory (✦ icon), avatar. The first two are glass with `--color-text-secondary` icons; the one whose view is open is ink with an on-ink icon. Watchlist carries the news dot (9.3) at its top right.
+1. **Header:** the mark; on the right three 40 × 40 round buttons, 8 apart: Watchlist (eye icon), Memory (✦ icon), avatar. The first two are glass with `--size-icon-large` (20) icons in `--color-brand`. Unselected hover and press use `--color-glass-hover` and keep the icon `--color-brand`. The one whose view is open uses `--color-ink`, an icon in `--color-on-ink`, and `--shadow-tab-selected`; its appearance does not change on hover or press. Watchlist carries the news dot (9.3), 4 from the top and 4 from the inline end.
 2. **Greeting block:** date, greeting (28/32, medium), coverage (14/20).
 3. **Tab bar:** the three email tabs only, each a third of the width.
 4. **List panel:** full width, radius `--radius-card`, 8 padding. A row opens the detail in the DetailSheet (9.8).
@@ -595,7 +595,7 @@ Two glass groups on one row: left `Needs you`, `Heads-up`, `Other mail`; right `
   - Default: transparent, `--color-text-secondary`; count `--color-text-muted`.
   - Hover and pressed: `--color-glass-hover` fill, `--color-text`.
   - Selected: `--color-ink` fill, `--color-on-ink` text, count `--color-on-ink-muted`, `--shadow-tab-selected`. No hover change.
-- **News dot** (Watchlist only, when any item has news): 8 × 8, 8 from the tab's top and right edges, `--color-brand`; on the selected tab `--color-on-ink`. The tab's accessible name adds “, new”.
+- **News dot** (Watchlist only, when any item has news): 8 × 8, 4 from the top and 4 from the inline end, `--color-brand`; on the selected tab `--color-on-ink`. The tab's accessible name adds “, new”.
 - **Counts:** Needs you = open items (not done, snoozed or moved away); Heads-up and Other mail = emails in that tab (Other mail uses `otherMail.total`, adjusted by moves); Watchlist = items; Memory = instructions plus learned.
 - **Roles:** each group is a `tablist` labeled “Email” or “Glance”; tabs are `tab` with `aria-selected`; arrow keys move within a group, Tab leaves it. The content region is a `tabpanel`.
 - **Phone:** one group, full width, tabs share it equally; 12/16 semibold if the labels do not fit at 14.
