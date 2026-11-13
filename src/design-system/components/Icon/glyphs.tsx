@@ -12,6 +12,23 @@ export const glyphs = {
       <circle cx="12" cy="12" r="3" />
     </>
   ),
+  move: <path d="M4 8h14m-4-4 4 4-4 4M20 16H6m4-4-4 4 4 4" />,
+  bulb: (
+    <>
+      <path d="M9 18h6M10 21h4M8 14a6 6 0 1 1 8 0c-1 1-1 2-1 3H9c0-1 0-2-1-3Z" />
+    </>
+  ),
+  pencil: <path d="m15 4 5 5M4 20l5-1L21 7l-4-4L5 15Z" />,
+  trash: (
+    <>
+      <path d="M4 6h16M9 6V3h6v3M6 6l1 15h10l1-15M10 10v7M14 10v7" />
+    </>
+  ),
+  plus: <path d="M12 5v14M5 12h14" />,
+  'chevron-down': <path d="m6 9 6 6 6-6" />,
+  quote: (
+    <path d="M4 12c0-4 1-6 5-7M4 12h6v7H4zM14 12c0-4 1-6 5-7M14 12h6v7h-6z" />
+  ),
   clock: (
     <>
       <circle cx="12" cy="12" r="8.5" />
