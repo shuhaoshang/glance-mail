@@ -16,7 +16,7 @@ export function FactChip({ kind, label, urgent = false }: FactChipProps) {
         .join(' ')}
     >
       <span className={styles.srOnly}>{kind + ': '}</span>
-      <span className={styles.dot} aria-hidden="true" />
+      {urgent && <span className={styles.dot} aria-hidden="true" />}
       {label}
       {urgent && <span className={styles.srOnly}>, urgent</span>}
     </span>

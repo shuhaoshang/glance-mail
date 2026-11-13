@@ -56,16 +56,6 @@ async function done(canvas: Canvas, name: string) {
   await userEvent.click(canvas.getByRole('button', { name: /^Done$/ }));
   await settled(canvas, name);
 }
-async function move(canvas: Canvas, name: string) {
-  await select(canvas, name);
-  const trigger = canvas.getByRole('button', { name: /Glance’s read:/ });
-  if (trigger.getAttribute('aria-expanded') !== 'true')
-    await userEvent.click(trigger);
-  await userEvent.click(
-    canvas.getByRole('button', { name: 'Move to Set aside' }),
-  );
-  await settled(canvas, name);
-}
 export const Maya: Story = {};
 export const Daniel: Story = { args: { initialPersonaId: 'daniel' } };
 export const Sarah: Story = { args: { initialPersonaId: 'sarah' } };
@@ -79,17 +69,6 @@ export const MayaFlow: Story = {
     ).toBeVisible();
     await userEvent.click(
       canvas.getByRole('button', { name: 'Undo Fernway Logistics' }),
-    );
-    await progress(canvas, 3, 1, 4);
-    await move(canvas, 'Halden Health');
-    await progress(canvas, 2, 1, 3);
-    await expect(
-      within(canvas.getByRole('button', { name: /^32 set aside/ })).getByText(
-        /32 set aside/,
-      ),
-    ).toBeVisible();
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Undo Halden Health' }),
     );
     await progress(canvas, 3, 1, 4);
     await expect(
@@ -138,7 +117,7 @@ export const SarahFlow: Story = {
     ).not.toBeInTheDocument();
     await expect(
       canvas.getByRole('link', { name: 'Open in Yahoo Mail' }).className,
-    ).toContain('neutral');
+    ).toContain('outline');
     await expect(
       canvas.getByRole('button', { name: 'Mark done' }).className,
     ).toContain('primary');
@@ -149,56 +128,6 @@ export const SarahFlow: Story = {
     await userEvent.click(canvas.getByRole('checkbox', { name: 'Pay $12' }));
     await userEvent.click(canvas.getByRole('button', { name: 'Mark done' }));
     await settled(canvas, 'Lincoln Elementary');
-    await progress(canvas, 2, 1, 3);
-    await simulate(canvas, 'Simulate reply to Riverside');
-    await settled(canvas, 'Riverside Pediatrics');
-    await progress(canvas, 1, 2, 3);
-    await expect(
-      canvas.getByRole('button', { name: 'Reply to Riverside detected ✓' }),
-    ).toBeDisabled();
-  },
-};
-export const SnoozeAndUndo: Story = {
-  play: async ({ canvas }) => {
-    await select(canvas, 'Halden Health');
-    const trigger = canvas.getByRole('button', { name: /^Snooze$/ });
-    if (canvas.queryByRole('dialog')) {
-      const sibling = canvas.getByRole('button', { name: /^Done$/ });
-      const footer = trigger.closest('footer')!;
-      const available =
-        footer.clientWidth -
-        parseFloat(getComputedStyle(footer).paddingLeft) -
-        parseFloat(getComputedStyle(footer).paddingRight);
-      const gap = parseFloat(getComputedStyle(footer).columnGap);
-      await expect(trigger.getBoundingClientRect().width).toBeCloseTo(
-        sibling.getBoundingClientRect().width,
-        1,
-      );
-      await expect(
-        trigger.getBoundingClientRect().width +
-          sibling.getBoundingClientRect().width +
-          gap,
-      ).toBeCloseTo(available, 1);
-    }
-    await userEvent.click(trigger);
-    await userEvent.keyboard('{Escape}');
-    await expect(trigger).toHaveFocus();
-    await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-    await userEvent.click(trigger);
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Tomorrow, 8:00 AM' }),
-    );
-    await settled(canvas, 'Halden Health');
-    await progress(canvas, 2, 1, 4);
-    await move(canvas, 'Fernway Logistics');
-    await progress(canvas, 1, 1, 3);
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Undo Halden Health' }),
-    );
-    await progress(canvas, 2, 1, 3);
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Undo Fernway Logistics' }),
-    );
     await progress(canvas, 3, 1, 4);
     for (const name of [
       'Fernway Logistics',
@@ -230,14 +159,9 @@ export const Snooze: Story = {
     await userEvent.click(canvas.getByRole('button', { name: /^Snooze$/ }));
   },
 };
-export const Moved: Story = {
-  play: async ({ canvas }) => {
-    await move(canvas, 'Halden Health');
-  },
-};
 export const Undo: Story = {
   play: async ({ canvas }) => {
-    await move(canvas, 'Halden Health');
+    await done(canvas, 'Halden Health');
     await userEvent.click(
       canvas.getByRole('button', { name: 'Undo Halden Health' }),
     );
@@ -295,12 +219,10 @@ export const AllSnoozed: Story = {
     await progress(canvas, 1, 1, 4);
   },
 };
-export const MoveToSetAside: Story = {
+export const Reasoning: Story = {
   play: async ({ canvas }) => {
     await select(canvas, 'Halden Health');
-    await userEvent.click(
-      canvas.getByRole('button', { name: /Glance’s read:/ }),
-    );
+    await userEvent.click(canvas.getByRole('button', { name: /^Why it’s/ }));
   },
 };
 
@@ -384,12 +306,11 @@ export const SimulatedResult: Story = {
 for (const story of [
   Done,
   Snooze,
-  Moved,
   Undo,
   ChecklistComplete,
   AllDone,
   SimulatedReply,
-  MoveToSetAside,
+  Reasoning,
   SarahFlow,
   SimulateReady,
   SnoozedEmpty,

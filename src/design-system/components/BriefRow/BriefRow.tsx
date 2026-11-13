@@ -67,11 +67,22 @@ export function BriefRow({
           data-brief-item={item.id}
           aria-pressed={selected}
           onClick={(event) => onSelect(item.id, event.currentTarget)}
-          className={[control.control, row.button, selected && row.selected]
+          className={[
+            control.control,
+            row.button,
+            styles.button,
+            selected && styles.selected,
+          ]
             .filter(Boolean)
             .join(' ')}
         >
-          <span className={row.rank}>{rank}</span>
+          <span
+            className={[row.rank, selected && styles.selectedRank]
+              .filter(Boolean)
+              .join(' ')}
+          >
+            {rank}
+          </span>
           <span className={row.content}>
             <span className={row.heading}>
               <span className={row.name}>{item.name}</span>
@@ -92,7 +103,12 @@ export function BriefRow({
               ))}
             </span>
           </span>
-          {!desktop && <Icon name="chevron" className={row.chevron} />}
+          <Icon
+            name="chevron"
+            className={[row.chevron, selected && styles.selectedChevron]
+              .filter(Boolean)
+              .join(' ')}
+          />
         </button>
       </div>
     </div>

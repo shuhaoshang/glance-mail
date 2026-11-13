@@ -199,52 +199,6 @@ export const MayaFlow: Story = {
     ).toEqual(['fernway', 'brightline', 'halden', 'okto']);
   },
 };
-export const Correction: Story = {
-  play: async (context) => {
-    const { canvas } = context;
-    await userEvent.click(
-      within(canvas.getByRole('list', { name: 'Needs you' })).getByRole(
-        'button',
-        { name: /Halden Health/ },
-      ),
-    );
-    const read = canvas.getByRole('button', { name: /Glance’s read:/ });
-    if (read.getAttribute('aria-expanded') !== 'true')
-      await userEvent.click(read);
-    await userEvent.click(
-      canvas.getByRole('button', { name: 'Move to Set aside' }),
-    );
-    await waitFor(async () => {
-      await expect(
-        canvas.getByRole('button', { name: 'Undo Halden Health' }),
-      ).toBeVisible();
-      await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
-    });
-    await counts(canvas, 2, 3, 32, 1, 3);
-    const panel = await open(canvas);
-    const moved = panel.getByRole('region', { name: 'Moved by you' });
-    await expect(moved.querySelectorAll('li')).toHaveLength(1);
-    await expect(moved.textContent).not.toContain('more');
-    await userEvent.click(
-      panel.getByRole('button', { name: 'Show in brief: SaaS Sales Weekly' }),
-    );
-    await counts(canvas, 2, 4, 31, 1, 3);
-    await userEvent.click(
-      panel.getByRole('button', { name: 'Back to Needs you: Halden Health' }),
-    );
-    await counts(canvas, 3, 4, 30, 1, 4);
-    await expect(
-      panel.queryByRole('region', { name: 'Moved by you' }),
-    ).not.toBeInTheDocument();
-    await userEvent.click(
-      panel.getByRole('button', {
-        name: 'Undo Show in brief: SaaS Sales Weekly',
-      }),
-    );
-    await counts(canvas, 3, 3, 31, 1, 4);
-    await back(canvas);
-  },
-};
 export const Open: Story = {
   play: async (c) => {
     await open(c.canvas);
@@ -285,43 +239,6 @@ export const DanielOpen: Story = {
 export const SarahOpen: Story = {
   args: { initialPersonaId: 'sarah' },
   play: Open.play,
-};
-const moveHalden = async (canvas: Canvas) => {
-  await userEvent.click(
-    within(canvas.getByRole('list', { name: 'Needs you' })).getByRole(
-      'button',
-      { name: /Halden Health/ },
-    ),
-  );
-  const read = canvas.getByRole('button', { name: /Glance’s read:/ });
-  if (read.getAttribute('aria-expanded') !== 'true')
-    await userEvent.click(read);
-  await userEvent.click(
-    canvas.getByRole('button', { name: 'Move to Set aside' }),
-  );
-  await waitFor(async () => {
-    await expect(
-      canvas.getByRole('button', { name: 'Undo Halden Health' }),
-    ).toBeVisible();
-    await expect(canvas.queryByRole('dialog')).not.toBeInTheDocument();
-  });
-};
-export const MovedGroup: Story = {
-  play: async (c) => {
-    await moveHalden(c.canvas);
-    await open(c.canvas);
-    await ready(c);
-  },
-};
-export const Returned: Story = {
-  play: async (c) => {
-    await moveHalden(c.canvas);
-    const panel = await open(c.canvas);
-    await userEvent.click(
-      panel.getByRole('button', { name: 'Back to Needs you: Halden Health' }),
-    );
-    await ready(c);
-  },
 };
 export const AddedKept: Story = {
   play: async (c) => {

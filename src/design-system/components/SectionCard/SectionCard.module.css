@@ -20,6 +20,7 @@
   line-height: var(--line-height-12);
 }
 .card {
+  box-shadow: var(--shadow-panel);
   padding-block: var(--space-4);
   background: var(--color-surface);
   border-radius: var(--radius-card);

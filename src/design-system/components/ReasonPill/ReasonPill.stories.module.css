@@ -3,3 +3,17 @@
   max-inline-size: 100%;
   padding: var(--space-20);
 }
+
+.ranks {
+  display: grid;
+  gap: var(--space-16);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.ranks li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-12);
+}

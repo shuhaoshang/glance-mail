@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect, fn } from 'storybook/test';
+import { expect, fn, userEvent } from 'storybook/test';
 import { getPersona } from '../../../data';
 import { ReasonPanel } from './ReasonPanel';
 import styles from './ReasonPanel.module.css';
+import mayaV2 from '../../../../docs/handoff/v2/provided/data/maya.json';
 
 const maya = getPersona('maya'),
   daniel = getPersona('daniel'),
@@ -43,4 +44,16 @@ export const Evidence: Story = {
   },
 };
 
-export const Correction: Story = { args: { onMoveAside: fn() } };
+export const Watchlist: Story = {
+  args: { watchlist: { name: mayaV2.watchlist[0].name, onOpen: fn() } },
+  play: async ({ canvas, args }) => {
+    const link = canvas.getByRole('button', {
+      name: 'Watchlist: ' + args.watchlist!.name,
+    });
+    await expect(canvas.getByText('Based on', { exact: true })).toBeVisible();
+    link.focus();
+    await userEvent.keyboard('{Enter}');
+    await expect(args.watchlist!.onOpen).toHaveBeenCalledOnce();
+    await expect(canvas.queryByText(/Not for you/)).not.toBeInTheDocument();
+  },
+};

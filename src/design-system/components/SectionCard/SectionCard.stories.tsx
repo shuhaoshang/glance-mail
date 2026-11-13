@@ -6,6 +6,14 @@ import { maya } from '../listSamples';
 const meta = {
   title: 'Composites/SectionCard',
   component: SectionCard,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'A section heading and list panel with the shared panel shadow. The existing desktop padding and phone dividers remain.',
+      },
+    },
+  },
   args: {
     title: 'Needs you',
     count: maya.items.filter((i) => !i.isNew).length,

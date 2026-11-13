@@ -173,7 +173,7 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
     const open = detail(page).getByRole('link', exact('Open in Yahoo Mail'));
     await expect(open).toHaveCSS(
       'background-color',
-      await tokenColor(open, '--color-surface-sunken'),
+      await tokenColor(open, '--color-surface'),
     );
     await expect(page.getByRole('button', exact('Snooze'))).toHaveCount(0);
     await expect(page.getByRole('dialog', exact(lincoln.name))).toBeVisible();
@@ -182,7 +182,9 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
     ).toBeVisible();
     await todo.getByRole('checkbox', exact(stepNames[0])).uncheck();
     await primary(page, open);
-    for (const name of ['Ask', 'Snooze', 'Done'])
+    await expect(detail(page).getByRole('tab', exact('Ask'))).toBeVisible();
+    await expect(detail(page).getByRole('button', exact('Ask'))).toHaveCount(0);
+    for (const name of ['Snooze', 'Done'])
       await expect(detail(page).getByRole('button', exact(name))).toBeVisible();
   });
 

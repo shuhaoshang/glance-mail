@@ -26,7 +26,7 @@ const prepare =
         { name: new RegExp(item.name) },
       ),
     );
-    await userEvent.click(canvas.getByRole('button', { name: /^Ask$/ }));
+    await userEvent.click(canvas.getByRole('tab', { name: /^Ask$/ }));
     await expect(canvas.getByRole('tab', { name: /^Ask$/ })).toHaveAttribute(
       'aria-selected',
       'true',
@@ -80,7 +80,7 @@ export const PhoneActions: Story = {
         { name: /Lincoln Elementary/ },
       ),
     );
-    await expect(canvas.getByRole('button', { name: /^Ask$/ })).toBeVisible();
+    await expect(canvas.getByRole('tab', { name: /^Ask$/ })).toBeVisible();
     canvasElement.dataset.askReady = 'true';
   },
 };
@@ -100,7 +100,7 @@ export const CheckedActions: Story = {
     await expect(
       canvas.getByRole('button', { name: 'Mark done' }),
     ).toBeVisible();
-    await expect(canvas.getByRole('button', { name: /^Ask$/ })).toBeVisible();
+    await expect(canvas.getByRole('tab', { name: /^Ask$/ })).toBeVisible();
     canvasElement.dataset.askReady = 'true';
   },
 };

@@ -5,6 +5,14 @@ import { maya } from '../listSamples';
 const meta = {
   title: 'Composites/CollapsedGroup',
   component: CollapsedGroup,
+  parameters: {
+    docs: {
+      description: {
+        component:
+          'A compact section summary with the shared panel shadow. Interactive and static variants retain their existing states and content.',
+      },
+    },
+  },
   args: { groups: maya.setAside, onSelect: fn() },
 } satisfies Meta<typeof CollapsedGroup>;
 export default meta;

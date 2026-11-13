@@ -103,7 +103,7 @@ test('Daniel — unblock the team, keep the evening', async ({
 
   await test.step('Daniel 3 · Understand: Sees what it blocks', async () => {
     await detail(page)
-      .getByRole('button', { name: /^Glance’s read: Ranked 1st/ })
+      .getByRole('button', { name: /^Why it’s first:/ })
       .click();
     const reasoning = page.getByRole('region', exact('Glance’s read'));
     await expect(
@@ -207,7 +207,7 @@ test('Daniel — unblock the team, keep the evening', async ({
     const dates = lea.scene.fields![0];
     await expect(field(timeOff, dates.value, dates.label)).toBeVisible();
     await detail(page)
-      .getByRole('button', { name: /^Glance’s read: Ranked 2nd/ })
+      .getByRole('button', { name: /^Why it’s second:/ })
       .click();
     const reasoning = page.getByRole('region', exact('Glance’s read'));
     await expect(

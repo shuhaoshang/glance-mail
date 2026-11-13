@@ -9,7 +9,7 @@ import { SceneCard, type SceneFieldSelection } from '../SceneCard/SceneCard';
 import { SourcePanel } from '../SourcePanel/SourcePanel';
 import { ReasonPill } from '../ReasonPill/ReasonPill';
 import { ReasonPanel } from '../ReasonPanel/ReasonPanel';
-import { ordinal } from '../ReasonPanel/reasonText';
+import { reasonLabel } from '../ReasonPanel/reasonText';
 import { AskThread } from '../AskThread/AskThread';
 import { EmailView } from '../EmailView/EmailView';
 import { Button } from '../Button/Button';
@@ -31,7 +31,7 @@ interface DetailPanelProps {
   onAskQuestion?: (index: number) => void;
   onDone?: () => void;
   onSnooze?: (label: string) => void;
-  onMoveAside?: () => void;
+  watchlist?: { name: string; onOpen: () => void };
   busy?: boolean;
   checkedSteps?: boolean[];
   onChecksChange?: (values: boolean[]) => void;
@@ -51,7 +51,7 @@ function Content({
   onAskQuestion,
   onDone,
   onSnooze,
-  onMoveAside,
+  watchlist,
   busy,
   checkedSteps,
   onChecksChange,
@@ -111,13 +111,6 @@ function Content({
       }}
     />
   );
-  function showAsk() {
-    setSnoozeOpen(false);
-    setTab('ask');
-    requestAnimationFrame(() =>
-      document.getElementById(askId + '-tab')?.focus(),
-    );
-  }
   function showEmail() {
     setTab('email');
     requestAnimationFrame(() =>
@@ -238,11 +231,7 @@ function Content({
             <ReasonPill
               ref={reasonTrigger}
               mobile={mobile}
-              label={[
-                'Glance’s read: Ranked ' + ordinal(position),
-                ...item.judgments.map((entry) => entry.label),
-                reasonOpen ? 'Hide' : 'Why?',
-              ].join(' · ')}
+              label={reasonLabel(position, item.judgments[0]?.label)}
               expanded={reasonOpen}
               controls={reasonId}
               onToggle={() => setReasonOpen((value) => !value)}
@@ -252,8 +241,7 @@ function Content({
                 item={item}
                 position={position}
                 id={reasonId}
-                onMoveAside={onMoveAside}
-                disabled={busy}
+                watchlist={watchlist}
               />
             )}
           </div>
@@ -308,8 +296,10 @@ function Content({
         >
           <Button
             className={styles.inbox}
-            size={mobile && complete && onDone ? 'touch' : undefined}
-            variant={complete && onDone ? 'neutral' : 'primary'}
+            size={
+              complete && onDone ? (mobile ? 'touch' : 'compact') : undefined
+            }
+            variant={complete && onDone ? 'outline' : 'primary'}
             href={inboxUrls[account.app]}
             target="_blank"
             rel="noopener noreferrer"
@@ -317,22 +307,12 @@ function Content({
           >
             Open in {account.app}
           </Button>
-          {tab !== 'ask' && (
-            <Button
-              variant="tint"
-              size={mobile ? 'touch' : undefined}
-              leadingIcon="message"
-              onClick={showAsk}
-            >
-              Ask
-            </Button>
-          )}
           {!complete && onSnooze && (
             <Button
               ref={snoozeTrigger}
               className={styles.snoozeTrigger}
-              size={mobile ? 'touch' : undefined}
-              variant="neutral"
+              size={mobile ? 'touch' : 'compact'}
+              variant="outline"
               leadingIcon="clock"
               aria-expanded={snoozeOpen}
               aria-controls={snoozeId}
@@ -356,8 +336,8 @@ function Content({
           {onDone && (
             <Button
               className={styles.done}
-              size={mobile && !complete ? 'touch' : undefined}
-              variant={complete ? 'primary' : 'neutral'}
+              size={complete ? undefined : mobile ? 'touch' : 'compact'}
+              variant={complete ? 'primary' : 'outline'}
               leadingIcon="check"
               disabled={busy}
               onClick={onDone}

@@ -82,7 +82,7 @@ test('Maya — protect a renewal before Friday', async ({
 
   await test.step('Maya 3 · Understand: Learns why it’s at risk', async () => {
     await detail(page)
-      .getByRole('button', { name: /^Glance’s read: Ranked 1st/ })
+      .getByRole('button', { name: /^Why it’s first:/ })
       .click();
     const reasoning = page.getByRole('region', exact('Glance’s read'));
     await expect(
@@ -118,10 +118,10 @@ test('Maya — protect a renewal before Friday', async ({
         'Not for you? Glance will rank emails like this lower.',
         { exact: true },
       ),
-    ).toBeVisible();
+    ).toHaveCount(0);
     await expect(
       reasoning.getByRole('button', exact('Move to Set aside')),
-    ).toBeVisible();
+    ).toHaveCount(0);
   });
 
   await test.step('Maya 4 · Ask: Confirms the discount', async () => {
