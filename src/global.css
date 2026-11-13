@@ -6,7 +6,9 @@
 
 body {
   margin: 0;
-  background: var(--color-bg);
+  background: var(--background-page);
+  background-repeat: no-repeat;
+  min-height: 100vh;
   color: var(--color-text);
   font-family: var(--font-family);
   font-size: var(--font-size-16);

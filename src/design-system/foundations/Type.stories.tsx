@@ -11,7 +11,7 @@ const renewal = maya.items[0];
 const deadline = renewal.facts[0];
 const { pre, hl, post } = deadline.source;
 const specimens = [
-  { variant: 'display', usage: 'Morning greeting', sample: maya.greeting },
+  { variant: 'greeting', usage: 'Morning greeting', sample: maya.greeting },
   {
     variant: 'request',
     usage: 'Request',

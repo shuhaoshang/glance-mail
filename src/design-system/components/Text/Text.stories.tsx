@@ -36,6 +36,9 @@ export const Body: Story = {};
 export const Display: Story = {
   args: { variant: 'display', as: 'h1', children: maya.greeting },
 };
+export const Greeting: Story = {
+  args: { variant: 'greeting', as: 'h1', children: maya.greeting },
+};
 export const Request: Story = {
   args: { variant: 'request', children: renewal.request.text },
 };
