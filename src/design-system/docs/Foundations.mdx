@@ -1,4 +1,6 @@
-import { Meta } from '@storybook/addon-docs/blocks';
+import { Markdown, Meta } from '@storybook/addon-docs/blocks';
+import rules from '../../../docs/design-rules.md?raw';
+import { section } from './section';
 
 <Meta title="Foundations/Overview" />
 
@@ -10,14 +12,18 @@ import { Meta } from '@storybook/addon-docs/blocks';
 
 ## Color
 
-The page uses a tinted background with two glows. Time is amber, money is yellow, and people are blue. Red marks urgency. Compare the current light and dark values in Colors.
+<Markdown>{section(rules, '3. Color')}</Markdown>
 
 ## Typography
 
-The greeting uses medium weight at 40/48 on desktop and 28/32 on phone. Type shows the styles in context and reads their metrics from the preview.
+<Markdown>{section(rules, '10. Typography')}</Markdown>
 
 ## Shape and spacing
 
-Radius, Spacing, and Motion read the active tokens. Panels use 28 px corners, with 20 px corners for blocks inside panels.
+<Markdown>{section(rules, '11. Shape and spacing')}</Markdown>
+
+## Visual 2.0
+
+<Markdown>{section(rules, '16. Visual 2.0')}</Markdown>
 
 [Visual 2.0 token specification](https://github.com/shuhaoshang/glance-mail/blob/main/docs/design-system.md#91-tokens)
