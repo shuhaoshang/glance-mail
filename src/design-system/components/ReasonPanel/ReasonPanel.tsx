@@ -9,16 +9,14 @@ interface ReasonPanelProps {
   item: Item;
   position: number;
   id?: string;
-  onMoveAside?: () => void;
-  disabled?: boolean;
+  watchlist?: { name: string; onOpen: () => void };
 }
 
 export function ReasonPanel({
   item,
   position,
   id,
-  onMoveAside,
-  disabled,
+  watchlist,
 }: ReasonPanelProps) {
   return (
     <section id={id} aria-label="Glance’s read" className={styles.panel}>
@@ -54,18 +52,11 @@ export function ReasonPanel({
           )}
         </div>
       ))}
-      {onMoveAside && (
-        <footer className={styles.correction}>
-          <Text as="p" variant="meta">
-            Not for you? Glance will rank emails like this lower.
-          </Text>
-          <Button
-            variant="outline"
-            leadingIcon="tray-arrow"
-            disabled={disabled}
-            onClick={onMoveAside}
-          >
-            Move to Set aside
+      {watchlist && (
+        <footer className={styles.watchlist}>
+          <Text variant="meta">Based on</Text>
+          <Button variant="text" size="compact" onClick={watchlist.onOpen}>
+            {'Watchlist: ' + watchlist.name}
           </Button>
         </footer>
       )}

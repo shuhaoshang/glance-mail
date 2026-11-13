@@ -22,6 +22,9 @@ const meta = {
     await expect(chip).toHaveTextContent(
       args.kind + ': ' + args.label + (args.urgent ? ', urgent' : ''),
     );
+    await expect(chip.querySelectorAll('[aria-hidden="true"]')).toHaveLength(
+      args.urgent ? 1 : 0,
+    );
     await expect(canvas.queryByRole('button')).not.toBeInTheDocument();
   },
 } satisfies Meta<typeof FactChip>;

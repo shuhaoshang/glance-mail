@@ -73,10 +73,14 @@ export async function tokenColor(element: Locator, name: string) {
     (el, token) => getComputedStyle(el).getPropertyValue(token).trim(),
     name,
   );
-  expect(value).toMatch(/^#[\da-f]{6}$/i);
+  expect(value).toMatch(/^#(?:[\da-f]{3}|[\da-f]{6})$/i);
+  const hex =
+    value.length === 4
+      ? '#' + [...value.slice(1)].map((digit) => digit + digit).join('')
+      : value;
   return (
     'rgb(' +
-    [1, 3, 5].map((i) => parseInt(value.slice(i, i + 2), 16)).join(', ') +
+    [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16)).join(', ') +
     ')'
   );
 }

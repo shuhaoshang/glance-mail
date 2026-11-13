@@ -36,6 +36,12 @@ export function ReasonPill({
           <Icon name="star" size={size === 'small' ? 'small' : 'default'} />
         </span>
         <span>{label}</span>
+        <Icon
+          name="chevron"
+          className={[styles.chevron, expanded && styles.expanded]
+            .filter(Boolean)
+            .join(' ')}
+        />
       </span>
     </button>
   );

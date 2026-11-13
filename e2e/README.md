@@ -38,3 +38,9 @@ One-screen checks measure from the top of the product's main landmark to the bot
 Sarah 1 includes the entire Set aside row. Sarah 7 includes the entire Needs you section, including Show 8 more, as required by the overload flow. The assertions use bounding boxes and Playwright polling, so scrolling cannot turn a partial-row measurement into a pass.
 
 See [the review evidence](../docs/reviews/16-persona-e2e/README.md) for the viewport context.
+
+## Visual 2.0 migration
+
+Task 21 changes the reasoning trigger to “Why it’s first” and keeps Ask in its view tab. Maya’s reasoning step verifies that the old correction footer is absent. Removing that entry point is intentional until task 27 introduces Move to; the remaining persona steps and their counts still run in every theme and motion mode.
+
+The shared-component spec also checks selection during real hover and press, compact-segment keyboard and touch behavior, the eleven-item reasoning example, the optional Watchlist callback, and desktop/phone action-bar geometry. Storybook interaction functions must finish without errors before assertions continue.

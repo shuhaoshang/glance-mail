@@ -16,7 +16,6 @@ const meta = {
   args: {
     onDone: fn(),
     onSnooze: fn(),
-    onMoveAside: fn(),
     item: visibleItems(daniel)[0],
     position: 1,
     total: visibleItems(daniel).length,
@@ -139,7 +138,7 @@ export const EscapeDisclosures: Story = {
       canvas.queryByRole('region', { name: /^Source from/ }),
     ).not.toBeInTheDocument();
     await expect(field).toHaveFocus();
-    const reason = canvas.getByRole('button', { name: /^Glance’s read:/ });
+    const reason = canvas.getByRole('button', { name: /^Why it’s first:/ });
     reason.focus();
     await userEvent.keyboard('{Enter}');
     await expect(
@@ -150,5 +149,58 @@ export const EscapeDisclosures: Story = {
       canvas.queryByRole('region', { name: 'Glance’s read' }),
     ).not.toBeInTheDocument();
     await expect(reason).toHaveFocus();
+  },
+};
+
+export const Actions: Story = {
+  args: { ...Maya.args, initialFactId: undefined },
+  play: async ({ canvas }) => {
+    await expect(
+      canvas.getByRole('link', { name: 'Open in Outlook' }),
+    ).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Snooze' })).toBeVisible();
+    await expect(canvas.getByRole('button', { name: 'Done' })).toBeVisible();
+    await expect(canvas.getByRole('tab', { name: 'Ask' })).toBeVisible();
+    await expect(
+      canvas.queryByRole('button', { name: 'Ask' }),
+    ).not.toBeInTheDocument();
+  },
+};
+export const ActionsHover: Story = {
+  ...Actions,
+  parameters: { pseudo: { hover: 'footer button' } },
+};
+export const ActionsPressed: Story = {
+  ...Actions,
+  parameters: { pseudo: { active: 'footer button' } },
+};
+export const ActionsFocus: Story = {
+  ...Actions,
+  parameters: { pseudo: { focusVisible: 'footer button:last-child' } },
+};
+export const Busy: Story = { args: { ...Actions.args, busy: true } };
+export const SnoozeOpen: Story = {
+  args: Actions.args,
+  play: async ({ canvas }) => {
+    await userEvent.click(canvas.getByRole('button', { name: 'Snooze' }));
+    await expect(
+      canvas.getByRole('button', { name: 'Snooze' }),
+    ).toHaveAttribute('aria-expanded', 'true');
+    await expect(
+      canvas.getByRole('button', { name: 'Later today, 3:00 PM' }),
+    ).toHaveFocus();
+  },
+};
+export const ChecklistComplete: Story = {
+  args: Sarah.args,
+  play: async ({ canvas }) => {
+    for (const checkbox of canvas.getAllByRole('checkbox'))
+      await userEvent.click(checkbox);
+    await expect(
+      canvas.getByRole('button', { name: 'Mark done' }),
+    ).toBeVisible();
+    await expect(
+      canvas.queryByRole('button', { name: 'Snooze' }),
+    ).not.toBeInTheDocument();
   },
 };

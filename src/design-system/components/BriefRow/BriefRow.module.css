@@ -6,10 +6,29 @@
   position: absolute;
   inset-block-start: 0;
   inset-inline-start: calc(
-    var(--space-12) + var(--size-icon) + var(--space-12)
+    var(--space-16) + var(--size-icon) + var(--space-12)
   );
-  inset-inline-end: var(--space-12);
+  inset-inline-end: var(--space-16);
   border-block-start: var(--border-hairline) solid var(--color-border);
   pointer-events: none;
   z-index: 1;
+}
+
+.button {
+  padding: var(--space-16);
+  border-radius: var(--radius-panel);
+}
+.selected {
+  --control-fill: var(--color-row-selected);
+  --hover-fill: var(--color-row-selected);
+  --pressed-fill: var(--color-row-selected);
+  box-shadow:
+    inset 0 0 0 var(--border-hairline) var(--color-brand-stroke),
+    var(--shadow-row-selected);
+}
+.selectedRank {
+  color: var(--color-brand-text);
+}
+.selectedChevron {
+  color: var(--color-brand);
 }

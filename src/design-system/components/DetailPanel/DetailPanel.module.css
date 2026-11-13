@@ -3,8 +3,10 @@
   flex-direction: column;
   gap: var(--space-24);
   min-inline-size: 0;
-  padding: var(--space-24) var(--space-32) var(--space-32);
+  padding: var(--space-24) calc(var(--space-24) + var(--space-4))
+    calc(var(--space-24) + var(--space-4));
   border-radius: var(--radius-card);
+  box-shadow: var(--shadow-panel);
   background: var(--color-surface);
   overflow-wrap: anywhere;
 }
@@ -80,6 +82,7 @@
   padding-block-start: var(--space-24);
 }
 .panel.mobile {
+  box-shadow: none;
   padding: 0;
   gap: 0;
   border-radius: 0;
@@ -184,4 +187,9 @@
   font-size: var(--font-size-16);
   line-height: var(--line-height-16);
   padding-inline: var(--space-20);
+}
+
+.snoozeTrigger[aria-expanded='true'] {
+  --control-fill: var(--color-sunken-pressed);
+  --hover-fill: var(--color-sunken-pressed);
 }

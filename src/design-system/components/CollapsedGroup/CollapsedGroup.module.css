@@ -1,4 +1,5 @@
 .card {
+  box-shadow: var(--shadow-panel);
   padding: var(--space-20);
   border-radius: var(--radius-card);
   align-items: center;

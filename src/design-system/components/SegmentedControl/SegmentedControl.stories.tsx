@@ -106,3 +106,20 @@ export const KeyboardNavigation: Story = {
     ).toHaveFocus();
   },
 };
+
+export const Small: Story = { args: { size: 'small' } };
+export const SmallHover: Story = { ...Hover, args: Small.args };
+export const SmallPressed: Story = { ...Pressed, args: Small.args };
+export const SmallSelectedHover: Story = { ...SelectedHover, args: Small.args };
+export const SmallSelectedPressed: Story = {
+  ...SelectedPressed,
+  args: Small.args,
+};
+export const SmallFocusAdjacentHover: Story = {
+  ...FocusAdjacentHover,
+  args: Small.args,
+};
+export const SmallKeyboardNavigation: Story = {
+  ...KeyboardNavigation,
+  args: { ...WithDisabledTab.args, ...Small.args },
+};

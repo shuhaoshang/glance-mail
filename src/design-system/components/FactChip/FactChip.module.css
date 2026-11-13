@@ -3,10 +3,10 @@
   inline-size: fit-content;
   align-items: center;
   gap: var(--space-8);
-  padding: var(--space-4) var(--space-12) var(--space-4) var(--space-8);
+  padding: var(--space-4) var(--space-8);
   border-radius: var(--radius-pill);
-  background: var(--color-surface-sunken);
-  color: var(--color-text);
+  background: var(--fact-tint);
+  color: var(--fact-text);
   font-family: var(--font-family);
   font-size: var(--font-size-12);
   line-height: var(--line-height-12);
@@ -21,6 +21,7 @@
   background: var(--fact-color);
 }
 .urgent {
+  padding: var(--space-4) var(--space-12) var(--space-4) var(--space-8);
   background: var(--color-urgent);
   color: var(--color-on-urgent);
 }

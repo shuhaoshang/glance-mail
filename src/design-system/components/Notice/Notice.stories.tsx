@@ -5,7 +5,15 @@ import { Notice } from './Notice';
 const meta = {
   title: 'Composites/Notice',
   component: Notice,
-  parameters: { layout: 'padded' },
+  parameters: {
+    layout: 'padded',
+    docs: {
+      description: {
+        component:
+          'An inbox notice on the shared panel shadow. Its existing title, body, and optional reconnect action remain.',
+      },
+    },
+  },
   args: {
     icon: 'link-off',
     title: 'Yahoo Mail (Family) is disconnected',

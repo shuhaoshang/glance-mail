@@ -11,13 +11,16 @@ const meta = {
   component: BriefRow,
   args: { item: maya.items[0], rank: 1, onSelect: fn() },
   decorators: [
-    (Story) => (
-      <div className={styles.list}>
-        <SectionCard title="Needs you" count={1}>
-          <Story />
-        </SectionCard>
-      </div>
-    ),
+    (Story, { parameters }) =>
+      parameters.layout === 'fullscreen' ? (
+        <Story />
+      ) : (
+        <div className={styles.list}>
+          <SectionCard title="Needs you" count={1}>
+            <Story />
+          </SectionCard>
+        </div>
+      ),
   ],
 } satisfies Meta<typeof BriefRow>;
 export default meta;
@@ -97,14 +100,15 @@ export const States: Story = {
     pseudo: {
       hover:
         '[data-row-state="Hover"] button[aria-pressed], [data-row-state="Selected hover"] button[aria-pressed]',
-      active: '[data-row-state="Pressed"] button[aria-pressed]',
+      active:
+        '[data-row-state="Pressed"] button[aria-pressed], [data-row-state="Selected pressed"] button[aria-pressed]',
       focusVisible: '[data-row-state="Focus"] button[aria-pressed]',
     },
   },
   render: () => (
     <FoundationPage
       title="BriefRow states"
-      description="Hover and press change the fill. Keyboard focus adds the outline."
+      description="Unselected rows change fill on hover and press. Selected rows keep their surface, ring, and shadow. Keyboard focus adds the outline."
     >
       <div className={styles.states}>
         {[
@@ -114,6 +118,7 @@ export const States: Story = {
           'Focus',
           'Selected',
           'Selected hover',
+          'Selected pressed',
           'New',
         ].map((state) => (
           <div className={styles.specimen} key={state} data-row-state={state}>
