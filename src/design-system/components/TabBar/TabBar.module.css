@@ -61,8 +61,8 @@
 }
 .news {
   position: absolute;
-  inset-block-start: var(--space-8);
-  inset-inline-end: var(--space-8);
+  inset-block-start: var(--space-4);
+  inset-inline-end: var(--space-4);
   inline-size: var(--size-dot);
   block-size: var(--size-dot);
   border-radius: var(--radius-pill);

@@ -29,7 +29,7 @@ export function HeaderButton({
       onClick={onClick}
       className={[control.control, hitTarget.target, styles.button].join(' ')}
     >
-      <Icon name={icon} />
+      <Icon name={icon} size="large" />
       {hasNews && <span className={styles.news} aria-hidden="true" />}
     </button>
   );

@@ -10,7 +10,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'The phone Watchlist and Memory shortcuts have a 40-pixel glass circle and an invisible 44-pixel hit target. Ink indicates the open view. Section 9.2 does not define hover or pressed styling; these states retain the default appearance pending review. Keyboard focus uses the shared focus tokens.',
+          'The phone Watchlist and Memory shortcuts have a 40-pixel glass circle and an invisible 44-pixel hit target. The 20-pixel icon stays brand-colored during unselected hover and press, while the fill uses the glass-hover token. The open view uses ink, an on-ink icon, and the selected-tab shadow; its hover and pressed appearance stays unchanged. Keyboard focus uses the shared focus tokens.',
       },
     },
   },
@@ -47,6 +47,8 @@ export const MemorySelected: Story = {
 };
 export const Hover: Story = { parameters: { pseudo: { hover: true } } };
 export const Pressed: Story = { parameters: { pseudo: { active: true } } };
+export const SelectedHover: Story = { ...Hover, args: { selected: true } };
+export const SelectedPressed: Story = { ...Pressed, args: { selected: true } };
 export const FocusVisible: Story = {
   parameters: { pseudo: { focusVisible: true } },
 };

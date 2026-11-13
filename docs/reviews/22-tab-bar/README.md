@@ -26,7 +26,7 @@ The phone examples show both the TabBar and HeaderButton components together so 
 - Use Arrow Left/Right, Home, and End within a group. Tab moves to the next group's entry tab, then the selected content panel. Each group has one tab stop, including the group without the current selection; entering that group with Tab does not change selection.
 - Hover or hold an unselected tab: the glass-hover token applies. A selected tab keeps its ink fill, count color, and shadow. FocusAdjacentHover shows the shared focus outline above a neighboring tab.
 - At 390 wide, only the Email tablist is rendered. All three tabs have equal widths; names and counts remain on one line using the permitted 12/16 type size. Desktop uses 14/20.
-- Open Primitives/HeaderButton. Watchlist uses the eye icon and optional news dot; Memory uses the existing star. Selected and MemorySelected use ink. Both controls retain a 44-pixel hit area around their 40-pixel visual circle.
+- Open Primitives/HeaderButton. Watchlist uses the eye icon and optional news dot; Memory uses the existing star. The icons use the 20-pixel size and brand color. Unselected hover and press use the glass-hover fill and keep the brand icon. Selected and MemorySelected use ink, an on-ink icon, and the selected-tab shadow; SelectedHover and SelectedPressed keep that appearance. Both controls retain a 44-pixel hit area around their 40-pixel visual circle.
 
 ## Component contract
 
@@ -40,11 +40,28 @@ HeaderButton accepts an icon, label, selected state, optional news state and con
 
 - App and Storybook production builds, lint, formatting, data validation, and the English-only check pass.
 - All 40 Playwright checks pass across light/dark and normal/reduced motion, including the existing three persona flows and the new TabBar/header checks. The existing GitHub Actions workflow runs the same suite.
-- All 30 TabBar and HeaderButton stories render and complete their interactions at 1280 and 390 widths in both themes: 120 successful runs.
-- Checks cover group names, roving focus, arrow-key wrapping, Home/End, Tab exit, panel IDs and labels, a single selected tab, optional right group, selected/unselected pointer states, news colors and labels, 44-pixel hit targets, equal phone tab widths, single-line labels/counts, and header-button keyboard activation.
+- All 32 TabBar and HeaderButton stories render and complete their interactions at 1280 and 390 widths in both themes: 128 successful runs.
+- Checks cover group names, roving focus, arrow-key wrapping, Home/End, Tab exit, panel IDs and labels, a single selected tab, optional right group, selected/unselected pointer states, news colors and labels, 4-pixel dot offsets and count clearance, header icon size/color and selected shadow, 44-pixel hit targets, equal phone tab widths, single-line labels/counts, and header-button keyboard activation.
 - No new token, dependency, application behavior, or live persona-data change. The supplied 12 spacing token provides the specified glass blur distance. An eye glyph is added to the existing icon set.
+
+## Review changes
+
+The designer's [review](https://github.com/shuhaoshang/glance-mail/pull/67#issuecomment-6857854385) resolves both open questions and corrects the specification:
+
+- News dots are 4 from the top and inline end in both components. The selected Watchlist tab now has a 4-pixel gap between the count and dot at 1280 wide.
+- HeaderButton uses `--size-icon-large` (20), `--color-brand` when unselected, and `--color-on-ink` when selected. Selection adds `--shadow-tab-selected`.
+- Unselected header hover and press use `--color-glass-hover` with a brand icon. Selected hover and press retain the selected appearance.
+- Design-system sections 9.2 and 9.3 reflect these decisions. Section 9.1 points to the header exception so the general page-icon rule stays consistent.
+
+All screenshots above have been refreshed. These links preserve the previous rendering for comparison:
+
+| View | Before review | After review |
+| --- | --- | --- |
+| Selected Watchlist, light | [Before](https://github.com/shuhaoshang/glance-mail/blob/920bad50c0035338a0dd3baf318be188d9d8226f/docs/reviews/22-tab-bar/desktop-watchlist-light.jpg) | [After](desktop-watchlist-light.jpg) |
+| Selected Watchlist, dark | [Before](https://github.com/shuhaoshang/glance-mail/blob/920bad50c0035338a0dd3baf318be188d9d8226f/docs/reviews/22-tab-bar/desktop-watchlist-dark.jpg) | [After](desktop-watchlist-dark.jpg) |
+| Phone header, light | [Before](https://github.com/shuhaoshang/glance-mail/blob/920bad50c0035338a0dd3baf318be188d9d8226f/docs/reviews/22-tab-bar/phone-needs-you-light.jpg) | [After](phone-needs-you-light.jpg) |
+| Phone header, dark | [Before](https://github.com/shuhaoshang/glance-mail/blob/920bad50c0035338a0dd3baf318be188d9d8226f/docs/reviews/22-tab-bar/phone-needs-you-dark.jpg) | [After](phone-needs-you-dark.jpg) |
 
 ## Open questions
 
-1. Section 9.2 defines the HeaderButton default and selected states, but not its hover or pressed treatment. These states currently retain the base appearance; keyboard focus uses the shared outline. Proposal: use `--color-glass-hover` for both unselected hover and press (light `#FFFFFF`, dark `rgba(255, 255, 255, 0.08)`) with `--color-text` icons, and keep selected buttons unchanged. Please confirm before these styles are added.
-2. Reference difference: the phone screenshot uses brand-colored header icons, while section 9.2 specifies `--color-text-secondary`. The implementation follows the written specification, with `--color-on-ink` for the selected icon.
+None. The review confirms the news-dot offsets and HeaderButton styling, including hover and pressed states.

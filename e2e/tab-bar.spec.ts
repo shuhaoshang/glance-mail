@@ -109,6 +109,8 @@ test('TabBar groups, panel relationships, and keyboard selection', async ({
   const watch = glance.getByRole('tab', { name: 'Watchlist 8, new' });
   const dot = watch.locator('[aria-hidden="true"]');
   await expect(dot).toHaveCSS('width', '8px');
+  await expect(dot).toHaveCSS('top', '4px');
+  await expect(dot).toHaveCSS('inset-inline-end', '4px');
   await expect(dot).toHaveCSS(
     'background-color',
     await token(watch, '--color-brand', 'backgroundColor'),
@@ -118,6 +120,9 @@ test('TabBar groups, panel relationships, and keyboard selection', async ({
     'background-color',
     await token(watch, '--color-on-ink', 'backgroundColor'),
   );
+  const countBounds = await watch.getByText('8', { exact: true }).boundingBox();
+  const dotBounds = await dot.boundingBox();
+  expect(dotBounds!.x - countBounds!.x - countBounds!.width).toBeCloseTo(4, 1);
   for (const tab of await page.getByRole('tab').all())
     await targetAtLeast44(tab);
 });
@@ -163,6 +168,25 @@ test('Phone tabs fit with counts and header buttons remain accessible', async ({
   await expect(watch).toHaveCSS('width', '40px');
   await expect(watch).toHaveCSS('height', '40px');
   await targetAtLeast44(watch);
+  const icon = watch.locator('svg');
+  const dot = watch.locator('span[aria-hidden="true"]');
+  await expect(icon).toHaveCSS('width', '20px');
+  await expect(icon).toHaveCSS('height', '20px');
+  const brand = await token(watch, '--color-brand', 'color');
+  const hover = await token(watch, '--color-glass-hover', 'backgroundColor');
+  await expect(icon).toHaveCSS('color', brand);
+  await expect(dot).toHaveCSS('top', '4px');
+  await expect(dot).toHaveCSS('inset-inline-end', '4px');
+  await watch.hover();
+  await expect(watch).toHaveCSS('background-color', hover);
+  await expect(icon).toHaveCSS('color', brand);
+  await page.mouse.down();
+  await expect(watch).toHaveCSS('background-color', hover);
+  await expect(icon).toHaveCSS('color', brand);
+  // Release away from the control so the keyboard test still starts unselected.
+  await page.mouse.move(0, 0);
+  await page.mouse.up();
+  await expect(watch).toHaveAttribute('aria-pressed', 'false');
   await watch.focus();
   await page.keyboard.press('Enter');
   await expect(watch).toHaveAttribute('aria-pressed', 'true');
@@ -177,6 +201,21 @@ test('Phone tabs fit with counts and header buttons remain accessible', async ({
     'background-color',
     await token(watch, '--color-on-ink', 'backgroundColor'),
   );
+  const ink = await token(watch, '--color-ink', 'backgroundColor');
+  const onInk = await token(watch, '--color-on-ink', 'color');
+  const shadow = await watch.evaluate((el) => getComputedStyle(el).boxShadow);
+  expect(shadow).toContain(
+    await token(watch, '--shadow-tab-selected', 'boxShadow'),
+  );
+  await expect(icon).toHaveCSS('color', onInk);
+  await watch.hover();
+  await expect(watch).toHaveCSS('background-color', ink);
+  await expect(watch).toHaveCSS('box-shadow', shadow);
+  await page.mouse.down();
+  await expect(watch).toHaveCSS('background-color', ink);
+  await expect(icon).toHaveCSS('color', onInk);
+  await expect(watch).toHaveCSS('box-shadow', shadow);
+  await page.mouse.up();
   await page.keyboard.press('Tab');
   const memory = page.getByRole('button', { name: 'Memory', exact: true });
   await expect(memory).toBeFocused();
