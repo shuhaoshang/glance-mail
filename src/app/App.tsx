@@ -191,7 +191,7 @@ function Brief({
           <Text as="p" variant="meta">
             {persona.date}
           </Text>
-          <Text as="h1" variant="display">
+          <Text as="h1" variant="greeting">
             {persona.greeting}
           </Text>
           <Text as="p" variant="body" className={styles.coverage}>

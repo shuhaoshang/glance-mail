@@ -5,18 +5,21 @@ import { FoundationPage } from './catalog';
 import { tokenNames, useTokenValues } from './tokenValues';
 import styles from './Colors.module.css';
 
-const colors = tokenNames.filter((name) => name.startsWith('--color-'));
+const colors = tokenNames.filter((name) =>
+  /^--(?:color-|background-)/.test(name),
+);
 // Apply the original theme rules to two local scopes so both palettes can be measured at once.
 const comparisonRules = tokenSource.replaceAll(':root', '[data-color-scope]');
 
 const groups = [
   [
-    'Surfaces and text',
-    /^--color-(?:bg|surface|sunken|border|text|icon|scrim)/,
+    'Page and surfaces',
+    /^(?:--background-page$|--color-(?:bg|glow|surface|glass|border|text|icon|scrim))/,
   ],
-  ['Glance and urgency', /^--color-(?:brand|on-brand|urgent|on-urgent)/],
+  ['Ink', /^--color-(?:ink|on-ink)/],
+  ['Glance and urgency', /^--color-(?:brand|on-brand|urgent|on-urgent|danger)/],
   ['Money', /^--color-money/],
-  ['Time', /^--color-time/],
+  ['Time (amber)', /^--color-time/],
   ['People and judgment', /^--color-(?:people|judgment)/],
   ['Demo controls', /^--color-demo/],
 ] as const;
@@ -28,7 +31,7 @@ function ColorCell({ value }: { value: string }) {
         <span
           aria-hidden="true"
           className={styles.swatch}
-          style={{ backgroundColor: value }}
+          style={{ background: value }}
         />
         <code>{value}</code>
       </div>

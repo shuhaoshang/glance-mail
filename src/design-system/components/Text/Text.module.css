@@ -21,6 +21,18 @@
   line-height: var(--line-height-32);
 }
 
+.greeting {
+  font-size: var(--font-size-28);
+  line-height: var(--line-height-28);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+.desktop.greeting {
+  font-size: var(--font-size-40);
+  line-height: var(--line-height-40);
+}
+
 .request {
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-20);

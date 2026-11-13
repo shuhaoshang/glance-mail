@@ -4,6 +4,7 @@ import styles from './Text.module.css';
 
 export type TextVariant =
   | 'display'
+  | 'greeting'
   | 'request'
   | 'title'
   | 'section'

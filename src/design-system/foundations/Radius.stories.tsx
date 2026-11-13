@@ -31,13 +31,15 @@ export const Default: StoryObj<typeof meta> = {
         />
       </section>
       <section>
-        <h2>Borders</h2>
+        <h2>Borders and focus</h2>
         <p>
           Selection rings sit inside the edge, so choosing an item keeps its
           dimensions.
         </p>
         <TokenList
-          names={tokenNames.filter((name) => name.startsWith('--border-'))}
+          names={tokenNames.filter((name) =>
+            /^--(?:border-|focus-ring-)/.test(name),
+          )}
           sample={(name) => (
             <span
               aria-hidden="true"
@@ -50,8 +52,10 @@ export const Default: StoryObj<typeof meta> = {
         />
       </section>
       <section>
-        <h2>Shadow</h2>
-        <p>The selected segment uses a surface fill and a tab shadow.</p>
+        <h2>Shadows</h2>
+        <p>
+          Compare the panel, selected row, selected tab, and popover shadows.
+        </p>
         <TokenList
           names={tokenNames.filter((name) => name.startsWith('--shadow-'))}
           sample={(name) => (
