@@ -133,3 +133,13 @@ export const UnderlineFocus: Story = {
   ...FocusAdjacentHover,
   args: { appearance: 'underline' },
 };
+export const UnderlineHover: Story = { ...Hover, args: Underline.args };
+export const UnderlinePressed: Story = { ...Pressed, args: Underline.args };
+export const UnderlineSelectedHover: Story = {
+  ...SelectedHover,
+  args: Underline.args,
+};
+export const UnderlineSelectedPressed: Story = {
+  ...SelectedPressed,
+  args: Underline.args,
+};

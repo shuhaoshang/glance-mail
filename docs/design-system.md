@@ -431,7 +431,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 
 | Type        | Use when the email…                                   | Layout                                                                                     | Examples                                           |
 | ----------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| `deal`      | is about an account with a value, a date and a status | three Fields in a row (default size)                                                       | Maya · Fernway renewal; Halden new lead            |
+| `deal`      | is about an account with a value, a date and a status | three Fields in a row on desktop, two columns on the phone (default size)                                                       | Maya · Fernway renewal; Halden new lead            |
 | `decision`  | offers named options and asks you to choose           | two option tiles (key badge, title, small Field); one per row in the phone sheet                                           | Daniel · Checkout redesign                         |
 | `approval`  | asks you to approve an amount                         | large amount Field, then small Fields (for, requested by, deadline), then an optional note | Daniel · Expense report                            |
 | `payment`   | is a bill or fee                                      | large amount Field, then due and payee                                                     | Sarah · City Water                                 |
@@ -650,6 +650,7 @@ The tab remembers its selected row for the session. Opening a tab for the first 
 
 - **Top row:** position on the left (“Needs you · 1 of 3”, “Heads-up · 2 of 3”, “Other mail · 1 of 31”; 14/20 medium, muted) and the SegmentedControl on the right.
 - **SegmentedControl (changed):** track and sizes as built. Selected segment: `--color-ink` fill, `--color-on-ink` text, no shadow. A new `size="small"`: track padding 2, segments 24 tall, padding 4 8, 12/16 semibold; used for the theme control in the account menu on desktop.
+- **Account fallback:** a Heads-up or Other mail email without an `account` belongs to the persona's main account: the one not marked `minority`. The caller resolves and passes that account to DetailPanel; no data change is needed.
 - **Needs you detail:** as built (title, Person, AccountLabel, request, GlanceMark, hint line, SceneCard, SourcePanel, ReasonPill and ReasonPanel), with the action bar in 9.6.
 - **Heads-up detail:** tabs `Details` and `Original email`.
   - Details: title (20/28 semibold); Person line built from the source (“Lena Ortiz · Wed, Nov 4, 5:30 PM”) with AccountLabel when needed; GlanceMark with its label; `summary` as the headline (20/28 semibold); the SourcePanel for `fact.source`, always open, no close button; when the item has a `judgment`, a ReasonPill “Why it’s here: {label}” that opens the read and its source; when it has `watch`, “Part of **Watchlist: {name}**” (14/20, the name a brand text button that opens the Watchlist tab).
@@ -718,7 +719,7 @@ Messages:
 
 The sheet, its gestures, focus trap and closing rules stay as built (D44). Inside it:
 
-- First row: the position text and the close button. Below it the tabs become **underline tabs**: full-width row with a hairline along the bottom; each tab 16/24 medium, `--color-text-secondary`, 44 tall, 24 apart; the selected one is semibold `--color-text` with a 2 px `--color-brand` underline. Same roles and keys as SegmentedControl.
+- First row: the position text and the close button. Below it the tabs become **underline tabs**: full-width row with a hairline along the bottom; each tab 16/24 medium, `--color-text-secondary`, 44 tall, 24 apart; the selected one is semibold `--color-text` with a 2 px `--color-brand` underline. Unselected tabs use `--color-text` on hover and press, keeping the fill transparent. Selected tabs keep their appearance on hover and press. Same roles and keys as SegmentedControl.
 - Content as in 9.5 with 20 side padding; the scene card fields are two per row.
 - The action bar stays pinned to the bottom of the sheet as built, with the layout in 9.6.
 - Other mail and Heads-up emails open in the same sheet.

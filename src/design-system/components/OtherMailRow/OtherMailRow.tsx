@@ -29,7 +29,7 @@ export function OtherMailRow({
         aria-pressed={selected}
         onClick={(event) => onSelect(item.id, event.currentTarget)}
       >
-        <span className={styles.content}>
+        <span className={[styles.content, styles.otherContent].join(' ')}>
           <span className={styles.heading}>
             <span className={styles.sender}>
               {moved ? item.title : item.sender}

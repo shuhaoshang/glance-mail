@@ -149,6 +149,8 @@ interface Demo {
 
 The persona files move to `"version": 2`. The files and `types.ts` are provided by design in `docs/handoff/v2/provided/`.
 
+A Heads-up or Other mail email without an `account` belongs to the persona's main account: the account not marked `minority`. Resolve and pass this account to DetailPanel when wiring the app. No account fields need to be added to the supplied data.
+
 ```ts
 interface Persona {
   version: 2;

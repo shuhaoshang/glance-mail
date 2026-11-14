@@ -18,6 +18,20 @@ Desktop viewport: 1280 × 1000. Phone viewport: 390 × 844. Both themes and redu
 
 The new row/detail variants have no previous implementation. Compare them with [heads-up](../../screens/v2/heads-up.png), [other-mail](../../screens/v2/other-mail.png), [Daniel](../../screens/v2/daniel-heads-up.png), [phone detail](../../screens/v2/phone-sheet.png), [phone Other mail](../../screens/v2/phone-sheet-other-mail.png), and [dark Other mail](../../screens/v2/dark-other-mail.png). The previous phone Needs you appearance is available in [light](../21-shared-components/detail-phone-light.jpg) and [dark](../21-shared-components/detail-phone-dark.jpg).
 
+### PR #70 review updates
+
+OtherMailRow now has no gap between its sender/time, subject, and reason lines. HeadsUpRow and BriefRow retain their spacing. Compare the refreshed desktop screenshots with the previous [light](https://github.com/shuhaoshang/glance-mail/blob/211b4ded0ef53aefa2b21c166a188d36077a3e98/docs/reviews/25-rows-and-details/other-mail-desktop-light.jpg) and [dark](https://github.com/shuhaoshang/glance-mail/blob/211b4ded0ef53aefa2b21c166a188d36077a3e98/docs/reviews/25-rows-and-details/other-mail-desktop-dark.jpg) versions.
+
+| Review state | Light | Dark |
+| --- | --- | --- |
+| Phone Other mail list | [Light](other-mail-list-phone-light.jpg) | [Dark](other-mail-list-phone-dark.jpg) |
+| Unselected underline tab, hover | [Light](underline-hover-light.jpg) | [Dark](underline-hover-dark.jpg) |
+| Unselected underline tab, pressed | [Light](underline-pressed-light.jpg) | [Dark](underline-pressed-dark.jpg) |
+| Selected underline tab, hover | [Light](underline-selected-hover-light.jpg) | [Dark](underline-selected-hover-dark.jpg) |
+| Selected underline tab, pressed | [Light](underline-selected-pressed-light.jpg) | [Dark](underline-selected-pressed-dark.jpg) |
+
+The new state screenshots use a 390-wide viewport. Unselected hover and press use `--color-text` on transparent fill; selected tabs retain their text, weight, and underline.
+
 ## How to review
 
 - Composites/Mail rows and details: MayaHeadsUp, MayaSecond, Brightline, DanielPersonal, MayaOtherMail, Promotion, OriginalEmail, and JudgmentOnly use real data. Select any row. Heads-up rows contain no underlined fact or nested action.
@@ -25,7 +39,7 @@ The new row/detail variants have no previous implementation. Compare them with [
 - MovedMatrix shows the three source kinds in all three destinations. The moved detail examples retain the source kind, include the moved note, and omit the reasoning pill. The matrix documents rendering; actual moves remain task 27.
 - MailList/OtherMail shows four Maya rows and “27 more like these.” ZeroRemaining omits that line; Empty and the combined Empty example show the empty tabs and the existing AllDone content.
 - HeadsUpRow and OtherMailRow have separate default, selected, hover, pressed, selected hover/press, focus, and keyboard stories.
-- SegmentedControl/Underline, UnderlineKeyboard, and UnderlineFocus share the existing roles, roving tab stop, arrows, Home/End, and disabled-tab skipping. Phone details use this appearance. The Needs you deal fields use two phone columns.
+- SegmentedControl/Underline, UnderlineKeyboard, UnderlineFocus, UnderlineHover, UnderlinePressed, UnderlineSelectedHover, and UnderlineSelectedPressed share the existing roles, roving tab stop, arrows, Home/End, and disabled-tab skipping. Phone details use this appearance. The Needs you deal fields use two phone columns.
 
 ## Reuse and scope
 
@@ -38,12 +52,19 @@ MailList supplies the panel, optional Needs you progress head, remaining count, 
 ## Validation
 
 - App and Storybook builds, lint, formatting, data validation, and English checks pass.
-- All 76 Playwright checks pass in both themes and both motion preferences. The new checks cover exact sources, Brightline reasoning, tab keyboard behavior, Personal account labeling, conditional legends, remainder text, moved content, empty states, and phone focus return.
-- All 45 new or directly related Storybook stories pass at 1280 and 390 widths in both themes: 180 renders and interaction runs.
+- All 80 Playwright checks pass in both themes and both motion preferences. The new checks cover exact sources, Brightline reasoning, tab keyboard behavior, Personal account labeling, conditional legends, remainder text, moved content, empty states, and phone focus return. They also verify gapless OtherMailRow text and real hover/press behavior for underline tabs.
+- All 49 new or directly related Storybook stories pass at 1280 and 390 widths in both themes: 196 renders and interaction runs.
 - Tokens and persona JSON are unchanged. Existing sheet gestures and focus management remain in DetailSheet.
+
+## Review decisions
+
+Resolved in the [designer's PR #70 review](https://github.com/shuhaoshang/glance-mail/pull/70#issuecomment-6873878144):
+
+- Keep the existing two-column phone deal layout; the scene-card table now states this explicitly. Future specification differences will be listed under Open questions before implementation.
+- Underline tab hover and press follow the approved text-only treatment, documented in section 9.8 and demonstrated by four new state stories.
+- A Heads-up or Other mail email with no account belongs to the main account, the one not marked `minority`. Section 9.5 and the data model's Version 2 section record this rule. Storybook examples resolve that account; app callers will pass it in later tasks. No data fields were added.
+- Keep the conditional highlight legend, Open email, and the source date in Person as approved.
 
 ## Open questions
 
-1. Underline tabs have specified default, selected, and keyboard-focus states but no separate hover or pressed treatment. They currently retain those appearances. Proposal: on unselected hover/press, keep the transparent fill and use `--color-text` (light `#16151C`, dark `#F2F1F7`); selected tabs remain unchanged. Please confirm before adding this state.
-2. OtherMailRow data does not include an account id. DetailPanel requires an explicit account; the Maya examples use her single Outlook account. Before connecting mixed-inbox Other mail to the app, proposal: add an account id to each Other mail record so Open in {app} has a defined destination.
-3. Reference differences: dark-other-mail.png shows an Amounts legend entry even though that selected email only contains judgment and time highlights. The implementation follows the written rule and lists only present kinds. Heads-up keeps Open email under D60, and its Person line includes the source date required by section 9.5.
+None. The review resolved the previous questions.

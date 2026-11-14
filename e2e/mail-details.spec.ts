@@ -1,4 +1,4 @@
-import { test, expect, type Page } from '@playwright/test';
+import { test, expect, type Page, type Locator } from '@playwright/test';
 import maya from '../src/data/maya.json' with { type: 'json' };
 async function story(page: Page, id: string, theme: string) {
   await page.goto(
@@ -28,6 +28,20 @@ async function story(page: Page, id: string, theme: string) {
     )
     .toBe('success');
   await expect(page.locator('.sb-errordisplay')).not.toBeVisible();
+}
+async function expectOtherMailSpacing(list: Locator) {
+  const gaps = await list
+    .getByRole('button')
+    .first()
+    .evaluate((button) => {
+      const lines = [...button.firstElementChild!.children].map((line) =>
+        line.getBoundingClientRect(),
+      );
+      return lines
+        .slice(1)
+        .map((line, index) => line.top - lines[index].bottom);
+    });
+  expect(gaps).toEqual([0, 0]);
 }
 const prefix = 'composites-mail-rows-and-details--';
 test('Heads-up rows expose real sources, reasoning, email, and account labels', async ({
@@ -70,6 +84,7 @@ test('Other mail renders only its actual highlight legend and remaining count', 
   await story(page, prefix + 'maya-other-mail', colorScheme!);
   const list = page.getByRole('list', { name: 'Other mail' });
   await expect(list.getByRole('listitem')).toHaveCount(4);
+  await expectOtherMailSpacing(list);
   await expect(page.getByText('27 more like these')).toBeVisible();
   for (const item of maya.otherMail.rows.filter((row) => !row.isNew)) {
     await list
@@ -112,6 +127,7 @@ test('Other mail renders only its actual highlight legend and remaining count', 
   );
   await page.keyboard.press('Escape');
   await expect(page.getByRole('dialog')).toHaveCount(0);
+  await expectOtherMailSpacing(page.getByRole('list', { name: 'Other mail' }));
 });
 test('Moved rows and details preserve origin content across all destinations', async ({
   page,
@@ -142,4 +158,63 @@ test('Moved rows and details preserve origin content across all destinations', a
   await expect(
     page.getByRole('heading', { name: 'Nothing else needs you today' }),
   ).toBeVisible();
+});
+
+test('Underline tabs change only unselected text on hover and press', async ({
+  page,
+  colorScheme,
+}) => {
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await story(page, 'primitives-segmentedcontrol--underline', colorScheme!);
+    const selected = page.getByRole('tab', { name: 'Details', exact: true });
+    const unselected = page.getByRole('tab', { name: 'Ask', exact: true });
+    const appearance = (tab: Locator) =>
+      tab.evaluate((node) => {
+        const style = getComputedStyle(node);
+        return {
+          color: style.color,
+          fill: style.backgroundColor,
+          shadow: style.boxShadow,
+        };
+      });
+    const selectedDefault = await appearance(selected);
+    const unselectedDefault = await appearance(unselected);
+    expect(unselectedDefault.color).not.toBe(selectedDefault.color);
+    for (const tab of [unselected, selected]) {
+      await tab.hover();
+      await expect(tab).toHaveCSS('color', selectedDefault.color);
+      await expect(tab).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+      await page.mouse.down();
+      await expect(tab).toHaveCSS('color', selectedDefault.color);
+      await expect(tab).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+      if (tab === selected)
+        expect(await appearance(tab)).toEqual(selectedDefault);
+      else await expect(tab).toHaveCSS('box-shadow', 'none');
+      await page.mouse.move(0, 0);
+      await page.mouse.up();
+    }
+    await expect(selected).toHaveAttribute('aria-selected', 'true');
+    await expect(unselected).toHaveCSS('color', unselectedDefault.color);
+    for (const state of [
+      'hover',
+      'pressed',
+      'selected-hover',
+      'selected-pressed',
+    ]) {
+      await story(
+        page,
+        'primitives-segmentedcontrol--underline-' + state,
+        colorScheme!,
+      );
+      const tab = page.getByRole('tab', {
+        name: state.startsWith('selected') ? 'Details' : 'Ask',
+        exact: true,
+      });
+      await expect(tab).toHaveCSS('color', selectedDefault.color);
+      await expect(tab).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+      if (state.startsWith('selected'))
+        expect(await appearance(tab)).toEqual(selectedDefault);
+    }
+  }
 });

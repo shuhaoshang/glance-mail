@@ -61,7 +61,8 @@ export function MailExample({
         : { kind, item: persona.items.filter((item) => !item.isNew)[selected] };
   const accountId = 'account' in item ? item.account : undefined;
   const account =
-    persona.accounts.find((a) => a.id === accountId) ?? persona.accounts[0];
+    persona.accounts.find((a) => a.id === accountId) ??
+    persona.accounts.find((a) => !a.minority)!;
   const watchId = 'watch' in item ? item.watch : undefined;
   const watchItem = persona.watchlist.find((entry) => entry.id === watchId);
   const common = {

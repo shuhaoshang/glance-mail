@@ -57,8 +57,8 @@
   --control-ink: var(--color-text-secondary);
   --hover-fill: transparent;
   --pressed-fill: transparent;
-  --hover-ink: var(--color-text-secondary);
-  --pressed-ink: var(--color-text-secondary);
+  --hover-ink: var(--color-text);
+  --pressed-ink: var(--color-text);
   min-block-size: var(--size-touch);
   padding: 0;
   border-radius: 0;

@@ -38,6 +38,9 @@
   min-inline-size: 0;
   gap: var(--space-4);
 }
+.otherContent {
+  gap: 0;
+}
 .text {
   color: var(--color-text-secondary);
   font-size: var(--font-size-14);
