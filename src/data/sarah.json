@@ -1,10 +1,11 @@
 {
   "$schema": "../../docs/data-model.md",
-  "version": 1,
+  "version": 2,
   "id": "sarah",
   "name": "Sarah",
   "role": "Parent",
   "initial": "S",
+  "email": "sarah@example.com",
   "date": "Thursday, November 5",
   "greeting": "Good morning, Sarah",
   "coverage": {
@@ -168,7 +169,8 @@
           "found": false,
           "a": "The email doesn’t mention lunch."
         }
-      ]
+      ],
+      "watch": "ellas-field-trip"
     },
     {
       "id": "riverside",
@@ -263,7 +265,8 @@
             "post": "."
           }
         }
-      ]
+      ],
+      "watch": "ellas-checkup"
     },
     {
       "id": "water",
@@ -367,11 +370,13 @@
             "post": ""
           }
         }
-      ]
+      ],
+      "watch": "water-bill"
     }
   ],
   "goodToKnow": [
     {
+      "id": "h1",
       "icon": "clock",
       "tone": "time",
       "title": "Soccer practice",
@@ -386,9 +391,32 @@
           "hl": "Saturday at 9:00 AM",
           "post": " because the field is closed on Thursday."
         }
+      },
+      "summary": "Moved to Sat, 9:00 AM",
+      "email": {
+        "subject": "Practice change this week",
+        "from": "Coach Martinez",
+        "paras": [
+          [
+            "Hi families,"
+          ],
+          [
+            "Practice this week moves to ",
+            {
+              "t": "Saturday at 9:00 AM",
+              "kind": "time",
+              "tag": "Time · Sat, 9:00 AM"
+            },
+            " because the field is closed on Thursday."
+          ],
+          [
+            "See you there,\nCoach Martinez"
+          ]
+        ]
       }
     },
     {
+      "id": "h2",
       "icon": "package",
       "tone": "neutral",
       "title": "Package",
@@ -403,6 +431,25 @@
           "hl": "today by 8:00 PM",
           "post": "."
         }
+      },
+      "summary": "Arrives today",
+      "email": {
+        "subject": "Out for delivery",
+        "from": "ShipFast",
+        "paras": [
+          [
+            "Your package is out for delivery and arrives ",
+            {
+              "t": "today by 8:00 PM",
+              "kind": "time",
+              "tag": "Time · today"
+            },
+            "."
+          ],
+          [
+            "No signature is required."
+          ]
+        ]
       }
     }
   ],
@@ -449,6 +496,172 @@
       ]
     }
   ],
+  "otherMail": {
+    "total": 18,
+    "rows": [
+      {
+        "id": "n1",
+        "sender": "PTA Weekly",
+        "subject": "Bake sale sign-ups are open",
+        "when": "Yesterday",
+        "reason": "PTA newsletter to all families",
+        "basis": null,
+        "paras": [
+          [
+            "Bake sale sign-ups are open for ",
+            {
+              "t": "Fri, Nov 20",
+              "kind": "time",
+              "tag": "Time · Fri, Nov 20"
+            },
+            ". Bring something homemade or store-bought."
+          ],
+          [
+            {
+              "t": "Sent to all school families.",
+              "kind": "judg",
+              "tag": "Why it’s here · PTA newsletter to all families"
+            }
+          ]
+        ]
+      },
+      {
+        "id": "n2",
+        "sender": "Little Readers",
+        "subject": "Five picture books for November",
+        "when": "6:30 AM",
+        "reason": "Newsletter you rarely open",
+        "basis": null,
+        "paras": [
+          [
+            "Five picture books for cold evenings, picked by our librarians."
+          ],
+          [
+            {
+              "t": "You subscribed in August and rarely open it.",
+              "kind": "judg",
+              "tag": "Why it’s here · Newsletter you rarely open"
+            }
+          ]
+        ]
+      },
+      {
+        "id": "p1",
+        "sender": "ToyBarn",
+        "subject": "Holiday sale starts Friday",
+        "when": "Yesterday",
+        "reason": "Store promotion",
+        "basis": "instruction",
+        "paras": [
+          [
+            {
+              "t": "Up to 40% off",
+              "kind": "judg",
+              "tag": "Why it’s here · Store promotion"
+            },
+            " toys and games, starting ",
+            {
+              "t": "Friday, Nov 6",
+              "kind": "time",
+              "tag": "Time · Friday, Nov 6"
+            },
+            "."
+          ],
+          [
+            "Free shipping on orders over ",
+            {
+              "t": "$35",
+              "kind": "money",
+              "tag": "Money · $35"
+            },
+            "."
+          ]
+        ]
+      },
+      {
+        "id": "c1",
+        "sender": "Soccer parents → team",
+        "subject": "Carpool for Saturday",
+        "when": "Yesterday",
+        "reason": "Sent to the whole team, and you drove last week",
+        "basis": null,
+        "paras": [
+          [
+            "Who can drive on ",
+            {
+              "t": "Saturday",
+              "kind": "time",
+              "tag": "Time · Saturday"
+            },
+            "? We need two more cars."
+          ],
+          [
+            {
+              "t": "Sent to the whole team list.",
+              "kind": "judg",
+              "tag": "Why it’s here · Sent to the whole team, and you drove last week"
+            },
+            " Thanks to Sarah for driving last week."
+          ]
+        ]
+      }
+    ]
+  },
+  "watchlist": [
+    {
+      "id": "ellas-field-trip",
+      "name": "Ella’s field trip",
+      "status": "Slip due tomorrow",
+      "news": 1,
+      "item": "lincoln"
+    },
+    {
+      "id": "ellas-checkup",
+      "name": "Ella’s checkup",
+      "status": "Mon, 3:30 PM",
+      "news": 1,
+      "item": "riverside"
+    },
+    {
+      "id": "water-bill",
+      "name": "Water bill",
+      "status": "Due Nov 12",
+      "news": 1,
+      "item": "water"
+    },
+    {
+      "id": "holiday-flights",
+      "name": "Holiday flights",
+      "status": "Watching prices",
+      "news": 0
+    }
+  ],
+  "memory": {
+    "instructions": [
+      {
+        "id": "i1",
+        "text": "Anything from Ella’s school needs me.",
+        "meta": "Added Sep 3"
+      },
+      {
+        "id": "i2",
+        "text": "Store promotions can wait.",
+        "meta": "Added Sep 10"
+      }
+    ],
+    "learned": [
+      {
+        "id": "l1",
+        "text": "Schedule changes from Coach Martinez go in Heads-up.",
+        "meta": "From 3 opens · Nov 2"
+      },
+      {
+        "id": "l2",
+        "text": "Delivery updates go in Heads-up unless something is late.",
+        "meta": "From 3 of your moves · Nov 2"
+      }
+    ]
+  },
   "demo": {
     "simulate": {
       "item": "riverside",
@@ -480,7 +693,7 @@
           "A package arrives today."
         ],
         "done": [],
-        "setAside": "18 other emails set aside."
+        "otherMail": "18 emails in Other mail."
       }
     },
     "initialSelection": {

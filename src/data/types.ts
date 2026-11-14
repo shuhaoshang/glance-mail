@@ -4,11 +4,12 @@ export type FactKind = 'money' | 'time' | 'people';
 export type InkKind = FactKind | 'judg'; // 'judg' = evidence behind Glance's read (purple ink)
 
 export interface Persona {
-  version: 1;
+  version: 2;
   id: PersonaId;
   name: string; // "Maya"
   role: string; // "Sales"
   initial: string; // avatar letter
+  email: string; // shown in the account menu
   date: string; // "Thursday, November 5" (the demo's fixed "today")
   greeting: string; // "Good morning, Maya"
   coverage: {
@@ -20,8 +21,11 @@ export interface Persona {
   doneBefore: { name: string; note: string }[]; // items already done when the brief opens
   newMail: NewMail | null; // mail that arrives while reading (Maya only)
   items: Item[]; // Needs you, already ranked: urgency first, then value
-  goodToKnow: KnowItem[];
-  setAside: SetAsideGroup[];
+  goodToKnow: KnowItem[]; // shown as the Heads-up tab
+  setAside: SetAsideGroup[]; // deprecated: the old Set aside view; removed in issue 32
+  otherMail: OtherMail; // the Other mail tab
+  watchlist: WatchItem[];
+  memory: { instructions: MemoryNote[]; learned: MemoryNote[] };
   demo: Demo; // demo-only content, not product data
 }
 
@@ -51,6 +55,7 @@ export interface Item {
   judgments: Judgment[]; // Glance's read, each optionally with evidence
   email: { subject: string; from: string; paras: Segment[][] };
   qa: QA[]; // pre-written Ask answers
+  watch?: string; // WatchItem.id; shows “Based on Watchlist: …” in Glance’s reasoning
 }
 
 export interface Fact {
@@ -152,6 +157,7 @@ export interface DateParts {
 }
 
 export interface KnowItem {
+  id: string; // "h1"
   icon: 'tag' | 'clock' | 'people' | 'chart' | 'package' | 'mail';
   tone: FactKind | 'neutral';
   title: string;
@@ -168,7 +174,10 @@ export interface KnowItem {
       post: string;
     };
   };
-  // value appears exactly once in text; it is underlined and opens the source
+  // value appears exactly once in text
+  summary: string; // the detail headline, Glance's words: "15% discount approved by Lena Ortiz, Finance"
+  watch?: string; // WatchItem.id; shows “Part of Watchlist: …” in the detail
+  email: { subject: string; from: string; paras: Segment[][] }; // the date is fact.source.when
   judgment?: {
     label: string;
     read: string;
@@ -187,6 +196,36 @@ export interface SetAsideGroup {
   short: string; // "newsletters" (used in the summary line)
   count: number; // total in the group, including rows not listed
   rows: { id: string; title: string; sub: string; isNew?: boolean }[];
+}
+
+export interface OtherMail {
+  total: number; // every email Glance sorted here; rows lists only some of them
+  rows: OtherMailRow[];
+}
+
+export interface OtherMailRow {
+  id: string;
+  sender: string;
+  subject: string;
+  when: string; // "6:02 AM", "Yesterday"
+  reason: string; // why Glance put it here, in Glance's words
+  basis: 'instruction' | 'learned' | null; // shown as a tag: "Your instruction" or "Learned"
+  isNew?: boolean; // arrives with newMail; hidden until "Add to brief"
+  paras: Segment[][]; // the email body; 'judg' segments mark what Glance used to sort it
+}
+
+export interface WatchItem {
+  id: string;
+  name: string; // "Fernway renewal"
+  status: string; // "Renews Nov 15"
+  news: number; // new emails about it in this brief
+  item?: string; // Item.id or KnowItem.id that the "N new" link opens; present when news > 0
+}
+
+export interface MemoryNote {
+  id: string;
+  text: string;
+  meta: string; // "Added Oct 28" or "From 4 opens · Oct 20"
 }
 
 export interface NewMail {
@@ -210,7 +249,7 @@ export interface Demo {
       needs: [string, string][];
       know: string[];
       done: string[];
-      setAside: string;
+      otherMail: string;
     };
   };
   initialSelection: {

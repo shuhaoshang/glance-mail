@@ -87,7 +87,7 @@ export const FocusVisible: Story = {
 
 export const PersonaAndLevelSelection: Story = {
   play: async ({ canvas, args }) => {
-    const trigger = canvas.queryByRole('button', {
+    let trigger = canvas.queryByRole('button', {
       name: 'Demo',
     });
     if (trigger) {
@@ -103,6 +103,16 @@ export const PersonaAndLevelSelection: Story = {
     let currentPersona: PersonaId = args.initialPersonaId ?? 'maya';
 
     async function checkSelection(personaId: PersonaId, level: DemoLevel) {
+      await waitFor(async () => {
+        await expect(
+          canvas.getByRole('heading', { name: getPersona(personaId).greeting }),
+        ).toBeVisible();
+      });
+      // Changing persona remounts the existing phone disclosure. Use its live controls.
+      trigger = canvas.queryByRole('button', { name: 'Demo' });
+      if (trigger?.getAttribute('aria-expanded') === 'false')
+        await userEvent.click(trigger);
+
       await waitFor(async () => {
         await expect(
           personaGroup().getByRole('button', {
@@ -162,6 +172,12 @@ export const PersonaAndLevelSelection: Story = {
       }
 
       const formatted = persona.demo.levels.l2;
+      await expect(
+        text.getByRole('heading', { name: 'Heads-up' }),
+      ).toBeVisible();
+      await expect(
+        text.queryByRole('heading', { name: 'Good to know' }),
+      ).not.toBeInTheDocument();
       const lists = text.getAllByRole('list');
       await expect(lists).toHaveLength(formatted.done.length ? 3 : 2);
       const needs = within(lists[0]).getAllByRole('listitem');
@@ -173,7 +189,7 @@ export const PersonaAndLevelSelection: Story = {
       for (const value of [...formatted.know, ...formatted.done]) {
         await expect(text.getByText(value)).toBeVisible();
       }
-      await expect(text.getByText(formatted.setAside)).toBeVisible();
+      await expect(text.getByText(formatted.otherMail)).toBeVisible();
       if (!formatted.done.length) {
         await expect(
           text.queryByRole('heading', { name: 'Done' }),
