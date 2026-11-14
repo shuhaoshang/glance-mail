@@ -298,6 +298,3 @@ test('Maya — protect a renewal before Friday', async ({
     ).toContainText(maya.goodToKnow[0].email.subject);
   });
 });
-
-test.fixme('Maya 8 · Move to Heads-up and Undo — https://github.com/shuhaoshang/glance-mail/issues/59', async () => {});
-test.fixme('Correct a false alarm with Move to — https://github.com/shuhaoshang/glance-mail/issues/59', async () => {});

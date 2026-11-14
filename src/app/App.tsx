@@ -1,4 +1,12 @@
-import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useCallback,
+  useId,
+  useRef,
+  useState,
+  type ReactNode,
+} from 'react';
 import { getPersona, type PersonaId } from '../data';
 import { Text } from '../design-system/components/Text/Text';
 import { Icon } from '../design-system/components/Icon/Icon';
@@ -24,10 +32,24 @@ import {
 } from './useItemLifecycle';
 import { NewMailRow } from '../design-system/components/NewMailRow/NewMailRow';
 import { AllDone } from '../design-system/components/AllDone/AllDone';
+import {
+  movedRow,
+  type EmailOrigin,
+  type EmailTab,
+} from '../design-system/components/MailRows/movedEmail';
+import { ToastProvider } from '../design-system/components/Toast/ToastProvider';
+import { useToast } from '../design-system/components/Toast/toastContext';
 import styles from './App.module.css';
 
 type BriefTab = 'needs-you' | 'heads-up' | 'other-mail';
-const labels: Record<BriefTab, string> = {
+function emailName(email: EmailOrigin) {
+  return email.kind === 'needs-you'
+    ? email.item.name
+    : email.kind === 'heads-up'
+      ? email.item.title
+      : email.item.sender;
+}
+const labels: Record<BriefTab, EmailTab> = {
   'needs-you': 'Needs you',
   'heads-up': 'Heads-up',
   'other-mail': 'Other mail',
@@ -38,11 +60,16 @@ function Brief({
   children,
   startClean = false,
   session,
+  onToastSurface,
 }: {
   personaId: PersonaId;
   children?: ReactNode;
   startClean?: boolean;
   session?: ItemLifecycle;
+  onToastSurface: (
+    container: HTMLElement | null,
+    actionBar: HTMLElement | null,
+  ) => void;
 }) {
   const persona = getPersona(personaId);
   const local = useItemLifecycle(persona);
@@ -58,18 +85,22 @@ function Brief({
   const [returnFocus, setReturnFocus] = useState<HTMLElement | null>(null);
   const [focusResult, setFocusResult] = useState<string | null>(null);
   const undoRefs = useRef(new Map<string, HTMLButtonElement>());
-  const items = life.active;
-  const other = persona.otherMail.rows.filter(
-    (row) => !row.isNew || life.newAdded,
-  );
-  const rows = {
-    'needs-you': items,
-    'heads-up': persona.goodToKnow,
-    'other-mail': other,
-  };
+  const rows = life.rows;
+  const items = rows['needs-you'];
+  const other = rows['other-mail'];
+  const appRoot = useRef<HTMLElement>(null);
+  const { showToast, dismissToast } = useToast();
+  const moveUi = useRef<{
+    tab: BriefTab;
+    selections: Partial<Record<BriefTab, string>>;
+    next?: string;
+    id: string;
+    position: { position: number; total: number };
+  } | null>(null);
+  const shownMove = useRef(0);
   const selected = (key: BriefTab) =>
-    rows[key].find((item) => item.id === selections[key])?.id ??
-    (desktop ? rows[key][0]?.id : undefined);
+    rows[key].find((email) => email.item.id === selections[key])?.item.id ??
+    (desktop ? rows[key][0]?.item.id : undefined);
   const selectedId = selected(tab);
   const counts = life.counts;
   const [previousDesktop, setPreviousDesktop] = useState(desktop);
@@ -80,7 +111,7 @@ function Brief({
 
   // An offscreen row has no collapse animation to finish.
   useEffect(() => {
-    if (life.pending && (tab !== 'needs-you' || children))
+    if (life.pending && (tab !== life.pending.source || children))
       life.settle(life.pending.id);
   }, [life, tab, children]);
 
@@ -99,6 +130,86 @@ function Brief({
     frame = requestAnimationFrame(restore);
     return () => cancelAnimationFrame(frame);
   }, [life.records, focusResult]);
+
+  useLayoutEffect(() => {
+    const dialog =
+      !desktop && sheetOpen && !children
+        ? (appRoot.current?.querySelector<HTMLDialogElement>('dialog[open]') ??
+          null)
+        : null;
+    onToastSurface(
+      dialog,
+      dialog?.querySelector<HTMLElement>('[data-detail-actions]') ?? null,
+    );
+  }, [desktop, sheetOpen, children, tab, selectedId, onToastSurface]);
+  const rowElement = useCallback(
+    (key: BriefTab, id?: string) => {
+      return Array.from(
+        document
+          .getElementById(prefix + '-' + key)
+          ?.querySelectorAll<HTMLButtonElement>(
+            '[data-brief-item], [data-mail-item]',
+          ) ?? [],
+      ).find(
+        (node) => (node.dataset.briefItem ?? node.dataset.mailItem) === id,
+      );
+    },
+    [prefix],
+  );
+  function afterSheetsClose(action: () => void) {
+    requestAnimationFrame(function wait() {
+      if (!appRoot.current?.isConnected) return;
+      if (document.querySelector('dialog[open]')) requestAnimationFrame(wait);
+      else action();
+    });
+  }
+  function moveEmail(source: BriefTab, id: string, destination: BriefTab) {
+    if (life.pending || source === destination) return;
+    const index = rows[source].findIndex((email) => email.item.id === id);
+    const remaining = rows[source].filter((email) => email.item.id !== id);
+    moveUi.current = {
+      tab: source,
+      selections: { ...selections, [source]: id },
+      id,
+      next: (remaining[index] ?? remaining[0])?.item.id,
+      position: sheetPosition,
+    };
+    dismissToast();
+    life.move(id, destination);
+    setSheetOpen(false);
+  }
+  useEffect(() => {
+    const receipt = life.lastMove;
+    if (!receipt || shownMove.current === receipt.sequence) return;
+    shownMove.current = receipt.sequence;
+    const before = moveUi.current;
+    if (!before) return;
+    setSelections((current) => ({ ...current, [receipt.from]: before.next }));
+    afterSheetsClose(() => {
+      const target =
+        rowElement(tab, tab === receipt.from ? before.next : selectedId) ??
+        document.getElementById(prefix + '-' + tab + '-tab');
+      target?.focus({ preventScroll: true });
+      showToast({
+        title: 'Moved to ' + labels[receipt.to] + '.',
+        description:
+          'Glance will sort emails like this into ' + labels[receipt.to] + '.',
+        returnFocus: target,
+        onUndo: () => {
+          life.undoMove(receipt);
+          setSheetOpen(false);
+          afterSheetsClose(() => {
+            setTab(before.tab);
+            setSelections(before.selections);
+            setSheetPosition(before.position);
+            requestAnimationFrame(() =>
+              rowElement(before.tab, before.id)?.focus({ preventScroll: true }),
+            );
+          });
+        },
+      });
+    });
+  }, [life, showToast, tab, selectedId, prefix, rowElement]);
 
   function act(id: string, result: Resolution) {
     setFocusResult(id);
@@ -119,7 +230,7 @@ function Brief({
     setSelections((current) => ({ ...current, [key]: id }));
     setReturnFocus(trigger);
     setSheetPosition({
-      position: rows[key].findIndex((item) => item.id === id) + 1,
+      position: rows[key].findIndex((email) => email.item.id === id) + 1,
       total: key === 'other-mail' ? counts.other : rows[key].length,
     });
     if (!desktop) setSheetOpen(true);
@@ -159,47 +270,57 @@ function Brief({
             .replace(/^Tomorrow/, 'tomorrow'),
       }),
   });
-  const detailProps = (key: BriefTab): DetailPanelProps[] => {
-    if (key === 'needs-you')
-      return persona.items
-        .filter((item) => !item.isNew || life.newAdded)
-        .map((item) => ({
-          ...detailActions(item.id),
-          item,
-          account: accountFor(item.account),
-          watchlist: watchlistFor(item.watch),
+  const detailProps = (key: BriefTab): DetailPanelProps[] =>
+    life.emails
+      .filter(
+        (email) =>
+          (email.kind === key || life.seen[email.item.id]?.includes(key)) &&
+          (!('isNew' in email.item) || !email.item.isNew || life.newAdded),
+      )
+      .map((email) => {
+        const item = email.item;
+        const common = {
+          ...(key === 'needs-you' ? detailActions(item.id) : {}),
+          busy: !!life.pending,
+          currentTab: key,
+          onMoveTo: (destination: BriefTab) =>
+            moveEmail(key, item.id, destination),
+          movedTo: email.kind === key ? undefined : labels[key],
           position: Math.max(
             1,
-            items.findIndex((entry) => entry.id === item.id) + 1,
+            rows[key].findIndex((entry) => entry.item.id === item.id) + 1,
           ),
-          total: counts.needs,
-          initialFactId:
-            !startClean && desktop && item.id === persona.items[0]?.id
-              ? item.facts[persona.demo.initialSelection.openFactIndex]?.id
-              : undefined,
-          initialReasonOpen:
-            !startClean &&
-            desktop &&
-            item.id === persona.items[0]?.id &&
-            persona.demo.initialSelection.reasonOpen,
-        }));
-    if (key === 'heads-up')
-      return persona.goodToKnow.map((item, index) => ({
-        variant: 'heads-up',
-        item,
-        account: accountFor(item.account),
-        watchlist: watchlistFor(item.watch),
-        position: index + 1,
-        total: counts.know,
-      }));
-    return other.map((item, index) => ({
-      variant: 'other-mail',
-      item,
-      account: defaultAccount,
-      position: index + 1,
-      total: counts.other,
-    }));
-  };
+          total: key === 'other-mail' ? counts.other : rows[key].length,
+          account: accountFor('account' in item ? item.account : undefined),
+          watchlist: watchlistFor('watch' in item ? item.watch : undefined),
+        };
+        if (email.kind === 'needs-you')
+          return {
+            ...common,
+            item: email.item,
+            checkedSteps: life.checks[item.id] ?? [],
+            onChecksChange: (values: boolean[]) => life.check(item.id, values),
+            askedQuestions: life.asked[item.id] ?? [],
+            onAskQuestion: (index: number) => life.ask(item.id, index),
+            initialFactId:
+              !startClean &&
+              desktop &&
+              key === email.kind &&
+              item.id === persona.items[0]?.id
+                ? email.item.facts[persona.demo.initialSelection.openFactIndex]
+                    ?.id
+                : undefined,
+            initialReasonOpen:
+              !startClean &&
+              desktop &&
+              key === email.kind &&
+              item.id === persona.items[0]?.id &&
+              persona.demo.initialSelection.reasonOpen,
+          };
+        return email.kind === 'heads-up'
+          ? { ...common, variant: 'heads-up', item: email.item }
+          : { ...common, variant: 'other-mail', item: email.item };
+      });
   const tabCounts = {
     'needs-you': counts.needs,
     'heads-up': counts.know,
@@ -207,6 +328,7 @@ function Brief({
   };
   return (
     <main
+      ref={appRoot}
       className={[styles.page, desktop && styles.desktop]
         .filter(Boolean)
         .join(' ')}
@@ -290,17 +412,22 @@ function Brief({
                       }}
                     />
                   )}
-                  {items.map((item, index) => (
+                  {items.map((email, index) => (
                     <BriefRow
-                      key={item.id}
-                      item={item}
+                      key={email.item.id}
+                      item={email.kind === key ? email.item : movedRow(email)}
                       rank={index + 1}
-                      account={minorityAccount(item.account)}
+                      account={minorityAccount(
+                        'account' in email.item
+                          ? email.item.account
+                          : undefined,
+                      )}
                       selected={
-                        (desktop || sheetOpen) && item.id === selected(key)
+                        (desktop || sheetOpen) &&
+                        email.item.id === selected(key)
                       }
-                      leaving={life.pending?.id === item.id}
-                      onLeaveComplete={() => life.settle(item.id)}
+                      leaving={life.pending?.id === email.item.id}
+                      onLeaveComplete={() => life.settle(email.item.id)}
                       onSelect={(id, trigger) => selectRow(key, id, trigger)}
                     />
                   ))}
@@ -319,31 +446,42 @@ function Brief({
                   {persona.doneBefore.map((item) => (
                     <DoneRow key={item.name} {...item} />
                   ))}
-                  {Object.entries(life.records).map(([id, result]) => (
-                    <DoneRow
-                      key={id + ':' + result.kind + ':' + result.note}
-                      undoDisabled={!!life.pending}
-                      name={persona.items.find((item) => item.id === id)!.name}
-                      kind={result.kind}
-                      note={result.note}
-                      undoRef={(button) => {
-                        if (button) undoRefs.current.set(id, button);
-                        else undoRefs.current.delete(id);
-                      }}
-                      onUndo={() => undo(id)}
-                    />
-                  ))}
+                  {Object.entries(life.records)
+                    .filter(([id]) => life.orders['needs-you'].includes(id))
+                    .map(([id, result]) => (
+                      <DoneRow
+                        key={id + ':' + result.kind + ':' + result.note}
+                        undoDisabled={!!life.pending}
+                        name={emailName(
+                          life.emails.find((email) => email.item.id === id)!,
+                        )}
+                        kind={result.kind}
+                        note={result.note}
+                        undoRef={(button) => {
+                          if (button) undoRefs.current.set(id, button);
+                          else undoRefs.current.delete(id);
+                        }}
+                        onUndo={() => undo(id)}
+                      />
+                    ))}
                 </MailList>
               )}
               {key === 'heads-up' && (
-                <MailList tab="Heads-up" empty={!persona.goodToKnow.length}>
-                  {persona.goodToKnow.map((item) => (
+                <MailList tab="Heads-up" empty={!rows['heads-up'].length}>
+                  {rows['heads-up'].map((email) => (
                     <HeadsUpRow
-                      key={item.id}
-                      item={item}
-                      account={minorityAccount(item.account)}
+                      key={email.item.id}
+                      item={email.kind === key ? email.item : movedRow(email)}
+                      leaving={life.pending?.id === email.item.id}
+                      onLeaveComplete={() => life.settle(email.item.id)}
+                      account={minorityAccount(
+                        'account' in email.item
+                          ? email.item.account
+                          : undefined,
+                      )}
                       selected={
-                        (desktop || sheetOpen) && item.id === selected(key)
+                        (desktop || sheetOpen) &&
+                        email.item.id === selected(key)
                       }
                       onSelect={(id, trigger) => selectRow(key, id, trigger)}
                     />
@@ -352,7 +490,11 @@ function Brief({
               )}
               {key === 'other-mail' && (
                 <OtherMailList
-                  items={other}
+                  items={other.map((email) =>
+                    email.kind === key ? email.item : movedRow(email),
+                  )}
+                  pendingId={life.pending?.id}
+                  onLeaveComplete={life.settle}
                   total={counts.other}
                   selected={desktop || sheetOpen ? selected(key) : undefined}
                   onSelect={(id, trigger) => selectRow(key, id, trigger)}
@@ -360,7 +502,9 @@ function Brief({
               )}
             </div>
             {detailProps(key).map((props) => {
-              const active = props.item.id === selected(key);
+              const active =
+                life.location(props.item.id) === key &&
+                props.item.id === selected(key);
               const panel = (
                 <DetailPanel
                   {...props}
@@ -410,5 +554,23 @@ export function App(props: {
   startClean?: boolean;
   session?: ItemLifecycle;
 }) {
-  return <Brief key={props.personaId} {...props} />;
+  const [surface, setSurface] = useState<{
+    container: HTMLElement | null;
+    actionBar: HTMLElement | null;
+  }>({ container: null, actionBar: null });
+  const onToastSurface = useCallback(
+    (container: HTMLElement | null, actionBar: HTMLElement | null) => {
+      setSurface((current) =>
+        current.container === container && current.actionBar === actionBar
+          ? current
+          : { container, actionBar },
+      );
+    },
+    [],
+  );
+  return (
+    <ToastProvider key={props.personaId} {...surface}>
+      <Brief key={props.personaId} {...props} onToastSurface={onToastSurface} />
+    </ToastProvider>
+  );
 }
