@@ -57,3 +57,16 @@ export const Watchlist: Story = {
     await expect(canvas.queryByText(/Not for you/)).not.toBeInTheDocument();
   },
 };
+
+export const WatchlistWithoutNavigation: Story = {
+  args: { watchlist: { name: maya.watchlist[0].name } },
+  play: async ({ canvas, args }) => {
+    await expect(
+      canvas.getByText('Based on Watchlist: ' + args.watchlist!.name, {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(canvas.queryByRole('button')).not.toBeInTheDocument();
+    await expect(canvas.queryByRole('link')).not.toBeInTheDocument();
+  },
+};

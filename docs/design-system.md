@@ -649,6 +649,7 @@ The tab remembers its selected row for the session. Opening a tab for the first 
 `--color-surface`, `--radius-card`, `--shadow-panel`, padding 24 28 28.
 
 - **Top row:** position on the left (“Needs you · 1 of 3”, “Heads-up · 2 of 3”, “Other mail · 1 of 31”; 14/20 medium, muted) and the SegmentedControl on the right.
+- **Narrow desktop header:** when the top row does not fit, the position takes its own line and SegmentedControl sits below it with `--space-12` between them and the existing padding. Words never break inside “Details” or “Ask”; no new breakpoint, token, or smaller type.
 - **SegmentedControl (changed):** track and sizes as built. Selected segment: `--color-ink` fill, `--color-on-ink` text, no shadow. A new `size="small"`: track padding 2, segments 24 tall, padding 4 8, 12/16 semibold; used for the theme control in the account menu on desktop.
 - **Account fallback:** a Heads-up or Other mail email without an `account` belongs to the persona's main account: the one not marked `minority`. The caller resolves and passes that account to DetailPanel; no data change is needed.
 - **Needs you detail:** as built (title, Person, AccountLabel, request, GlanceMark, hint line, SceneCard, SourcePanel, ReasonPill and ReasonPanel), with the action bar in 9.6.
@@ -661,11 +662,13 @@ The tab remembers its selected row for the session. Opening a tab for the first 
   - The email body in a `--color-surface-muted` block, radius `--radius-panel`, padding 20 24, paragraphs in `Reading` style 16 apart, highlights as in EmailView (`judg` uses `--color-judgment-ink`).
   - The legend, 12 below, 12/16 muted: a `judgment`-ink sample “Highlighted”, “what Glance used to sort it.”, then a money-ink sample “Amounts” “and” a time-ink sample “dates” “are marked too.” Show only the kinds that appear in the email; with only `judg`, the sentence ends after “sort it.”
 - **Moved emails** keep the detail of where they came from. Under the Person line they show “You moved this here. Glance will sort emails like it the same way.” (14/20, `--color-brand-text` on `--color-brand-tint`, padding 8 12, radius 12).
-- **Empty tab:** the list panel shows “Nothing here.” (16/24 semibold) and “Emails you move to {tab} will show up here.” (14/20, muted), centered, 40 padding; there is no detail panel. Needs you with everything done keeps the built AllDone.
+- **Empty tab:** the list panel shows “Nothing here.” (16/24 semibold) and “Emails you move to {tab} will show up here.” (14/20, muted), centered, 40 padding; there is no detail panel. Needs you with everything done keeps the built AllDone. In the app, its body reads “{done} of {total} actions done. {know} emails in Heads-up and {other} in Other mail.” Keep the existing snoozed sentence after the first sentence when applicable. Legacy wording remains only in existing library and edge-state stories.
 
 **ReasonPill (changed):** ring is `--border-hairline` in `--color-brand-stroke`. Label: “Why it’s {ordinal}” plus “: {first judgment label}” when the item has a judgment (“Why it’s first: Renewal risk”, “Why it’s second”). Ordinals are words up to tenth; after that “Why it’s ranked 11th”. A chevron at the end points down, and up while open. Moved items have no pill.
 
 **ReasonPanel (changed):** title and judgments as built. The “Not for you?” block and its button are removed (D53). When the item has `watch`, a last line under a hairline: “Based on **Watchlist: {name}**”, the name a brand text button that opens the Watchlist tab.
+
+**Watchlist attribution without navigation:** when no callback is passed, render “Based on Watchlist: {name}” and “Part of Watchlist: {name}” as plain text. Task 28 connects the name to Watchlist; when a callback is available, keep the existing brand text button.
 
 ### 9.6 Action bar
 

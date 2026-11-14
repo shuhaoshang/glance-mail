@@ -210,3 +210,101 @@ test('Tab and item changes preserve source, reasoning, Ask, checklist, and email
     ).toHaveAttribute('aria-selected', 'true');
   }
 });
+
+test('Review states keep header words intact, update AllDone, and show plain Watchlist attribution', async ({
+  page,
+}) => {
+  for (const width of [1280, 1024, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await cleanStart(page, 'maya');
+    await row(page, maya.items[0].name).click();
+    if (width >= 960) {
+      const position = detail(page).getByText('Needs you · 1 of 3', {
+        exact: true,
+      });
+      const tabs = detail(page).getByRole('tablist', exact('Item views'));
+      const [positionBox, tabsBox] = await Promise.all([
+        position.boundingBox(),
+        tabs.boundingBox(),
+      ]);
+      if (width === 1024)
+        expect(tabsBox!.y - positionBox!.y - positionBox!.height).toBe(12);
+      else expect(positionBox!.y).toBeGreaterThanOrEqual(tabsBox!.y);
+      for (const name of ['Details', 'Ask']) {
+        const lines = await tabs
+          .getByRole('tab', exact(name))
+          .evaluate((node) => {
+            const range = document.createRange();
+            range.selectNodeContents(node);
+            return new Set([...range.getClientRects()].map((rect) => rect.y))
+              .size;
+          });
+        expect(lines).toBe(1);
+      }
+    }
+    await detail(page)
+      .getByRole('button', { name: /^Why it’s first:/ })
+      .click();
+    const attribution = 'Based on Watchlist: Fernway renewal';
+    await expect(
+      detail(page).getByText(attribution, { exact: true }),
+    ).toBeVisible();
+    await expect(
+      detail(page).getByRole('button', { name: /Watchlist:/ }),
+    ).toHaveCount(0);
+    await expect(
+      detail(page).getByRole('link', { name: /Watchlist:/ }),
+    ).toHaveCount(0);
+    if (width === 390) {
+      await detail(page).getByRole('button', exact('Close detail')).click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    }
+    await page.getByRole('tab', exact('Heads-up 3')).click();
+    await page
+      .getByRole('list', exact('Heads-up'))
+      .getByRole('button')
+      .first()
+      .click();
+    await expect(
+      detail(page).getByText('Part of Watchlist: Fernway renewal', {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(
+      detail(page).getByRole('button', { name: /Watchlist:/ }),
+    ).toHaveCount(0);
+    await expect(
+      detail(page).getByRole('link', { name: /Watchlist:/ }),
+    ).toHaveCount(0);
+    if (width === 390) {
+      await detail(page).getByRole('button', exact('Close detail')).click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+    }
+    await page.getByRole('tab', exact('Needs you 3')).click();
+    for (const item of maya.items.filter((item) => !item.isNew)) {
+      await row(page, item.name).click();
+      if (item.id === 'halden') {
+        await detail(page).getByRole('button', exact('Snooze')).click();
+        await detail(page)
+          .getByRole('button', exact('Tomorrow, 8:00 AM'))
+          .click();
+      } else await detail(page).getByRole('button', exact('Done')).click();
+      await expect(page.getByRole('dialog')).toHaveCount(0);
+      await expect(
+        page.getByRole('button', exact('Undo ' + item.name)),
+      ).toBeVisible();
+    }
+    const empty = page.getByRole('region', exact('All done'));
+    await expect(empty).toContainText(
+      '3 of 4 actions done. 1 snoozed item will come back later. 3 emails in Heads-up and 31 in Other mail.',
+    );
+    await expect(empty).not.toContainText('good to know');
+    await page.getByRole('button', exact('Undo Halden Health')).click();
+    await row(page, 'Halden Health').click();
+    await detail(page).getByRole('button', exact('Done')).click();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+    await expect(empty).toContainText(
+      '4 of 4 actions done. 3 emails in Heads-up and 31 in Other mail.',
+    );
+  }
+});

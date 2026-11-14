@@ -118,3 +118,37 @@ export const HeadsUpDetail: Story = { play: showTab('Heads-up', true) };
 export const OtherMailDetail: Story = { play: showTab('Other mail', true) };
 export const DanielHeadsUp: Story = { ...Daniel, play: showTab('Heads-up') };
 export const SarahOtherMail: Story = { ...Sarah, play: showTab('Other mail') };
+
+export const WatchlistReasoning: Story = {
+  play: async ({ canvas }) => {
+    await userEvent.click(
+      within(canvas.getByRole('list', { name: 'Needs you' }))
+        .getAllByRole('button')
+        .find((button) => button.hasAttribute('data-brief-item'))!,
+    );
+    const panel = within(canvas.getByRole('region', { name: 'Selected item' }));
+    await userEvent.click(
+      panel.getByRole('button', { name: /^Why it’s first:/ }),
+    );
+    await expect(
+      panel.getByText('Based on Watchlist: Fernway renewal', { exact: true }),
+    ).toBeVisible();
+    await expect(
+      panel.queryByRole('button', { name: /Watchlist:/ }),
+    ).not.toBeInTheDocument();
+  },
+};
+export const WatchlistHeadsUp: Story = {
+  play: async (context) => {
+    await showTab('Heads-up', true)(context);
+    const panel = within(
+      context.canvas.getByRole('region', { name: 'Selected item' }),
+    );
+    await expect(
+      panel.getByText('Part of Watchlist: Fernway renewal', { exact: true }),
+    ).toBeVisible();
+    await expect(
+      panel.queryByRole('button', { name: /Watchlist:/ }),
+    ).not.toBeInTheDocument();
+  },
+};

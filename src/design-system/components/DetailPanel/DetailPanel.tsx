@@ -35,7 +35,7 @@ export interface NeedsYouDetailProps {
   onAskQuestion?: (index: number) => void;
   onDone?: () => void;
   onSnooze?: (label: string) => void;
-  watchlist?: { name: string; onOpen: () => void };
+  watchlist?: { name: string; onOpen?: () => void };
   busy?: boolean;
   checkedSteps?: boolean[];
   onChecksChange?: (values: boolean[]) => void;

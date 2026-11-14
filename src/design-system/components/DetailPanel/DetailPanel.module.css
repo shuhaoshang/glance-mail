@@ -22,10 +22,17 @@
 }
 .topRow {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-12);
   min-block-size: calc(var(--size-touch-compact) + var(--space-4) * 2);
+}
+.topRow > * {
+  flex-shrink: 0;
+}
+.topRow > [role='tablist'] > [role='tab'] {
+  overflow-wrap: normal;
 }
 .panel .meta {
   font-weight: var(--font-weight-semibold);
@@ -97,6 +104,7 @@
   flex: 1;
 }
 .mobile .topRow {
+  flex-wrap: nowrap;
   min-block-size: var(--space-24);
   block-size: var(--space-24);
 }

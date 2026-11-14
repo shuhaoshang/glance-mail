@@ -6,7 +6,7 @@ The app now uses Needs you, Heads-up, and Other mail. Each tab keeps its selecte
 
 ## Screenshots
 
-All 56 images were captured with isolated Chromium color-scheme and reduced-motion emulation. No system settings were changed. Desktop: 1280 × 1000. Phone: 390 × 844. Full-page images include content below the viewport. The brief stories use the existing clean-start option so initial source and reasoning panels do not obscure the page structure.
+All 68 images were captured with isolated Chromium color-scheme and reduced-motion emulation. No system settings were changed. Desktop: 1280 × 1000. Phone: 390 × 844. Full-page images include content below the viewport. The brief stories use the existing clean-start option so initial source and reasoning panels do not obscure the page structure.
 
 | Persona and tab | Desktop light | Desktop dark | Phone light | Phone dark |
 | --- | --- | --- | --- | --- |
@@ -29,7 +29,15 @@ All 56 images were captured with isolated Chromium color-scheme and reduced-moti
 | Heads-up sheet | — | — | [Light](maya-heads-up-detail-phone-light.jpg) | [Dark](maya-heads-up-detail-phone-dark.jpg) |
 | Other mail sheet | — | — | [Light](maya-other-mail-detail-phone-light.jpg) | [Dark](maya-other-mail-detail-phone-dark.jpg) |
 
-The 1024-wide desktop samples show the unresolved label wrapping described below: [light](maya-narrow-desktop-light.jpg), [dark](maya-narrow-desktop-dark.jpg).
+| Added review state | Desktop light | Desktop dark | Phone light | Phone dark |
+| --- | --- | --- | --- | --- |
+| AllDone with snoozed items | [Light](maya-all-snoozed-desktop-light.jpg) | [Dark](maya-all-snoozed-desktop-dark.jpg) | [Light](maya-all-snoozed-phone-light.jpg) | [Dark](maya-all-snoozed-phone-dark.jpg) |
+| Needs you Watchlist attribution | [Light](maya-watchlist-reasoning-desktop-light.jpg) | [Dark](maya-watchlist-reasoning-desktop-dark.jpg) | [Light](maya-watchlist-reasoning-phone-light.jpg) | [Dark](maya-watchlist-reasoning-phone-dark.jpg) |
+| Heads-up Watchlist attribution | [Light](maya-watchlist-heads-up-desktop-light.jpg) | [Dark](maya-watchlist-heads-up-desktop-dark.jpg) | [Light](maya-watchlist-heads-up-phone-light.jpg) | [Dark](maya-watchlist-heads-up-phone-dark.jpg) |
+
+Phone reasoning screenshots are scrolled to the attribution line inside the sheet.
+
+The updated 1024-wide desktop samples show the approved stacked header: [light](maya-narrow-desktop-light.jpg), [dark](maya-narrow-desktop-dark.jpg).
 
 Before the structural change: [desktop light](../21-shared-components/brief-desktop-light.jpg), [desktop dark](../21-shared-components/brief-desktop-dark.jpg), [phone light](../21-shared-components/brief-phone-light.jpg), [phone dark](../21-shared-components/brief-phone-dark.jpg). The previous row/detail component review is [task 25](../25-rows-and-details/README.md).
 
@@ -55,12 +63,22 @@ Compared with [Needs you](../../screens/v2/needs-you.png), [done and snoozed](..
 ## Validation
 
 - App and Storybook builds, lint, formatting, English checks, and data validation pass.
-- 88 Playwright checks pass in light/dark and normal/reduced motion. Two Move to scenarios are explicitly marked `fixme` with [task 27 / #59](https://github.com/shuhaoshang/glance-mail/issues/59), producing eight skipped project cases.
+- 92 Playwright checks pass in light/dark and normal/reduced motion. Two Move to scenarios are explicitly marked `fixme` with [task 27 / #59](https://github.com/shuhaoshang/glance-mail/issues/59), producing eight skipped project cases.
 - The tab checks cover all three personas at 1280, 1024, and 390 widths, every visible email's account destination, one greeting h1, named panels, keyboard order, phone close/focus return, and no horizontal overflow.
-- 56 related Storybook stories pass in both themes at 1280 and 390: 224 renders and interaction runs. These include Brief, New mail, Item lifecycle, Ask, and Demo.
+- 69 related Storybook stories pass in both themes at 1280 and 390: 276 renders and interaction runs. These include Brief, New mail, Item lifecycle, Ask, Demo, AllDone, and ReasonPanel.
+
+## Review updates
+
+Implemented all three proposals approved in the [PR #71 review](https://github.com/shuhaoshang/glance-mail/pull/71#issuecomment-6876067729):
+
+1. The detail header wraps naturally when the position and tabs do not fit together. The position stays above the SegmentedControl with `--space-12` between them. Existing type and padding remain; “Details” and “Ask” stay whole. Compare the 1024 screenshots with the previous [light](https://github.com/shuhaoshang/glance-mail/blob/912c1bc31922c124d2f5fbc5ae0454e3e3f9e902/docs/reviews/26-brief-in-tabs/maya-narrow-desktop-light.jpg) and [dark](https://github.com/shuhaoshang/glance-mail/blob/912c1bc31922c124d2f5fbc5ae0454e3e3f9e902/docs/reviews/26-brief-in-tabs/maya-narrow-desktop-dark.jpg) versions.
+2. The app uses the new AllDone wording, including the existing snoozed sentence when needed. Existing library and edge-state uses retain the default legacy wording. Compare the previous [desktop light](https://github.com/shuhaoshang/glance-mail/blob/912c1bc31922c124d2f5fbc5ae0454e3e3f9e902/docs/reviews/26-brief-in-tabs/maya-all-done-desktop-light.jpg) and [phone dark](https://github.com/shuhaoshang/glance-mail/blob/912c1bc31922c124d2f5fbc5ae0454e3e3f9e902/docs/reviews/26-brief-in-tabs/maya-all-done-phone-dark.jpg) screenshots with the updated images above.
+3. Needs you reasoning and Heads-up details show their Watchlist attribution as plain text without a callback. Existing callback-driven examples still render the working brand text button. The app supplies names from each item's `watch` reference without enabling Watchlist navigation.
+
+Section 9.5 now documents the header behavior, AllDone wording, and attribution fallback. The approved “2 of 4 done” count remains unchanged.
+
+New review stories: Patterns/Brief → WatchlistReasoning and WatchlistHeadsUp; Composites/AllDone → TabbedComplete and TabbedSnoozed; Composites/ReasonPanel → WatchlistWithoutNavigation.
 
 ## Open questions
 
-1. **Narrow desktop detail navigation:** the specified 80 side padding, 416 list column, and existing segment padding leave little space at 1024. There is no horizontal overflow, but “Details” and “Ask” can break inside words. Proposal: let the detail's position text stay on its own line when the two controls do not fit, with the SegmentedControl below it using the existing `--space-12` gap and its existing padding. No new breakpoint, token, or smaller type would be needed. This layout change is not implemented.
-2. **AllDone wording:** D60 preserves the built component, whose body still says “good to know” and “set aside.” Its old Review set aside action is omitted because the view has been removed. Proposal: add an optional Visual 2.0 wording variant: “{done} of {total} actions done. {know} emails in Heads-up and {other} in Other mail.” Keep the existing snoozed sentence when needed and preserve the legacy wording for edge-state/library examples. Awaiting approval.
-3. **Watchlist attribution before task 28:** Watchlist is out of scope and its tab is intentionally absent. The existing detail API couples the attribution line to a working Watchlist callback, so these lines are omitted for now. Proposal: allow a name without a callback and render “Based on Watchlist: {name}” / “Part of Watchlist: {name}” as plain text until #60 connects the links. No inert link or placeholder destination has been added.
+None. All three proposals were approved and implemented.

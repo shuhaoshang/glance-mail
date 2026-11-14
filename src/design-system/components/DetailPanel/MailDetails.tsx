@@ -22,7 +22,7 @@ export type MailDetailProps = {
   mobile?: boolean;
   onClose?: () => void;
   movedTo?: EmailTab;
-  watchlist?: { name: string; onOpen: () => void };
+  watchlist?: { name: string; onOpen?: () => void };
   initialTab?: 'details' | 'email';
 } & (
   | { variant: 'heads-up'; item: KnowItem }
@@ -204,14 +204,20 @@ export function MailDetails(props: MailDetailProps) {
               )}
               {heads.watch && watchlist && (
                 <Text as="p" variant="meta" className={mail.watch}>
-                  Part of{' '}
-                  <Button
-                    variant="text"
-                    size="compact"
-                    onClick={watchlist.onOpen}
-                  >
-                    {'Watchlist: ' + watchlist.name}
-                  </Button>
+                  {watchlist.onOpen ? (
+                    <>
+                      Part of{' '}
+                      <Button
+                        variant="text"
+                        size="compact"
+                        onClick={watchlist.onOpen}
+                      >
+                        {'Watchlist: ' + watchlist.name}
+                      </Button>
+                    </>
+                  ) : (
+                    'Part of Watchlist: ' + watchlist.name
+                  )}
                 </Text>
               )}
             </div>

@@ -138,6 +138,10 @@ function Brief({
     const account = accountFor(id);
     return account.minority ? account : undefined;
   };
+  const watchlistFor = (id?: string) => {
+    const entry = persona.watchlist.find((watch) => watch.id === id);
+    return entry ? { name: entry.name } : undefined;
+  };
   const detailActions = (id: string) => ({
     busy: !!life.pending,
     checkedSteps: life.checks[id] ?? [],
@@ -163,6 +167,7 @@ function Brief({
           ...detailActions(item.id),
           item,
           account: accountFor(item.account),
+          watchlist: watchlistFor(item.watch),
           position: Math.max(
             1,
             items.findIndex((entry) => entry.id === item.id) + 1,
@@ -183,6 +188,7 @@ function Brief({
         variant: 'heads-up',
         item,
         account: accountFor(item.account),
+        watchlist: watchlistFor(item.watch),
         position: index + 1,
         total: counts.know,
       }));
@@ -301,6 +307,7 @@ function Brief({
                   {!items.length && (
                     <div role="listitem">
                       <AllDone
+                        wording="tabs"
                         done={counts.done}
                         total={counts.actions}
                         know={counts.know}
