@@ -239,7 +239,7 @@ test('Maya — protect a renewal before Friday', async ({
     await expectNeeds(page, [brightline.name, halden.name]);
     await page.getByRole('button', exact('Add to brief')).click();
     await expect(needs(page).getByRole('listitem').first()).toContainText(
-      maya.newMail!.added,
+      '2 new added: 1 here, 1 in Other mail',
     );
     await expectNeeds(page, [brightline.name, halden.name, okto.name]);
     await expect(

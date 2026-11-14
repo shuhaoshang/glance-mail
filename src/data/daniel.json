@@ -1,10 +1,11 @@
 {
   "$schema": "../../docs/data-model.md",
-  "version": 1,
+  "version": 2,
   "id": "daniel",
   "name": "Daniel",
   "role": "Manager",
   "initial": "D",
+  "email": "daniel@example.com",
   "date": "Thursday, November 5",
   "greeting": "Good morning, Daniel",
   "coverage": {
@@ -198,7 +199,8 @@
             "post": " of work."
           }
         }
-      ]
+      ],
+      "watch": "checkout-launch"
     },
     {
       "id": "riya",
@@ -277,7 +279,8 @@
           "found": false,
           "a": "The scores are in the hiring tool, not in your email."
         }
-      ]
+      ],
+      "watch": "riya-sen-hiring-loop"
     },
     {
       "id": "expense",
@@ -499,11 +502,13 @@
             "post": " off to visit family."
           }
         }
-      ]
+      ],
+      "watch": "leas-time-off-request"
     }
   ],
   "goodToKnow": [
     {
+      "id": "h1",
       "icon": "chart",
       "tone": "neutral",
       "title": "Weekly report",
@@ -518,9 +523,32 @@
           "hl": "Dec 8",
           "post": " while we finish the index migration."
         }
+      },
+      "summary": "3 of 5 projects on track; Search moves to Dec 8",
+      "email": {
+        "subject": "Weekly report: Nov 4",
+        "from": "Mei Tan",
+        "paras": [
+          [
+            "Hi Daniel,"
+          ],
+          [
+            "3 of 5 projects are on track. Search moves to ",
+            {
+              "t": "Dec 8",
+              "kind": "time",
+              "tag": "Time · Dec 8"
+            },
+            " while we finish the index migration."
+          ],
+          [
+            "Details are in the tracker.\nMei"
+          ]
+        ]
       }
     },
     {
+      "id": "h2",
       "icon": "clock",
       "tone": "time",
       "title": "Design review",
@@ -535,9 +563,33 @@
           "hl": "Monday at 2:00 PM",
           "post": " so the checkout decision lands first."
         }
+      },
+      "summary": "Moved to Mon, 2:00 PM",
+      "watch": "checkout-launch",
+      "email": {
+        "subject": "Design review moved",
+        "from": "Kofi Mensah",
+        "paras": [
+          [
+            "Hi team,"
+          ],
+          [
+            "I’m moving our design review to ",
+            {
+              "t": "Monday at 2:00 PM",
+              "kind": "time",
+              "tag": "Time · Mon, 2:00 PM"
+            },
+            " so the checkout decision lands first."
+          ],
+          [
+            "Kofi"
+          ]
+        ]
       }
     },
     {
+      "id": "h3",
       "icon": "clock",
       "tone": "time",
       "title": "Car service",
@@ -553,6 +605,25 @@
           "hl": "Saturday, Nov 7 at 9:00 AM",
           "post": "."
         }
+      },
+      "summary": "Booked for Sat, 9:00 AM",
+      "email": {
+        "subject": "Your appointment is confirmed",
+        "from": "Hillside Auto",
+        "paras": [
+          [
+            "Your car service is booked for ",
+            {
+              "t": "Saturday, Nov 7 at 9:00 AM",
+              "kind": "time",
+              "tag": "Time · Sat, 9:00 AM"
+            },
+            "."
+          ],
+          [
+            "Reply to this email if you need to reschedule."
+          ]
+        ]
       }
     }
   ],
@@ -609,6 +680,166 @@
       ]
     }
   ],
+  "otherMail": {
+    "total": 64,
+    "rows": [
+      {
+        "id": "c1",
+        "sender": "Sam Patel → Payments team",
+        "subject": "Re: saved cards scope",
+        "when": "Yesterday",
+        "reason": "You were CC’d, and nothing asks you",
+        "basis": "learned",
+        "paras": [
+          [
+            "Team, here’s the updated scope for saved cards. We can ship tokenization first and add the wallet view later."
+          ],
+          [
+            {
+              "t": "Daniel, CC’ing you for visibility. No action needed.",
+              "kind": "judg",
+              "tag": "Why it’s here · You were CC’d, and nothing asks you"
+            }
+          ]
+        ]
+      },
+      {
+        "id": "c2",
+        "sender": "Priya Raman → Design",
+        "subject": "Accessibility audit, round 2",
+        "when": "Yesterday",
+        "reason": "Sent to a team list you’re on",
+        "basis": "learned",
+        "paras": [
+          [
+            "Round 2 of the audit is done. We fixed 18 of 22 issues; the rest land by ",
+            {
+              "t": "Nov 20",
+              "kind": "time",
+              "tag": "Time · Nov 20"
+            },
+            "."
+          ],
+          [
+            {
+              "t": "Sent to the Design team list.",
+              "kind": "judg",
+              "tag": "Why it’s here · Sent to a team list you’re on"
+            }
+          ]
+        ]
+      },
+      {
+        "id": "n1",
+        "sender": "Design Systems Digest",
+        "subject": "Five ways teams name their tokens",
+        "when": "6:10 AM",
+        "reason": "Newsletter you rarely open",
+        "basis": null,
+        "paras": [
+          [
+            "This week: five naming schemes for design tokens, and what breaks when teams rename them."
+          ],
+          [
+            {
+              "t": "You haven’t opened this digest in a month.",
+              "kind": "judg",
+              "tag": "Why it’s here · Newsletter you rarely open"
+            }
+          ]
+        ]
+      },
+      {
+        "id": "k1",
+        "sender": "Sprint planning",
+        "subject": "Room changed to 4B",
+        "when": "7:45 AM",
+        "reason": "Calendar already updated, nothing to do",
+        "basis": null,
+        "paras": [
+          [
+            "Sprint planning on ",
+            {
+              "t": "Mon, Nov 9, 10:00 AM",
+              "kind": "time",
+              "tag": "Time · Mon, Nov 9, 10:00 AM"
+            },
+            " moves to ",
+            {
+              "t": "room 4B",
+              "kind": "judg",
+              "tag": "Why it’s here · Calendar already updated, nothing to do"
+            },
+            "."
+          ],
+          [
+            "Your calendar is already updated."
+          ]
+        ]
+      }
+    ]
+  },
+  "watchlist": [
+    {
+      "id": "checkout-launch",
+      "name": "Checkout launch",
+      "status": "Decision due tomorrow",
+      "news": 1,
+      "item": "checkout"
+    },
+    {
+      "id": "riya-sen-hiring-loop",
+      "name": "Riya Sen hiring loop",
+      "status": "Debrief Fri",
+      "news": 1,
+      "item": "riya"
+    },
+    {
+      "id": "leas-time-off-request",
+      "name": "Lea’s time-off request",
+      "status": "Waiting on you",
+      "news": 1,
+      "item": "lea"
+    },
+    {
+      "id": "q4-headcount-plan",
+      "name": "Q4 headcount plan",
+      "status": "Due Nov 20",
+      "news": 0
+    },
+    {
+      "id": "vendor-contract-renewal",
+      "name": "Vendor contract renewal",
+      "status": "In legal review",
+      "news": 0
+    }
+  ],
+  "memory": {
+    "instructions": [
+      {
+        "id": "i1",
+        "text": "Anything from my reports about a blocker needs me.",
+        "meta": "Added Oct 20"
+      },
+      {
+        "id": "i2",
+        "text": "Personal email never goes in Needs you during work hours.",
+        "meta": "Added Oct 22"
+      }
+    ],
+    "learned": [
+      {
+        "id": "l1",
+        "text": "You skim the weekly report and never reply, so it goes in Heads-up.",
+        "meta": "From 5 opens · Oct 29"
+      },
+      {
+        "id": "l2",
+        "text": "Threads where you’re only CC’d go in Other mail.",
+        "meta": "From 6 of your moves · Nov 3"
+      }
+    ]
+  },
   "demo": {
     "simulate": {
       "item": "checkout",
@@ -647,7 +878,7 @@
         "done": [
           "Design hiring plan: you replied."
         ],
-        "setAside": "64 other emails set aside."
+        "otherMail": "64 emails in Other mail."
       }
     },
     "initialSelection": {

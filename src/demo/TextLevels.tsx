@@ -45,7 +45,7 @@ export function TextLevels({ persona, level }: TextLevelsProps) {
         ))}
       </ul>
       <Text as="h2" variant="title" className={styles.heading}>
-        Good to know
+        Heads-up
       </Text>
       <ul className={styles.list}>
         {formatted.know.map((text) => (
@@ -65,7 +65,7 @@ export function TextLevels({ persona, level }: TextLevelsProps) {
         </>
       )}
       <Text as="p" variant="body" className={styles.aside}>
-        {formatted.setAside}
+        {formatted.otherMail}
       </Text>
     </section>
   );
