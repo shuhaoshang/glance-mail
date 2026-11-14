@@ -8,6 +8,7 @@ export function AllDone({
   know,
   aside,
   snoozed = 0,
+  wording = 'legacy',
   onReviewAside,
 }: {
   done: number;
@@ -15,6 +16,7 @@ export function AllDone({
   know: number;
   aside: number;
   snoozed?: number;
+  wording?: 'legacy' | 'tabs';
   onReviewAside?: (trigger: HTMLButtonElement) => void;
 }) {
   return (
@@ -40,12 +42,14 @@ export function AllDone({
               ' will come back later.'
             : '') +
           ' ' +
-          know +
-          ' things are good to know, and ' +
-          aside +
-          ' emails are set aside.'}
+          (wording === 'tabs'
+            ? know + ' emails in Heads-up and ' + aside + ' in Other mail.'
+            : know +
+              ' things are good to know, and ' +
+              aside +
+              ' emails are set aside.')}
       </Text>
-      {onReviewAside && (
+      {wording === 'legacy' && onReviewAside && (
         <Button
           data-review-set-aside
           variant="tint"

@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from 'react';
+import { useId, useLayoutEffect, useRef, useState } from 'react';
 import type { Account, Item } from '../../../data/types';
 import { Text } from '../Text/Text';
 import { Person } from '../Person/Person';
@@ -35,7 +35,7 @@ export interface NeedsYouDetailProps {
   onAskQuestion?: (index: number) => void;
   onDone?: () => void;
   onSnooze?: (label: string) => void;
-  watchlist?: { name: string; onOpen: () => void };
+  watchlist?: { name: string; onOpen?: () => void };
   busy?: boolean;
   checkedSteps?: boolean[];
   onChecksChange?: (values: boolean[]) => void;
@@ -83,6 +83,41 @@ function Content({
     snoozeTrigger.current?.focus();
   }
 
+  const actionBar = useRef<HTMLElement>(null);
+  const [stackedActions, setStackedActions] = useState(false);
+  useLayoutEffect(() => {
+    const bar = actionBar.current;
+    if (!bar || mobile) return;
+    const measure = () => {
+      if (!bar.clientWidth) return;
+      const style = getComputedStyle(bar);
+      const available =
+        bar.clientWidth -
+        parseFloat(style.paddingLeft) -
+        parseFloat(style.paddingRight);
+      const groups = Array.from(bar.children);
+      const required =
+        groups.reduce(
+          (sum, group) => sum + group.getBoundingClientRect().width,
+          0,
+        ) +
+        Math.max(0, groups.length - 1) * parseFloat(style.columnGap);
+      setStackedActions(required > available);
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(bar);
+    Array.from(bar.children).forEach((group) => observer.observe(group));
+    let active = true;
+    document.fonts.ready.then(() => {
+      if (active) measure();
+    });
+    measure();
+    return () => {
+      active = false;
+      observer.disconnect();
+    };
+  }, [mobile, complete, onDone, onSnooze, movedTo, account.app]);
+
   const [highlighted, setHighlighted] = useState(true);
   const reasonTrigger = useRef<HTMLButtonElement>(null);
   const [reasonOpen, setReasonOpen] = useState(initialReasonOpen && !movedTo);
@@ -123,6 +158,87 @@ function Content({
       document.getElementById(emailId + '-tab')?.focus(),
     );
   }
+  const markDonePrimary =
+    complete && !!onDone && (!movedTo || movedTo === 'Needs you');
+  const inboxAction = (
+    <Button
+      key="inbox"
+      className={styles.inbox}
+      size={
+        complete && onDone && (!movedTo || movedTo === 'Needs you')
+          ? mobile
+            ? 'touch'
+            : 'compact'
+          : undefined
+      }
+      variant={
+        complete && onDone && (!movedTo || movedTo === 'Needs you')
+          ? 'outline'
+          : 'primary'
+      }
+      href={inboxUrls[account.app]}
+      target="_blank"
+      rel="noopener noreferrer"
+      external
+    >
+      Open in {account.app}
+    </Button>
+  );
+  const snoozeAction = (!movedTo || movedTo === 'Needs you') &&
+    !complete &&
+    onSnooze && (
+      <Button
+        ref={snoozeTrigger}
+        className={styles.snoozeTrigger}
+        size={mobile ? 'touch' : 'compact'}
+        variant="outline"
+        leadingIcon="clock"
+        aria-expanded={snoozeOpen}
+        aria-controls={snoozeId}
+        disabled={busy}
+        onClick={() => {
+          if ((!movedTo || movedTo === 'Needs you') && snoozeOpen)
+            closeSnooze();
+          else {
+            setSnoozeOpen(true);
+            requestAnimationFrame(() =>
+              document
+                .getElementById(snoozeId)
+                ?.querySelector<HTMLButtonElement>('button')
+                ?.focus(),
+            );
+          }
+        }}
+      >
+        Snooze
+      </Button>
+    );
+  const doneAction = (!movedTo || movedTo === 'Needs you') && onDone && (
+    <Button
+      key="done"
+      className={styles.done}
+      size={complete ? undefined : mobile ? 'touch' : 'compact'}
+      variant={complete ? 'primary' : 'outline'}
+      leadingIcon="check"
+      disabled={busy}
+      onClick={onDone}
+    >
+      {complete ? 'Mark done' : 'Done'}
+    </Button>
+  );
+  const primaryAction = markDonePrimary ? doneAction : inboxAction;
+  const secondaryActions = (markDonePrimary || snoozeAction || doneAction) && (
+    <div key="secondary" className={styles.secondaryActions}>
+      {markDonePrimary ? (
+        inboxAction
+      ) : (
+        <>
+          {snoozeAction}
+          {doneAction}
+        </>
+      )}
+    </div>
+  );
   return (
     <section
       ref={root}
@@ -306,69 +422,21 @@ function Content({
             </div>
           )}
         <footer
-          className={[styles.actions, complete && styles.complete]
+          ref={actionBar}
+          className={[styles.actions, stackedActions && styles.stackedActions]
             .filter(Boolean)
             .join(' ')}
         >
-          <Button
-            className={styles.inbox}
-            size={
-              complete && onDone && (!movedTo || movedTo === 'Needs you')
-                ? mobile
-                  ? 'touch'
-                  : 'compact'
-                : undefined
-            }
-            variant={
-              complete && onDone && (!movedTo || movedTo === 'Needs you')
-                ? 'outline'
-                : 'primary'
-            }
-            href={inboxUrls[account.app]}
-            target="_blank"
-            rel="noopener noreferrer"
-            external
-          >
-            Open in {account.app}
-          </Button>
-          {(!movedTo || movedTo === 'Needs you') && !complete && onSnooze && (
-            <Button
-              ref={snoozeTrigger}
-              className={styles.snoozeTrigger}
-              size={mobile ? 'touch' : 'compact'}
-              variant="outline"
-              leadingIcon="clock"
-              aria-expanded={snoozeOpen}
-              aria-controls={snoozeId}
-              disabled={busy}
-              onClick={() => {
-                if ((!movedTo || movedTo === 'Needs you') && snoozeOpen)
-                  closeSnooze();
-                else {
-                  setSnoozeOpen(true);
-                  requestAnimationFrame(() =>
-                    document
-                      .getElementById(snoozeId)
-                      ?.querySelector<HTMLButtonElement>('button')
-                      ?.focus(),
-                  );
-                }
-              }}
-            >
-              Snooze
-            </Button>
-          )}
-          {(!movedTo || movedTo === 'Needs you') && onDone && (
-            <Button
-              className={styles.done}
-              size={complete ? undefined : mobile ? 'touch' : 'compact'}
-              variant={complete ? 'primary' : 'outline'}
-              leadingIcon="check"
-              disabled={busy}
-              onClick={onDone}
-            >
-              {complete ? 'Mark done' : 'Done'}
-            </Button>
+          {markDonePrimary && !mobile && !stackedActions ? (
+            <>
+              {secondaryActions}
+              {primaryAction}
+            </>
+          ) : (
+            <>
+              {primaryAction}
+              {secondaryActions}
+            </>
           )}
         </footer>
       </div>

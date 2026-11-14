@@ -1,14 +1,13 @@
 import { useReducer } from 'react';
 import type { Persona } from '../data';
 export type Resolution = {
-  kind: 'done' | 'snoozed' | 'moved';
+  kind: 'done' | 'snoozed';
   note: string;
   auto?: boolean;
 };
 interface State {
   started: boolean;
   newAdded: boolean;
-  kept: Record<string, boolean>;
   records: Record<string, Resolution>;
   pending: { id: string; result: Resolution } | null;
   checks: Record<string, boolean[]>;
@@ -20,12 +19,10 @@ type Action =
   | { type: 'undo'; id: string }
   | { type: 'check'; id: string; values: boolean[] }
   | { type: 'ask'; id: string; index: number }
-  | { type: 'addMail' }
-  | { type: 'keep'; id: string; value: boolean };
+  | { type: 'addMail' };
 const initial: State = {
   started: false,
   newAdded: false,
-  kept: {},
   records: {},
   pending: null,
   checks: {},
@@ -34,8 +31,6 @@ const initial: State = {
 function reducer(state: State, action: Action): State {
   if (action.type === 'addMail')
     return state.newAdded ? state : { ...state, newAdded: true };
-  if (action.type === 'keep')
-    return { ...state, kept: { ...state.kept, [action.id]: action.value } };
   if (action.type === 'ask') {
     const asked = state.asked[action.id] ?? [];
     return asked.includes(action.index)
@@ -83,41 +78,24 @@ export function useItemLifecycle(persona: Persona) {
   const items = state.newAdded
     ? [...baseItems, ...persona.items.filter((item) => item.isNew)]
     : baseItems;
-  const groups = persona.setAside.map((group) => {
-    const rows = group.rows.filter((row) => !row.isNew || state.newAdded);
-    return {
-      ...group,
-      rows,
-      count:
-        group.count +
-        rows.filter((row) => row.isNew).length -
-        rows.filter((row) => state.kept[row.id]).length,
-    };
-  });
-  const keptRows = groups.flatMap((group) =>
-    group.rows.filter((row) => state.kept[row.id]),
-  );
   const active = items.filter((item) => !state.records[item.id]);
   const values = Object.values(state.records);
-  const moved = values.filter((r) => r.kind === 'moved').length;
   const snoozed = values.filter((r) => r.kind === 'snoozed').length;
   const done =
     persona.doneBefore.length + values.filter((r) => r.kind === 'done').length;
-  const aside = groups.reduce((n, g) => n + g.count, 0) + moved;
+  const other =
+    persona.otherMail.total +
+    (state.newAdded
+      ? persona.otherMail.rows.filter((row) => row.isNew).length
+      : 0);
   const counts = {
     needs: active.length,
     done,
-    aside,
+    other,
     snoozed,
-    know: persona.goodToKnow.length + keptRows.length,
-    actions: items.length + persona.doneBefore.length - moved,
-    covered:
-      active.length +
-      done +
-      aside +
-      snoozed +
-      persona.goodToKnow.length +
-      keptRows.length,
+    know: persona.goodToKnow.length,
+    actions: items.length + persona.doneBefore.length,
+    covered: active.length + done + other + snoozed + persona.goodToKnow.length,
   };
   function finish(id: string, result: Resolution, immediate = false) {
     if (!items.some((item) => item.id === id)) return;
@@ -133,19 +111,9 @@ export function useItemLifecycle(persona: Persona) {
   return {
     ...state,
     active,
-    groups,
-    keptRows,
-    movedItems: items.filter(
-      (item) => state.records[item.id]?.kind === 'moved',
-    ),
     addMail: () => {
       if (persona.newMail) dispatch({ type: 'addMail' });
     },
-    keep: (id: string) => {
-      if (groups.some((g) => g.rows.some((row) => row.id === id)))
-        dispatch({ type: 'keep', id, value: true });
-    },
-    undoKeep: (id: string) => dispatch({ type: 'keep', id, value: false }),
     counts,
     finish,
     ask: (id: string, index: number) => dispatch({ type: 'ask', id, index }),

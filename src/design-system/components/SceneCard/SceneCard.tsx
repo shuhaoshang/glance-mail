@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useLayoutEffect, useRef, useState } from 'react';
 import type { Fact, FieldSpec, Item, Scene } from '../../../data/types';
 import { Text } from '../Text/Text';
 import { Field } from '../Field/Field';
@@ -53,6 +53,33 @@ function Content({
   onSelectFact,
   onChecklistCompleteChange,
 }: SceneCardProps) {
+  const dealGrid = useRef<HTMLDivElement>(null);
+  const [compactDeal, setCompactDeal] = useState(false);
+  useLayoutEffect(() => {
+    const grid = dealGrid.current;
+    if (!grid || mobile) return;
+    const values = Array.from(
+      grid.querySelectorAll<HTMLElement>('[data-deal-field] > * > :last-child'),
+    );
+    const measure = () => {
+      if (!grid.clientWidth) return;
+      const gap = parseFloat(getComputedStyle(grid).columnGap);
+      const widest = Math.max(...values.map((value) => value.scrollWidth), 0);
+      setCompactDeal(widest * 3 + gap * 2 > grid.clientWidth);
+    };
+    const observer = new ResizeObserver(measure);
+    observer.observe(grid);
+    values.forEach((value) => observer.observe(value));
+    let active = true;
+    document.fonts.ready.then(() => {
+      if (active) measure();
+    });
+    measure();
+    return () => {
+      active = false;
+      observer.disconnect();
+    };
+  }, [item, mobile]);
   const [localChecked, setChecked] = useState<boolean[]>([]);
   const checked = checkedSteps ?? localChecked;
   const scene = isKnownScene(item.scene) ? item.scene : undefined;
@@ -95,7 +122,11 @@ function Content({
     fieldKey: string,
     size: 'small' | 'default' | 'large' = 'small',
   ) => (
-    <div key={fieldKey} className={styles.fieldSlot}>
+    <div
+      key={fieldKey}
+      className={styles.fieldSlot}
+      data-deal-field={scene?.type === 'deal' ? true : undefined}
+    >
       {field(spec, fieldKey, size)}
     </div>
   );
@@ -119,7 +150,11 @@ function Content({
     case 'deal':
       body = (
         <div
-          className={[styles.deal, mobile && styles.phoneFields]
+          ref={dealGrid}
+          className={[
+            styles.deal,
+            (mobile || compactDeal) && styles.phoneFields,
+          ]
             .filter(Boolean)
             .join(' ')}
         >

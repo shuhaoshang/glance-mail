@@ -34,7 +34,7 @@ async function progress(
 ) {
   await waitFor(async () => {
     await expect(
-      canvas.getByRole('heading', {
+      canvas.getByRole('tab', {
         name: new RegExp('^Needs you\\s+' + needs + '$'),
       }),
     ).toBeVisible();
@@ -128,24 +128,19 @@ export const SarahFlow: Story = {
     await userEvent.click(canvas.getByRole('checkbox', { name: 'Pay $12' }));
     await userEvent.click(canvas.getByRole('button', { name: 'Mark done' }));
     await settled(canvas, 'Lincoln Elementary');
-    await progress(canvas, 3, 1, 4);
-    for (const name of [
-      'Fernway Logistics',
-      'Brightline Studio',
-      'Halden Health',
-    ])
-      await done(canvas, name);
-    await progress(canvas, 0, 4, 4);
+    await progress(canvas, 2, 1, 3);
+    await simulate(canvas, 'Simulate reply to Riverside');
+    await settled(canvas, 'Riverside Pediatrics');
+    await progress(canvas, 1, 2, 3);
+    await done(canvas, 'City Water');
+    await progress(canvas, 0, 3, 3);
     await expect(
       canvas.getByRole('heading', { name: 'Nothing else needs you today' }),
     ).toBeVisible();
     await userEvent.click(
-      canvas.getByRole('button', { name: 'Undo Brightline Studio' }),
+      canvas.getByRole('button', { name: 'Undo City Water' }),
     );
-    await progress(canvas, 1, 3, 4);
-    await expect(
-      canvas.queryByRole('region', { name: 'All done' }),
-    ).not.toBeInTheDocument();
+    await progress(canvas, 1, 2, 3);
   },
 };
 export const Done: Story = {
@@ -255,9 +250,7 @@ export const SimulateInTextLevel: Story = {
     ).toBeDisabled();
     await userEvent.click(canvas.getByRole('button', { name: '3 Glance' }));
     await progress(canvas, 2, 2, 4);
-    await expect(
-      canvas.getByRole('button', { name: 'Undo Fernway Logistics' }),
-    ).toBeVisible();
+    await settled(canvas, 'Fernway Logistics');
   },
 };
 

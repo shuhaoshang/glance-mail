@@ -9,7 +9,7 @@ interface ReasonPanelProps {
   item: Item;
   position: number;
   id?: string;
-  watchlist?: { name: string; onOpen: () => void };
+  watchlist?: { name: string; onOpen?: () => void };
 }
 
 export function ReasonPanel({
@@ -54,10 +54,18 @@ export function ReasonPanel({
       ))}
       {watchlist && (
         <footer className={styles.watchlist}>
-          <Text variant="meta">Based on</Text>
-          <Button variant="text" size="compact" onClick={watchlist.onOpen}>
-            {'Watchlist: ' + watchlist.name}
-          </Button>
+          {watchlist.onOpen ? (
+            <>
+              <Text variant="meta">Based on</Text>
+              <Button variant="text" size="compact" onClick={watchlist.onOpen}>
+                {'Watchlist: ' + watchlist.name}
+              </Button>
+            </>
+          ) : (
+            <Text variant="meta">
+              {'Based on Watchlist: ' + watchlist.name}
+            </Text>
+          )}
         </footer>
       )}
     </section>

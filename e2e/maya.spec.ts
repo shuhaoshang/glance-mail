@@ -24,7 +24,7 @@ const contractFact = fernway.facts.find((fact) => fact.id === contract.fact)!;
 const risk = fernway.judgments[0];
 const discount = fernway.qa[2] as QA;
 const notFound = fernway.qa[0];
-const newsletter = maya.setAside[0].rows.find((entry) => !entry.isNew)!;
+const newsletter = maya.otherMail.rows[0];
 
 test('Maya — protect a renewal before Friday', async ({
   page,
@@ -261,50 +261,43 @@ test('Maya — protect a renewal before Friday', async ({
     await expectNeeds(page, [brightline.name, halden.name, okto.name]);
   });
 
-  await test.step('Maya 8 · Tidy: Keeps one newsletter', async () => {
-    await page.getByRole('button', { name: /^32 set aside/ }).click();
-    const aside = page.getByRole('region', exact('Set aside view'));
-    await expect(
-      aside.getByRole('heading', exact('Set aside 32')),
-    ).toBeVisible();
-    await expect(
-      aside.getByRole('heading', exact('Newsletters 19')),
-    ).toBeVisible();
-    await aside
-      .getByRole('button', exact('Show in brief: ' + newsletter.title))
+  await test.step('Maya 8 · Tidy: Read Other mail and its reason', async () => {
+    await page.getByRole('tab', exact('Other mail 32')).click();
+    const list = page.getByRole('list', exact('Other mail'));
+    await expect(list.getByRole('listitem')).toHaveCount(5);
+    await expect(list.getByRole('listitem').last()).toContainText(
+      'Revenue Ops Digest',
+    );
+    await expect(page.getByText('27 more like these')).toBeVisible();
+    await list
+      .getByRole('button', { name: new RegExp(newsletter.sender) })
       .click();
-    const kept = aside
-      .getByRole('listitem')
-      .filter({ has: page.getByText(newsletter.title, { exact: true }) });
-    await expect(kept).toContainText('In Good to know');
+    await expect(detail(page)).toContainText(
+      'Glance put this in Other mail: ' + newsletter.reason,
+    );
     await expect(
-      kept.getByRole(
-        'button',
-        exact('Undo Show in brief: ' + newsletter.title),
+      detail(page).getByRole('heading', exact(newsletter.subject)),
+    ).toBeVisible();
+    for (const segment of newsletter.paras.flat())
+      if (typeof segment !== 'string' && segment.kind === 'judg')
+        await expectInk(
+          detail(page).getByText(segment.t, { exact: true }),
+          '--color-judgment-ink',
+        );
+    await page.getByRole('tab', exact('Heads-up 3')).click();
+    await expect(detail(page)).toContainText(maya.goodToKnow[0].summary);
+    await expect(
+      detail(page).getByRole(
+        'region',
+        exact('Source from ' + maya.goodToKnow[0].fact.source.from),
       ),
     ).toBeVisible();
+    await detail(page).getByRole('tab', exact('Original email')).click();
     await expect(
-      aside.getByRole('heading', exact('Set aside 31')),
-    ).toBeVisible();
-    await expect(
-      aside.getByRole('heading', exact('Newsletters 18')),
-    ).toBeVisible();
-    await expect(
-      page.getByRole('heading', exact('Good to know 4')),
-    ).toBeVisible();
-    const last = page
-      .getByRole('list', exact('Good to know'))
-      .getByRole('listitem')
-      .last();
-    await expect(last).toContainText(newsletter.title + ': ' + newsletter.sub);
-    await expect(last).toContainText('Moved by you');
-    await expectNeeds(page, [brightline.name, halden.name, okto.name]);
-    await progress(page, 2, 5);
-    await expect(
-      page.getByText(
-        maya.coverage.text.replace('{n}', String(3 + 4 + 31 + 2)),
-        { exact: true },
-      ),
-    ).toBeVisible();
+      detail(page).getByRole('region', exact('Original email')),
+    ).toContainText(maya.goodToKnow[0].email.subject);
   });
 });
+
+test.fixme('Maya 8 · Move to Heads-up and Undo — https://github.com/shuhaoshang/glance-mail/issues/59', async () => {});
+test.fixme('Correct a false alarm with Move to — https://github.com/shuhaoshang/glance-mail/issues/59', async () => {});

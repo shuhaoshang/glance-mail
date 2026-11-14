@@ -189,9 +189,11 @@ export const SnoozeOpen: Story = {
     await expect(
       canvas.getByRole('button', { name: 'Snooze' }),
     ).toHaveAttribute('aria-expanded', 'true');
-    await expect(
-      canvas.getByRole('button', { name: 'Later today, 3:00 PM' }),
-    ).toHaveFocus();
+    await waitFor(() =>
+      expect(
+        canvas.getByRole('button', { name: 'Later today, 3:00 PM' }),
+      ).toHaveFocus(),
+    );
   },
 };
 export const ChecklistComplete: Story = {

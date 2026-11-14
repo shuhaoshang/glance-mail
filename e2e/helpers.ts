@@ -13,7 +13,7 @@ export function row(page: Page, name: string) {
 
 export async function expectNeeds(page: Page, names: string[]) {
   await expect(
-    page.getByRole('heading', exact('Needs you ' + names.length)),
+    page.getByRole('tab', exact('Needs you ' + names.length)),
   ).toBeVisible();
   const buttons = needs(page).getByRole('button', { name: /^\d+\s/ });
   await expect(buttons).toHaveCount(names.length);

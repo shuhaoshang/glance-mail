@@ -431,7 +431,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 
 | Type        | Use when the email…                                   | Layout                                                                                     | Examples                                           |
 | ----------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| `deal`      | is about an account with a value, a date and a status | three Fields in a row on desktop, two columns on the phone (default size)                                                       | Maya · Fernway renewal; Halden new lead            |
+| `deal`      | is about an account with a value, a date and a status | three Fields in a row on desktop, two columns on the phone (default size); when the card cannot fit three intact values, use the same two-column layout based on card space, not a page breakpoint. Field values never break inside themselves                                                       | Maya · Fernway renewal; Halden new lead            |
 | `decision`  | offers named options and asks you to choose           | two option tiles (key badge, title, small Field); one per row in the phone sheet                                           | Daniel · Checkout redesign                         |
 | `approval`  | asks you to approve an amount                         | large amount Field, then small Fields (for, requested by, deadline), then an optional note | Daniel · Expense report                            |
 | `payment`   | is a bill or fee                                      | large amount Field, then due and payee                                                     | Sarah · City Water                                 |
@@ -649,6 +649,7 @@ The tab remembers its selected row for the session. Opening a tab for the first 
 `--color-surface`, `--radius-card`, `--shadow-panel`, padding 24 28 28.
 
 - **Top row:** position on the left (“Needs you · 1 of 3”, “Heads-up · 2 of 3”, “Other mail · 1 of 31”; 14/20 medium, muted) and the SegmentedControl on the right.
+- **Narrow desktop header:** when the top row does not fit, the position takes its own line and SegmentedControl sits below it with `--space-12` between them and the existing padding. Words never break inside “Details” or “Ask”; no new breakpoint, token, or smaller type.
 - **SegmentedControl (changed):** track and sizes as built. Selected segment: `--color-ink` fill, `--color-on-ink` text, no shadow. A new `size="small"`: track padding 2, segments 24 tall, padding 4 8, 12/16 semibold; used for the theme control in the account menu on desktop.
 - **Account fallback:** a Heads-up or Other mail email without an `account` belongs to the persona's main account: the one not marked `minority`. The caller resolves and passes that account to DetailPanel; no data change is needed.
 - **Needs you detail:** as built (title, Person, AccountLabel, request, GlanceMark, hint line, SceneCard, SourcePanel, ReasonPill and ReasonPanel), with the action bar in 9.6.
@@ -661,11 +662,13 @@ The tab remembers its selected row for the session. Opening a tab for the first 
   - The email body in a `--color-surface-muted` block, radius `--radius-panel`, padding 20 24, paragraphs in `Reading` style 16 apart, highlights as in EmailView (`judg` uses `--color-judgment-ink`).
   - The legend, 12 below, 12/16 muted: a `judgment`-ink sample “Highlighted”, “what Glance used to sort it.”, then a money-ink sample “Amounts” “and” a time-ink sample “dates” “are marked too.” Show only the kinds that appear in the email; with only `judg`, the sentence ends after “sort it.”
 - **Moved emails** keep the detail of where they came from. Under the Person line they show “You moved this here. Glance will sort emails like it the same way.” (14/20, `--color-brand-text` on `--color-brand-tint`, padding 8 12, radius 12).
-- **Empty tab:** the list panel shows “Nothing here.” (16/24 semibold) and “Emails you move to {tab} will show up here.” (14/20, muted), centered, 40 padding; there is no detail panel. Needs you with everything done keeps the built AllDone.
+- **Empty tab:** the list panel shows “Nothing here.” (16/24 semibold) and “Emails you move to {tab} will show up here.” (14/20, muted), centered, 40 padding; there is no detail panel. Needs you with everything done keeps the built AllDone. In the app, its body reads “{done} of {total} actions done. {know} emails in Heads-up and {other} in Other mail.” Keep the existing snoozed sentence after the first sentence when applicable. Legacy wording remains only in existing library and edge-state stories.
 
 **ReasonPill (changed):** ring is `--border-hairline` in `--color-brand-stroke`. Label: “Why it’s {ordinal}” plus “: {first judgment label}” when the item has a judgment (“Why it’s first: Renewal risk”, “Why it’s second”). Ordinals are words up to tenth; after that “Why it’s ranked 11th”. A chevron at the end points down, and up while open. Moved items have no pill.
 
 **ReasonPanel (changed):** title and judgments as built. The “Not for you?” block and its button are removed (D53). When the item has `watch`, a last line under a hairline: “Based on **Watchlist: {name}**”, the name a brand text button that opens the Watchlist tab.
+
+**Watchlist attribution without navigation:** when no callback is passed, render “Based on Watchlist: {name}” and “Part of Watchlist: {name}” as plain text. Task 28 connects the name to Watchlist; when a callback is available, keep the existing brand text button.
 
 ### 9.6 Action bar
 
@@ -679,6 +682,7 @@ One primary, then outline buttons (D12, D53). Ask is no longer in the bar; it is
 
 - Icons: Snooze clock, Move to the move icon and a trailing chevron-down, Done check.
 - Phone: the primary is full width on its own row; the outline buttons share the second row equally (`touch` size, 44).
+- **Narrow action bar:** if the primary and outline actions do not fit together, keep the outline buttons in one group and move that group to its own row below the primary, start-aligned, with the existing `--space-8` gap.
 - Outline buttons use the built states (`--color-sunken-hover`, `--color-sunken-pressed`); the button whose menu is open keeps the pressed fill.
 
 ### 9.7 MoveMenu and Toast (new)

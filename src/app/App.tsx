@@ -1,36 +1,37 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useEffect, useId, useRef, useState, type ReactNode } from 'react';
 import { getPersona, type PersonaId } from '../data';
-import type { Account } from '../data/types';
 import { Text } from '../design-system/components/Text/Text';
 import { Icon } from '../design-system/components/Icon/Icon';
 import { Avatar } from '../design-system/components/Avatar/Avatar';
 import { DetailSheet } from '../design-system/components/DetailSheet/DetailSheet';
-import { DetailPanel } from '../design-system/components/DetailPanel/DetailPanel';
-import { CollapsedGroup } from '../design-system/components/CollapsedGroup/CollapsedGroup';
-import { SectionCard } from '../design-system/components/SectionCard/SectionCard';
+import {
+  DetailPanel,
+  type DetailPanelProps,
+} from '../design-system/components/DetailPanel/DetailPanel';
 import { BriefRow } from '../design-system/components/BriefRow/BriefRow';
-import { KnowRow } from '../design-system/components/KnowRow/KnowRow';
+import { HeadsUpRow } from '../design-system/components/HeadsUpRow/HeadsUpRow';
+import {
+  MailList,
+  OtherMailList,
+} from '../design-system/components/MailList/MailList';
+import { TabBar } from '../design-system/components/TabBar/TabBar';
 import { DoneRow } from '../design-system/components/DoneRow/DoneRow';
-import { ProgressBar } from '../design-system/components/ProgressBar/ProgressBar';
 import { useDesktopLayout } from '../design-system/components/useDesktopLayout';
 import {
   useItemLifecycle,
   type ItemLifecycle,
   type Resolution,
 } from './useItemLifecycle';
-import { SetAsideList } from '../design-system/components/SetAsideList/SetAsideList';
 import { NewMailRow } from '../design-system/components/NewMailRow/NewMailRow';
 import { AllDone } from '../design-system/components/AllDone/AllDone';
 import styles from './App.module.css';
 
-function openInbox(account: Account) {
-  const urls = {
-    Gmail: 'https://mail.google.com/',
-    Outlook: 'https://outlook.office.com/mail/',
-    'Yahoo Mail': 'https://mail.yahoo.com/',
-  };
-  window.open(urls[account.app], '_blank', 'noopener,noreferrer');
-}
+type BriefTab = 'needs-you' | 'heads-up' | 'other-mail';
+const labels: Record<BriefTab, string> = {
+  'needs-you': 'Needs you',
+  'heads-up': 'Heads-up',
+  'other-mail': 'Other mail',
+};
 
 function Brief({
   personaId,
@@ -46,28 +47,43 @@ function Brief({
   const persona = getPersona(personaId);
   const local = useItemLifecycle(persona);
   const life = session ?? local;
-  const items = life.active;
-  const [selectedId, setSelectedId] = useState(
-    items[persona.demo.initialSelection.itemIndex]?.id ?? items[0]?.id,
-  );
   const desktop = useDesktopLayout();
-  const [view, setView] = useState<'item' | 'aside'>('item');
-  const [sheetView, setSheetView] = useState<'item' | 'aside'>('item');
+  const prefix = useId();
+  const [tab, setTab] = useState<BriefTab>('needs-you');
+  const [selections, setSelections] = useState<
+    Partial<Record<BriefTab, string>>
+  >({});
   const [sheetOpen, setSheetOpen] = useState(false);
+  const [sheetPosition, setSheetPosition] = useState({ position: 1, total: 1 });
   const [returnFocus, setReturnFocus] = useState<HTMLElement | null>(null);
-  const [selectionRevision, setSelectionRevision] = useState(0);
+  const [focusResult, setFocusResult] = useState<string | null>(null);
+  const undoRefs = useRef(new Map<string, HTMLButtonElement>());
+  const items = life.active;
+  const other = persona.otherMail.rows.filter(
+    (row) => !row.isNew || life.newAdded,
+  );
+  const rows = {
+    'needs-you': items,
+    'heads-up': persona.goodToKnow,
+    'other-mail': other,
+  };
+  const selected = (key: BriefTab) =>
+    rows[key].find((item) => item.id === selections[key])?.id ??
+    (desktop ? rows[key][0]?.id : undefined);
+  const selectedId = selected(tab);
+  const counts = life.counts;
   const [previousDesktop, setPreviousDesktop] = useState(desktop);
   if (previousDesktop !== desktop) {
     setPreviousDesktop(desktop);
-    if (desktop) setSheetOpen(false);
+    setSheetOpen(false);
   }
-  const selected = items.find((item) => item.id === selectedId) ?? items[0];
-  const counts = life.counts;
-  const [sheetItem, setSheetItem] = useState(items[0]);
-  const [sheetPosition, setSheetPosition] = useState(1);
-  const [sheetTotal, setSheetTotal] = useState(items.length);
-  const [focusResult, setFocusResult] = useState<string | null>(null);
-  const undoRefs = useRef(new Map<string, HTMLButtonElement>());
+
+  // An offscreen row has no collapse animation to finish.
+  useEffect(() => {
+    if (life.pending && (tab !== 'needs-you' || children))
+      life.settle(life.pending.id);
+  }, [life, tab, children]);
+
   useEffect(() => {
     const id = focusResult;
     if (!id || !life.records[id]) return;
@@ -83,6 +99,7 @@ function Brief({
     frame = requestAnimationFrame(restore);
     return () => cancelAnimationFrame(frame);
   }, [life.records, focusResult]);
+
   function act(id: string, result: Resolution) {
     setFocusResult(id);
     life.finish(id, result);
@@ -98,9 +115,33 @@ function Brief({
         ?.focus({ preventScroll: true }),
     );
   }
-  const movedCount = Object.values(life.records).filter(
-    (entry) => entry.kind === 'moved',
-  ).length;
+  function selectRow(key: BriefTab, id: string, trigger: HTMLButtonElement) {
+    setSelections((current) => ({ ...current, [key]: id }));
+    setReturnFocus(trigger);
+    setSheetPosition({
+      position: rows[key].findIndex((item) => item.id === id) + 1,
+      total: key === 'other-mail' ? counts.other : rows[key].length,
+    });
+    if (!desktop) setSheetOpen(true);
+  }
+  function selectTab(key: BriefTab) {
+    // Save the automatically selected desktop row before leaving its tab.
+    if (desktop)
+      setSelections((current) => ({ ...current, [tab]: selectedId }));
+    setTab(key);
+    setSheetOpen(false);
+  }
+  const defaultAccount = persona.accounts.find((account) => !account.minority)!;
+  const accountFor = (id?: string) =>
+    persona.accounts.find((account) => account.id === id) ?? defaultAccount;
+  const minorityAccount = (id?: string) => {
+    const account = accountFor(id);
+    return account.minority ? account : undefined;
+  };
+  const watchlistFor = (id?: string) => {
+    const entry = persona.watchlist.find((watch) => watch.id === id);
+    return entry ? { name: entry.name } : undefined;
+  };
   const detailActions = (id: string) => ({
     busy: !!life.pending,
     checkedSteps: life.checks[id] ?? [],
@@ -118,59 +159,52 @@ function Brief({
             .replace(/^Tomorrow/, 'tomorrow'),
       }),
   });
-  function openAside(trigger: HTMLButtonElement) {
-    setView('aside');
-    setSheetView('aside');
-    setReturnFocus(trigger);
-    if (!desktop) setSheetOpen(true);
-  }
-  function backToBrief() {
-    setView('item');
-    setSheetOpen(false);
-    if (desktop)
-      requestAnimationFrame(() =>
-        (returnFocus?.isConnected
-          ? returnFocus
-          : document.querySelector<HTMLButtonElement>('[data-review-set-aside]')
-        )?.focus({ preventScroll: true }),
-      );
-  }
-  const aside = (
-    <SetAsideList
-      groups={life.groups}
-      moved={life.movedItems}
-      kept={life.kept}
-      apps={[...new Set(persona.accounts.map((account) => account.app))]}
-      onKeep={life.keep}
-      onUndoKeep={life.undoKeep}
-      onRestore={life.undo}
-      busy={!!life.pending}
-      onBack={backToBrief}
-      mobile={!desktop}
-      onClose={() => setSheetOpen(false)}
-    />
-  );
-  const empty = (
-    <AllDone
-      done={counts.done}
-      total={counts.actions}
-      know={counts.know}
-      aside={counts.aside}
-      snoozed={counts.snoozed}
-      onReviewAside={openAside}
-    />
-  );
-
-  const defaultAccount =
-    persona.accounts.find((account) => !account.minority) ??
-    persona.accounts[0];
-  const accountFor = (id?: string) =>
-    persona.accounts.find((account) => account.id === id) ?? defaultAccount;
-  const minorityAccount = (id?: string) => {
-    const account = accountFor(id);
-    return account.minority ? account : undefined;
+  const detailProps = (key: BriefTab): DetailPanelProps[] => {
+    if (key === 'needs-you')
+      return persona.items
+        .filter((item) => !item.isNew || life.newAdded)
+        .map((item) => ({
+          ...detailActions(item.id),
+          item,
+          account: accountFor(item.account),
+          watchlist: watchlistFor(item.watch),
+          position: Math.max(
+            1,
+            items.findIndex((entry) => entry.id === item.id) + 1,
+          ),
+          total: counts.needs,
+          initialFactId:
+            !startClean && desktop && item.id === persona.items[0]?.id
+              ? item.facts[persona.demo.initialSelection.openFactIndex]?.id
+              : undefined,
+          initialReasonOpen:
+            !startClean &&
+            desktop &&
+            item.id === persona.items[0]?.id &&
+            persona.demo.initialSelection.reasonOpen,
+        }));
+    if (key === 'heads-up')
+      return persona.goodToKnow.map((item, index) => ({
+        variant: 'heads-up',
+        item,
+        account: accountFor(item.account),
+        watchlist: watchlistFor(item.watch),
+        position: index + 1,
+        total: counts.know,
+      }));
+    return other.map((item, index) => ({
+      variant: 'other-mail',
+      item,
+      account: defaultAccount,
+      position: index + 1,
+      total: counts.other,
+    }));
   };
-
+  const tabCounts = {
+    'needs-you': counts.needs,
+    'heads-up': counts.know,
+    'other-mail': counts.other,
+  };
   return (
     <main
       className={[styles.page, desktop && styles.desktop]
@@ -186,13 +220,17 @@ function Brief({
           <Avatar initial={persona.initial} label={persona.name} />
         </div>
         <div className={styles.greeting}>
-          <Text as="p" variant="meta">
+          <Text as="p" variant="meta" className={styles.date}>
             {persona.date}
           </Text>
           <Text as="h1" variant="greeting">
             {persona.greeting}
           </Text>
-          <Text as="p" variant="body" className={styles.coverage}>
+          <Text
+            as="p"
+            variant={desktop ? 'body' : 'meta'}
+            className={styles.coverage}
+          >
             {persona.coverage.text.replace('{n}', String(counts.covered))}
           </Text>
           {persona.coverage.note && (
@@ -203,216 +241,174 @@ function Brief({
           )}
         </div>
       </header>
-      {children ?? (
-        <div className={styles.layout}>
-          <div className={styles.list}>
-            <SectionCard
-              title="Needs you"
-              count={counts.needs}
-              rightSlot={
-                <div className={styles.progress}>
-                  <Text
-                    variant="meta"
-                    role="status"
-                    aria-label="Brief progress"
-                    aria-live="polite"
-                    aria-atomic="true"
-                  >
-                    {counts.done + ' of ' + counts.actions + ' done'}
-                  </Text>
-                  <div className={styles.progressBar}>
-                    <ProgressBar
-                      value={counts.actions ? counts.done / counts.actions : 0}
+      {children}
+      <div hidden={!!children} className={styles.brief}>
+        <TabBar
+          left={(Object.keys(labels) as BriefTab[]).map((key) => ({
+            id: prefix + '-' + key,
+            label: labels[key],
+            count: tabCounts[key],
+          }))}
+          selected={prefix + '-' + tab}
+          onSelect={(id) => selectTab(id.slice(prefix.length + 1) as BriefTab)}
+        />
+        {(Object.keys(labels) as BriefTab[]).map((key) => (
+          <div
+            key={key}
+            role="tabpanel"
+            id={prefix + '-' + key}
+            aria-labelledby={prefix + '-' + key + '-tab'}
+            hidden={tab !== key}
+            className={styles.layout}
+          >
+            <div className={styles.list}>
+              {key === 'needs-you' && (
+                <MailList
+                  tab="Needs you"
+                  progress={{ done: counts.done, total: counts.actions }}
+                >
+                  {persona.newMail && (
+                    <NewMailRow
+                      label={
+                        life.newAdded
+                          ? persona.newMail.added
+                          : persona.newMail.label
+                      }
+                      added={life.newAdded}
+                      onAdd={() => {
+                        life.addMail();
+                        const id = persona.items.find((item) => item.isNew)?.id;
+                        requestAnimationFrame(() =>
+                          Array.from(
+                            document.querySelectorAll<HTMLButtonElement>(
+                              '[data-brief-item]',
+                            ),
+                          )
+                            .find((button) => button.dataset.briefItem === id)
+                            ?.focus({ preventScroll: true }),
+                        );
+                      }}
                     />
-                  </div>
-                </div>
-              }
-            >
-              {persona.newMail && (
-                <NewMailRow
-                  label={
-                    life.newAdded
-                      ? persona.newMail.added
-                      : persona.newMail.label
-                  }
-                  added={life.newAdded}
-                  onAdd={() => {
-                    life.addMail();
-                    const id = persona.items.find((item) => item.isNew)?.id;
-                    requestAnimationFrame(() =>
-                      Array.from(
-                        document.querySelectorAll<HTMLButtonElement>(
-                          '[data-brief-item]',
-                        ),
-                      )
-                        .find((button) => button.dataset.briefItem === id)
-                        ?.focus({ preventScroll: true }),
-                    );
-                  }}
+                  )}
+                  {items.map((item, index) => (
+                    <BriefRow
+                      key={item.id}
+                      item={item}
+                      rank={index + 1}
+                      account={minorityAccount(item.account)}
+                      selected={
+                        (desktop || sheetOpen) && item.id === selected(key)
+                      }
+                      leaving={life.pending?.id === item.id}
+                      onLeaveComplete={() => life.settle(item.id)}
+                      onSelect={(id, trigger) => selectRow(key, id, trigger)}
+                    />
+                  ))}
+                  {!items.length && (
+                    <div role="listitem">
+                      <AllDone
+                        wording="tabs"
+                        done={counts.done}
+                        total={counts.actions}
+                        know={counts.know}
+                        aside={counts.other}
+                        snoozed={counts.snoozed}
+                      />
+                    </div>
+                  )}
+                  {persona.doneBefore.map((item) => (
+                    <DoneRow key={item.name} {...item} />
+                  ))}
+                  {Object.entries(life.records).map(([id, result]) => (
+                    <DoneRow
+                      key={id + ':' + result.kind + ':' + result.note}
+                      undoDisabled={!!life.pending}
+                      name={persona.items.find((item) => item.id === id)!.name}
+                      kind={result.kind}
+                      note={result.note}
+                      undoRef={(button) => {
+                        if (button) undoRefs.current.set(id, button);
+                        else undoRefs.current.delete(id);
+                      }}
+                      onUndo={() => undo(id)}
+                    />
+                  ))}
+                </MailList>
+              )}
+              {key === 'heads-up' && (
+                <MailList tab="Heads-up" empty={!persona.goodToKnow.length}>
+                  {persona.goodToKnow.map((item) => (
+                    <HeadsUpRow
+                      key={item.id}
+                      item={item}
+                      account={minorityAccount(item.account)}
+                      selected={
+                        (desktop || sheetOpen) && item.id === selected(key)
+                      }
+                      onSelect={(id, trigger) => selectRow(key, id, trigger)}
+                    />
+                  ))}
+                </MailList>
+              )}
+              {key === 'other-mail' && (
+                <OtherMailList
+                  items={other}
+                  total={counts.other}
+                  selected={desktop || sheetOpen ? selected(key) : undefined}
+                  onSelect={(id, trigger) => selectRow(key, id, trigger)}
                 />
               )}
-              {items.map((item, index) => (
-                <BriefRow
-                  key={item.id}
-                  item={item}
-                  rank={index + 1}
-                  account={minorityAccount(item.account)}
-                  selected={
-                    view === 'item' &&
-                    (desktop || (sheetOpen && sheetView === 'item')) &&
-                    item.id === selected?.id
-                  }
-                  leaving={life.pending?.id === item.id}
-                  onLeaveComplete={() => life.settle(item.id)}
-                  onSelect={(id, trigger) => {
-                    setView('item');
-                    setSheetView('item');
-                    setSelectedId(id);
-                    setSheetItem(items.find((item) => item.id === id)!);
-                    setSheetPosition(
-                      items.findIndex((item) => item.id === id) + 1,
-                    );
-                    setSheetTotal(counts.needs);
-                    if (!desktop || id !== selectedId)
-                      setSelectionRevision((value) => value + 1);
-                    setReturnFocus(trigger);
-                    if (!desktop) setSheetOpen(true);
-                  }}
-                />
-              ))}
-              {persona.doneBefore.map((item) => (
-                <DoneRow key={item.name} {...item} />
-              ))}
-              {Object.entries(life.records).map(([id, result]) => {
-                const item = persona.items.find((item) => item.id === id)!;
-                return (
-                  <DoneRow
-                    key={id + ':' + result.kind + ':' + result.note}
-                    undoDisabled={!!life.pending}
-                    name={item.name}
-                    kind={result.kind}
-                    note={result.note}
-                    undoRef={(button) => {
-                      if (button) undoRefs.current.set(id, button);
-                      else undoRefs.current.delete(id);
-                    }}
-                    onUndo={() => undo(id)}
-                  />
-                );
-              })}
-            </SectionCard>
-            {!desktop && !items.length && empty}
-            <SectionCard title="Good to know" count={counts.know}>
-              {persona.goodToKnow.map((item) => (
-                <KnowRow
-                  key={item.title}
-                  item={item}
-                  account={minorityAccount(item.account)}
-                  onOpenEmail={() => openInbox(accountFor(item.account))}
-                />
-              ))}
-              {life.keptRows.map((row) => (
-                <KnowRow
-                  key={row.id}
-                  item={{ title: row.title, sub: row.sub, movedByUser: true }}
-                />
-              ))}
-            </SectionCard>
-            <CollapsedGroup
-              groups={
-                movedCount
-                  ? [
-                      { count: movedCount, short: 'moved by you' },
-                      ...life.groups,
-                    ]
-                  : life.groups
-              }
-              selected={
-                view === 'aside' &&
-                (desktop || (sheetOpen && sheetView === 'aside'))
-              }
-              onSelect={openAside}
-            />
-          </div>
-          {desktop && view === 'aside' && (
-            <div className={styles.detail}>{aside}</div>
-          )}
-          {desktop && view === 'item' && selected && (
-            <div className={styles.detail}>
-              <DetailPanel
-                key={selected.id + ':' + selectionRevision}
-                {...detailActions(selected.id)}
-                item={selected}
-                position={items.indexOf(selected) + 1}
-                total={counts.needs}
-                account={accountFor(selected.account)}
-                initialFactId={
-                  !startClean && !life.started && selectionRevision === 0
-                    ? selected.facts[
-                        persona.demo.initialSelection.openFactIndex
-                      ]?.id
-                    : undefined
-                }
-                initialReasonOpen={
-                  !startClean &&
-                  !life.started &&
-                  selectionRevision === 0 &&
-                  persona.demo.initialSelection.reasonOpen
-                }
-              />
             </div>
-          )}
-          {desktop && view === 'item' && !items.length && (
-            <div className={styles.detail}>{empty}</div>
-          )}
-        </div>
-      )}
-      {!desktop && (sheetItem || sheetView === 'aside') && !children && (
-        <DetailSheet
-          open={sheetOpen}
-          onClose={() => setSheetOpen(false)}
-          returnFocus={returnFocus}
-          label={sheetView === 'aside' ? 'Set aside' : sheetItem.name}
-        >
-          {sheetView === 'aside' ? (
-            aside
-          ) : (
-            <DetailPanel
-              key={sheetItem.id + ':' + selectionRevision}
-              {...detailActions(sheetItem.id)}
-              item={sheetItem}
-              position={sheetPosition}
-              total={sheetTotal}
-              account={accountFor(sheetItem.account)}
-              mobile
-              onClose={() => setSheetOpen(false)}
-            />
-          )}
-        </DetailSheet>
-      )}
+            {detailProps(key).map((props) => {
+              const active = props.item.id === selected(key);
+              const panel = (
+                <DetailPanel
+                  {...props}
+                  {...(!desktop ? sheetPosition : {})}
+                  mobile={!desktop}
+                  onClose={() => setSheetOpen(false)}
+                />
+              );
+              // Keep each item's detail mounted so tabs retain source, reasoning,
+              // email-highlighter, and view state as well as session-owned answers.
+              return desktop ? (
+                <div
+                  key={props.item.id}
+                  hidden={!active}
+                  className={styles.detail}
+                >
+                  {panel}
+                </div>
+              ) : (
+                <DetailSheet
+                  key={props.item.id}
+                  open={!children && tab === key && active && sheetOpen}
+                  onClose={() => setSheetOpen(false)}
+                  returnFocus={returnFocus}
+                  label={
+                    'name' in props.item
+                      ? props.item.name
+                      : 'title' in props.item
+                        ? props.item.title
+                        : props.item.subject
+                  }
+                >
+                  {panel}
+                </DetailSheet>
+              );
+            })}
+          </div>
+        ))}
+      </div>
     </main>
   );
 }
 
-export function App({
-  personaId,
-  children,
-  startClean = false,
-  session,
-}: {
+export function App(props: {
   personaId: PersonaId;
   children?: ReactNode;
   startClean?: boolean;
   session?: ItemLifecycle;
 }) {
-  return (
-    <Brief
-      key={personaId}
-      personaId={personaId}
-      startClean={startClean}
-      session={session}
-    >
-      {children}
-    </Brief>
-  );
+  return <Brief key={props.personaId} {...props} />;
 }
