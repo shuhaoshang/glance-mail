@@ -16,9 +16,13 @@ import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { SnoozeMenu } from '../SnoozeMenu/SnoozeMenu';
 import { firstFieldForFact, inboxUrls } from './detailSelection';
+import { MailDetails, MovedNote, type MailDetailProps } from './MailDetails';
+import type { EmailTab } from '../MailRows/movedEmail';
 import styles from './DetailPanel.module.css';
 
-interface DetailPanelProps {
+export interface NeedsYouDetailProps {
+  variant?: 'needs-you';
+  movedTo?: EmailTab;
   item: Item;
   position: number;
   total: number;
@@ -47,6 +51,7 @@ function Content({
   initialFactId,
   initialReasonOpen = false,
   initialTab = 'details',
+  movedTo,
   askedQuestions,
   onAskQuestion,
   onDone,
@@ -55,7 +60,7 @@ function Content({
   busy,
   checkedSteps,
   onChecksChange,
-}: DetailPanelProps) {
+}: NeedsYouDetailProps) {
   const prefix = useId(),
     sourceId = prefix + '-source',
     reasonId = prefix + '-reason';
@@ -80,7 +85,7 @@ function Content({
 
   const [highlighted, setHighlighted] = useState(true);
   const reasonTrigger = useRef<HTMLButtonElement>(null);
-  const [reasonOpen, setReasonOpen] = useState(initialReasonOpen);
+  const [reasonOpen, setReasonOpen] = useState(initialReasonOpen && !movedTo);
   const [selection, setSelection] = useState<SceneFieldSelection | null>(() => {
     const fact = item.facts.find((entry) => entry.id === initialFactId);
     const fieldKey = firstFieldForFact(item, initialFactId);
@@ -99,6 +104,7 @@ function Content({
   const tabs = (
     <SegmentedControl
       aria-label="Item views"
+      appearance={mobile ? 'underline' : 'segmented'}
       options={[
         { value: 'details', label: 'Details', panelId: detailsId },
         { value: 'email', label: 'Original email', panelId: emailId },
@@ -123,10 +129,14 @@ function Content({
       aria-label="Selected item"
       onKeyDown={(event) => {
         if (event.key !== 'Escape') return;
-        if (snoozeOpen || (tab === 'details' && (selection || reasonOpen))) {
+        if (
+          ((!movedTo || movedTo === 'Needs you') && snoozeOpen) ||
+          (tab === 'details' && (selection || (!movedTo && reasonOpen)))
+        ) {
           event.preventDefault();
           event.stopPropagation();
-          if (snoozeOpen) closeSnooze();
+          if ((!movedTo || movedTo === 'Needs you') && snoozeOpen)
+            closeSnooze();
           else if (selection) closeSource();
           else {
             setReasonOpen(false);
@@ -142,7 +152,7 @@ function Content({
         <div className={styles.navigation}>
           <div className={styles.topRow}>
             <Text variant="meta" className={styles.meta}>
-              {'Needs you · ' + position + ' of ' + total}
+              {(movedTo ?? 'Needs you') + ' · ' + position + ' of ' + total}
             </Text>
             {mobile ? (
               <IconButton
@@ -158,7 +168,7 @@ function Content({
           </div>
           {mobile && tabs}
         </div>
-        {(!mobile || tab === 'details') && (
+        {(!mobile || tab === 'details' || movedTo) && (
           <div className={styles.identity}>
             <Text as="h2" variant="title" className={styles.title}>
               {item.name}
@@ -167,6 +177,7 @@ function Content({
               <Person {...item.person} />
               {account.minority && <AccountLabel account={account} />}
             </div>
+            {movedTo && <MovedNote />}
           </div>
         )}
         <div
@@ -227,24 +238,26 @@ function Content({
               />
             )}
           </div>
-          <div className={styles.reason}>
-            <ReasonPill
-              ref={reasonTrigger}
-              mobile={mobile}
-              label={reasonLabel(position, item.judgments[0]?.label)}
-              expanded={reasonOpen}
-              controls={reasonId}
-              onToggle={() => setReasonOpen((value) => !value)}
-            />
-            {reasonOpen && (
-              <ReasonPanel
-                item={item}
-                position={position}
-                id={reasonId}
-                watchlist={watchlist}
+          {!movedTo && (
+            <div className={styles.reason}>
+              <ReasonPill
+                ref={reasonTrigger}
+                mobile={mobile}
+                label={reasonLabel(position, item.judgments[0]?.label)}
+                expanded={reasonOpen}
+                controls={reasonId}
+                onToggle={() => setReasonOpen((value) => !value)}
               />
-            )}
-          </div>
+              {reasonOpen && (
+                <ReasonPanel
+                  item={item}
+                  position={position}
+                  id={reasonId}
+                  watchlist={watchlist}
+                />
+              )}
+            </div>
+          )}
         </div>
         <div
           role="tabpanel"
@@ -277,18 +290,21 @@ function Content({
         </div>
       </div>
       <div className={styles.actionArea}>
-        {snoozeOpen && !complete && onSnooze && (
-          <div className={styles.snooze}>
-            <SnoozeMenu
-              id={snoozeId}
-              onChoose={(label) => {
-                setSnoozeOpen(false);
-                onSnooze(label);
-              }}
-              onClose={closeSnooze}
-            />
-          </div>
-        )}
+        {(!movedTo || movedTo === 'Needs you') &&
+          snoozeOpen &&
+          !complete &&
+          onSnooze && (
+            <div className={styles.snooze}>
+              <SnoozeMenu
+                id={snoozeId}
+                onChoose={(label) => {
+                  setSnoozeOpen(false);
+                  onSnooze(label);
+                }}
+                onClose={closeSnooze}
+              />
+            </div>
+          )}
         <footer
           className={[styles.actions, complete && styles.complete]
             .filter(Boolean)
@@ -297,9 +313,17 @@ function Content({
           <Button
             className={styles.inbox}
             size={
-              complete && onDone ? (mobile ? 'touch' : 'compact') : undefined
+              complete && onDone && (!movedTo || movedTo === 'Needs you')
+                ? mobile
+                  ? 'touch'
+                  : 'compact'
+                : undefined
             }
-            variant={complete && onDone ? 'outline' : 'primary'}
+            variant={
+              complete && onDone && (!movedTo || movedTo === 'Needs you')
+                ? 'outline'
+                : 'primary'
+            }
             href={inboxUrls[account.app]}
             target="_blank"
             rel="noopener noreferrer"
@@ -307,7 +331,7 @@ function Content({
           >
             Open in {account.app}
           </Button>
-          {!complete && onSnooze && (
+          {(!movedTo || movedTo === 'Needs you') && !complete && onSnooze && (
             <Button
               ref={snoozeTrigger}
               className={styles.snoozeTrigger}
@@ -318,7 +342,8 @@ function Content({
               aria-controls={snoozeId}
               disabled={busy}
               onClick={() => {
-                if (snoozeOpen) closeSnooze();
+                if ((!movedTo || movedTo === 'Needs you') && snoozeOpen)
+                  closeSnooze();
                 else {
                   setSnoozeOpen(true);
                   requestAnimationFrame(() =>
@@ -333,7 +358,7 @@ function Content({
               Snooze
             </Button>
           )}
-          {onDone && (
+          {(!movedTo || movedTo === 'Needs you') && onDone && (
             <Button
               className={styles.done}
               size={complete ? undefined : mobile ? 'touch' : 'compact'}
@@ -350,6 +375,9 @@ function Content({
     </section>
   );
 }
+export type DetailPanelProps = NeedsYouDetailProps | MailDetailProps;
 export function DetailPanel(props: DetailPanelProps) {
+  if (props.variant === 'heads-up' || props.variant === 'other-mail')
+    return <MailDetails key={props.variant + props.item.id} {...props} />;
   return <Content key={props.item.id} {...props} />;
 }

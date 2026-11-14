@@ -1,0 +1,52 @@
+.panel {
+  padding: var(--space-8);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-panel);
+  background: var(--color-surface);
+  min-inline-size: 0;
+}
+.rows {
+  display: grid;
+  gap: var(--space-4);
+}
+.heading {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-8);
+  padding: var(--space-8) var(--space-12) var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+}
+.progress {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+.progress > div {
+  inline-size: calc(var(--space-32) * 2);
+}
+.remaining {
+  padding: var(--space-12) var(--space-16);
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+}
+.empty {
+  padding: var(--space-40);
+  text-align: center;
+}
+.empty strong {
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-16);
+  font-weight: var(--font-weight-semibold);
+}
+.empty p {
+  margin: var(--space-8) 0 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}

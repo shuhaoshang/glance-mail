@@ -1,7 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { getPersona } from '../../../data';
-import { DetailPanel } from './DetailPanel';
+import { DetailPanel, type NeedsYouDetailProps } from './DetailPanel';
+const NeedsYouPanel = (props: NeedsYouDetailProps) => (
+  <DetailPanel {...props} />
+);
 import styles from './DetailPanel.module.css';
 
 const maya = getPersona('maya');
@@ -12,7 +15,7 @@ const visibleItems = (persona: typeof maya) =>
 
 const meta = {
   title: 'Composites/DetailPanel',
-  component: DetailPanel,
+  component: NeedsYouPanel,
   args: {
     onDone: fn(),
     onSnooze: fn(),
@@ -39,7 +42,7 @@ const meta = {
         </div>
       )!,
   ],
-} satisfies Meta<typeof DetailPanel>;
+} satisfies Meta<typeof NeedsYouPanel>;
 
 export default meta;
 type Story = StoryObj<typeof meta>;

@@ -1,0 +1,24 @@
+.example {
+  display: grid;
+  align-items: start;
+  gap: var(--gap-column);
+  max-inline-size: var(--content-max);
+  margin-inline: auto;
+  padding: var(--space-24) var(--space-16);
+}
+.desktop {
+  grid-template-columns: var(--column-list) minmax(0, 1fr);
+  padding-inline: 0;
+}
+.matrix {
+  display: grid;
+  gap: var(--space-24);
+  padding: var(--space-24) var(--space-16);
+  max-inline-size: var(--content-max);
+  margin-inline: auto;
+}
+.matrix h2 {
+  font-size: var(--font-size-20);
+  line-height: var(--line-height-20);
+  margin: 0 0 var(--space-12);
+}

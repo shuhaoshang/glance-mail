@@ -1,4 +1,4 @@
-import type { Account, Item } from '../../../data/types';
+import type { Account, Item, Segment } from '../../../data/types';
 import { Text } from '../Text/Text';
 import { Switch } from '../Switch/Switch';
 import { Highlight } from '../Highlight/Highlight';
@@ -6,7 +6,7 @@ import { useDesktopLayout } from '../useDesktopLayout';
 import styles from './EmailView.module.css';
 
 interface EmailViewProps {
-  item: Item;
+  item: Pick<Item, 'email' | 'when'>;
   account?: Account;
   highlighted: boolean;
   onHighlightedChange: (highlighted: boolean) => void;
@@ -87,8 +87,28 @@ export function EmailView({
           />
         </div>
       </div>
+      <EmailBody paras={item.email.paras} highlighted={highlighted} />
+      {desktop && (
+        <Text as="p" variant="meta">
+          Highlights mark every fact Glance used in your brief. Point at one to
+          see what it was used for.
+        </Text>
+      )}
+    </section>
+  );
+}
+
+export function EmailBody({
+  paras,
+  highlighted = true,
+}: {
+  paras: Segment[][];
+  highlighted?: boolean;
+}) {
+  return (
+    <div className={highlighted ? styles.enabled : undefined}>
       <div className={styles.body} data-testid="email-body">
-        {item.email.paras.map((paragraph, index) => (
+        {paras.map((paragraph, index) => (
           <Text as="p" variant="reading" key={index}>
             {paragraph.map((segment, segmentIndex) =>
               typeof segment === 'string' ? (
@@ -115,12 +135,6 @@ export function EmailView({
           </Text>
         ))}
       </div>
-      {desktop && (
-        <Text as="p" variant="meta">
-          Highlights mark every fact Glance used in your brief. Point at one to
-          see what it was used for.
-        </Text>
-      )}
-    </section>
+    </div>
   );
 }

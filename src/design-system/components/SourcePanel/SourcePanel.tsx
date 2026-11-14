@@ -13,7 +13,7 @@ interface SourcePanelProps {
   kind: HighlightKind;
   animate?: boolean;
   onOpenEmail: () => void;
-  onClose: () => void;
+  onClose?: () => void;
 }
 
 export function SourcePanel({
@@ -30,7 +30,7 @@ export function SourcePanel({
     <section
       id={id}
       onKeyDown={(event) => {
-        if (event.key !== 'Escape') return;
+        if (event.key !== 'Escape' || !onClose) return;
         event.preventDefault();
         event.stopPropagation();
         onClose();
@@ -49,12 +49,14 @@ export function SourcePanel({
           <Button variant="text" size="compact" onClick={onOpenEmail}>
             Open email
           </Button>
-          <IconButton
-            size="compact"
-            icon="close"
-            aria-label="Close source"
-            onClick={onClose}
-          />
+          {onClose && (
+            <IconButton
+              size="compact"
+              icon="close"
+              aria-label="Close source"
+              onClick={onClose}
+            />
+          )}
         </div>
       </header>
       <Text as="p" variant="reading">

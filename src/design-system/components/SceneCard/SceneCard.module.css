@@ -202,3 +202,7 @@
     calc(100% - var(--size-touch) + var(--space-4))
   );
 }
+
+.phoneFields {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
