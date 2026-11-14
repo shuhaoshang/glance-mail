@@ -45,13 +45,20 @@ test('Daniel — unblock the team, keep the evening', async ({
     await expect(
       needs(page).getByText('Personal', { exact: true }),
     ).toHaveCount(0);
+    await expect(page.getByRole('tab', exact('Heads-up 3'))).toBeVisible();
+    await expect(page.getByRole('tab', exact('Other mail 64'))).toBeVisible();
+    await page.getByRole('tab', exact('Heads-up 3')).click();
     const car = daniel.goodToKnow.find((item) => item.account === 'personal')!;
     const personal = page
-      .getByRole('list', exact('Good to know'))
-      .getByRole('listitem')
-      .filter({ hasText: car.title });
+      .getByRole('list', exact('Heads-up'))
+      .getByRole('button', { name: new RegExp(car.title) });
     await expect(personal).toContainText(car.title + car.text);
     await expect(personal.getByText('Personal', { exact: true })).toBeVisible();
+    await personal.click();
+    await expect(
+      detail(page).getByRole('link', exact('Open in Gmail')),
+    ).toHaveAttribute('href', 'https://mail.google.com/');
+    await page.getByRole('tab', exact('Needs you 4')).click();
     await expect(
       needs(page).getByText(
         daniel.doneBefore[0].name + ' · ' + daniel.doneBefore[0].note,

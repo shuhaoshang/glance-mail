@@ -59,10 +59,7 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
       'background-color',
       await tokenColor(urgent, '--color-urgent'),
     );
-    await expectProductFits(
-      page,
-      page.getByRole('button', { name: /^18 set aside/ }),
-    );
+    await expectProductFits(page, page.getByRole('list', exact('Needs you')));
   });
 
   await test.step('Sarah 2 · Verify: Checks the fee', async () => {
@@ -178,7 +175,7 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
     await expect(page.getByRole('button', exact('Snooze'))).toHaveCount(0);
     await expect(page.getByRole('dialog', exact(lincoln.name))).toBeVisible();
     await expect(
-      page.getByText('Needs you · 1 of 3', { exact: true }),
+      detail(page).getByText('Needs you · 1 of 3', { exact: true }),
     ).toBeVisible();
     await todo.getByRole('checkbox', exact(stepNames[0])).uncheck();
     await primary(page, open);
