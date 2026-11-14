@@ -26,7 +26,7 @@ export function MailExample({
 }) {
   const persona = getPersona(personaId),
     desktop = useDesktopLayout();
-  const [selected, setSelected] = useState(index),
+  const [selection, setSelected] = useState(index),
     [open, setOpen] = useState(false),
     [trigger, setTrigger] = useState<HTMLElement | null>(null),
     [watch, setWatch] = useState('');
@@ -36,6 +36,7 @@ export function MailExample({
       : kind === 'other-mail'
         ? persona.otherMail.rows.filter((row) => !row.isNew)
         : persona.items.filter((item) => !item.isNew);
+  const selected = Math.max(0, Math.min(selection, items.length - 1));
   const item = items[selected];
   const choose = (id: string, element: HTMLButtonElement) => {
     setSelected(items.findIndex((item) => item.id === id));

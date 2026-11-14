@@ -6,6 +6,18 @@ const meta = {
   component: MailExample,
   parameters: { layout: 'fullscreen' },
   args: { kind: 'heads-up', personaId: 'maya' },
+  render: (args) => (
+    <MailExample
+      key={[
+        args.personaId,
+        args.kind,
+        args.index,
+        args.movedTo,
+        args.initialEmail,
+      ].join('-')}
+      {...args}
+    />
+  ),
 } satisfies Meta<typeof MailExample>;
 export default meta;
 type Story = StoryObj<typeof meta>;
