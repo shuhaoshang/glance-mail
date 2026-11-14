@@ -2,6 +2,7 @@ import { useId } from 'react';
 import { TextInput } from '../TextInput/TextInput';
 import { Button } from '../Button/Button';
 import { Icon } from '../Icon/Icon';
+import { useDesktopLayout } from '../useDesktopLayout';
 import styles from './InlineForm.module.css';
 interface InlineFormProps {
   label: string;
@@ -13,6 +14,8 @@ interface InlineFormProps {
   placeholder?: string;
   note?: string;
   autoFocus?: boolean;
+  /** Defaults to the shared responsive breakpoint. */
+  mobile?: boolean;
 }
 export function InlineForm({
   label,
@@ -24,11 +27,14 @@ export function InlineForm({
   placeholder,
   note,
   autoFocus,
+  mobile,
 }: InlineFormProps) {
   const noteId = useId();
+  const desktop = useDesktopLayout();
+  const phone = mobile ?? !desktop;
   return (
     <form
-      className={styles.form}
+      className={[styles.form, phone && styles.phone].filter(Boolean).join(' ')}
       aria-label={label}
       onSubmit={(event) => {
         event.preventDefault();

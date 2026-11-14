@@ -22,9 +22,9 @@ The phone Toast also stays above a taller action bar: [light](toast-expanded-pho
 ## How to review
 
 - **Composites/MoveMenu:** Default, HeadsUp, and OtherMail show each checked current destination. Hover, Pressed, and CurrentHover demonstrate row states. KeyboardAndDismissal verifies first-enabled focus, arrow keys, Home/End, disabled activation, Escape, outside click, and the callback. InSheet uses the existing native detail sheet.
-- **Primitives/Toast:** Default, WithoutUndo, Short, Watchlist, and Memory cover the specified message shapes. Use the replay buttons to replace a confirmation. Focused and Hovered pause it; Replacement and UndoOnce verify callbacks. InSheet demonstrates placement above a measured action bar, including its changing height.
+- **Primitives/Toast:** Default, WithoutUndo, Short, Watchlist, and Memory cover the specified message shapes. Use the replay buttons to replace a confirmation. Focused pauses it; Hovered, CloseHovered, Pressed, and ClosePressed expose the approved control states. Replacement and UndoOnce verify callbacks. InSheet demonstrates placement above a measured action bar, including its changing height.
 - **Primitives/TextInput:** Empty, Filled, Focused, HiddenLabel, Memory, and Editing cover placeholder, value, focus, and both naming methods. Focus uses the specified 1.5-pixel inset ring without an additional outline.
-- **Composites/InlineForm:** Empty disables Add, Filled enables it, and Edit uses Save without a note. Memory uses the provided instruction placeholder and note. SubmitAndCancel verifies whitespace-only prevention, Enter, Escape, and focus return through the example consumer.
+- **Composites/InlineForm:** Empty disables Add, Filled enables it, and Edit uses Save without a note. Memory uses the provided instruction placeholder and note. PhoneLongPlaceholder shows the two-row layout with the long instruction placeholder. SubmitAndCancel verifies whitespace-only prevention, Enter, Escape, and focus return through the example consumer.
 
 ## Component contracts
 
@@ -34,21 +34,38 @@ Mount one ToastProvider for the application and call useToast from any descendan
 
 For a native phone sheet, pass the open dialog as the provider's container and the actual footer element as actionBar. This keeps the live status and controls in the dialog's top layer and focus scope. A ResizeObserver measures footer changes; the Toast remains 16 above it. On a regular phone page it uses 16 margins plus the safe-area inset. On desktop it uses the specified 24 bottom offset and 416–640 width range.
 
-TextInput requires a label. hideLabel uses that name as aria-label instead of rendering a visible label. InlineForm is controlled through value/onValueChange, calls onSubmit with a nonempty trimmed value, and calls onCancel for Cancel or Escape. Its consumer owns closing and restoring focus. It does not save application data.
+TextInput requires a label. hideLabel uses that name as aria-label instead of rendering a visible label. InlineForm is controlled through value/onValueChange, calls onSubmit with a nonempty trimmed value, and calls onCancel for Cancel or Escape. Its consumer owns closing and restoring focus. It does not save application data. Below the shared desktop breakpoint, the input fills the first row and the compact submit/Cancel buttons remain start-aligned on a second row, 8 apart. The optional mobile override supports isolated phone examples.
 
 The eye glyph is reused. Move, bulb, pencil, trash, plus, chevron-down, and quote glyphs are added to the existing icon set.
 
 ## Validation
 
 - App and Storybook production builds, lint, formatting, data validation, and check:english pass.
-- All 56 Playwright checks pass in light/dark with normal/reduced motion. The existing GitHub Actions workflow runs the full suite.
-- All 36 new component stories complete at both widths and themes: 144 render/interaction checks.
+- All 60 Playwright checks pass in light/dark with normal/reduced motion. The existing GitHub Actions workflow runs the full suite.
+- All 40 new component stories complete at both widths and themes: 160 render/interaction checks.
 - Controlled browser time verifies expiration, both pause reasons together, remaining-time resumption, replacement deadlines, and focused replacement. Undo, close, and return focus are checked separately.
 - The phone tests verify a 358-wide Toast at x=16, a 16-pixel clearance above both footer heights, and that the Toast remains inside the modal dialog. The phone MoveMenu spans the 390-wide action bar and does not close the sheet when dismissed.
 - Tokens and persona files are unchanged. Runtime placement values come from measured element bounds; the six-second timeout is the behavior explicitly specified in section 9.7.
 
+## Review changes
+
+The designer's [review](https://github.com/shuhaoshang/glance-mail/pull/68#issuecomment-6870570387) resolves all three open questions:
+
+- Close uses `--color-on-ink-muted` at rest and `--color-on-ink` on hover and press. Undo keeps `--color-on-ink-link` and gains an underline with `--space-2` offset on hover and press. Both fills remain transparent, with the shared focus outline.
+- The phone InlineForm places the input across the first row, then submit and Cancel in their existing order, start-aligned and 8 apart. PhoneLongPlaceholder uses the documented instruction placeholder.
+- The reference differences are accepted: the input keeps the documented 48 height, radius 12, and disabled-empty submit rule.
+- Sections 9.7 and 9.11 now document these decisions. The input examples use immediate local state so rapid typing remains reliable. Scene checks verify Storybook's success result and interaction errors; InSheet now asserts against the status message itself.
+
+The existing screenshots have been refreshed. New state evidence:
+
+| State | Light | Dark |
+| --- | --- | --- |
+| Undo hovered | [Light](toast-hovered-light.jpg) | [Dark](toast-hovered-dark.jpg) |
+| Close hovered | [Light](toast-close-hovered-light.jpg) | [Dark](toast-close-hovered-dark.jpg) |
+| Phone form with long placeholder | [Light](form-long-placeholder-phone-light.jpg) | [Dark](form-long-placeholder-phone-dark.jpg) |
+
+Toast state images capture the bottom 200 pixels of a 1280 × 800 viewport. Before-review examples remain available at the original commit: [phone form](https://github.com/shuhaoshang/glance-mail/blob/0099faeec1283837cdf60b816fd1f5723d54c71e/docs/reviews/23-feedback-controls/form-phone-light.jpg), [light toast](https://github.com/shuhaoshang/glance-mail/blob/0099faeec1283837cdf60b816fd1f5723d54c71e/docs/reviews/23-feedback-controls/toast-desktop-light.jpg), and [dark toast](https://github.com/shuhaoshang/glance-mail/blob/0099faeec1283837cdf60b816fd1f5723d54c71e/docs/reviews/23-feedback-controls/toast-desktop-dark.jpg).
+
 ## Open questions
 
-1. **Toast control hover and press:** section 9.7 defines Undo in `--color-on-ink-link` and the close IconButton, but not their states on the inverse surface. Both currently keep their base colors and transparent fills, with the shared keyboard-focus outline. Proposal: Undo uses `--color-on-ink` on hover/press (light `#FFFFFF`, dark `#16151C`), and the close icon uses `--color-on-ink-muted` (white at 72% in light, ink at 64% in dark). Fills would stay transparent. Please confirm before adding these states.
-2. **InlineForm on the phone:** the specification defines the inline input/Add/Cancel arrangement but no phone rearrangement. The current preview keeps that row, so the input has less room. Proposal: at the existing phone breakpoint, put the input on a full-width first row and the compact submit/Cancel buttons on a second row with the existing 8 spacing token. Please confirm before adding this layout.
-3. **Reference differences:** the prototype add form has a rounder input and a longer example placeholder, and its empty Add button looks active. The implementation follows section 9.11's 48 height, radius 12, shorter placeholder, and the issue's disabled-empty requirement.
+None. The review confirms the Toast control states and phone InlineForm layout, and accepts the documented reference differences.

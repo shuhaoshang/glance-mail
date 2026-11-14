@@ -27,3 +27,12 @@
   flex: none;
   margin-block-start: var(--space-2);
 }
+
+.phone .row {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.phone .row > input {
+  flex: 1 1 100%;
+  inline-size: 100%;
+}

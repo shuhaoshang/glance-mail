@@ -1,4 +1,4 @@
-import { expect, test, type Page } from '@playwright/test';
+import { expect, test, type Page, type Locator } from '@playwright/test';
 import maya from '../docs/handoff/v2/provided/data/maya.json' with { type: 'json' };
 async function story(page: Page, id: string, theme: string) {
   const url = new URL('http://127.0.0.1:6196/iframe.html');
@@ -6,20 +6,31 @@ async function story(page: Page, id: string, theme: string) {
   url.searchParams.set('viewMode', 'story');
   url.searchParams.set('globals', 'theme:' + theme);
   await page.goto(url.href);
-  await expect
-    .poll(() =>
-      page.evaluate(() => {
-        const render = (
-          window as unknown as {
-            __STORYBOOK_PREVIEW__?: {
-              currentRender?: { phase: string; playFunctionException?: Error };
+  const result = () =>
+    page.evaluate(() => {
+      const render = (
+        window as unknown as {
+          __STORYBOOK_PREVIEW__?: {
+            currentRender?: {
+              channel: { last: (name: string) => unknown[] | undefined };
             };
-          }
-        ).__STORYBOOK_PREVIEW__?.currentRender;
-        return render?.playFunctionException?.message ?? render?.phase;
-      }),
-    )
-    .toBe('finished');
+          };
+        }
+      ).__STORYBOOK_PREVIEW__?.currentRender;
+      const channel = render?.channel;
+      const finished = channel?.last('storyFinished')?.[0] as
+        { status?: string } | undefined;
+      return {
+        status: finished?.status,
+        error:
+          channel?.last('playFunctionThrewException') ??
+          channel?.last('storyThrewException') ??
+          channel?.last('unhandledErrorsWhilePlaying'),
+      };
+    });
+  await expect.poll(async () => (await result()).status).toBe('success');
+  expect((await result()).error).toBeUndefined();
+  await expect(page.locator('.sb-errordisplay')).not.toBeVisible();
 }
 
 test('MoveMenu blocks the current destination and restores focus', async ({
@@ -36,7 +47,9 @@ test('MoveMenu blocks the current destination and restores focus', async ({
     const menu = page.getByRole('menu', { name: 'Move to' });
     const disabled = menu.getByRole('menuitem', { disabled: true });
     await expect(disabled).toHaveCount(1);
+    await disabled.hover();
     await disabled.click({ force: true });
+    await expect(menu).toBeVisible();
     await disabled.focus();
     await page.keyboard.press('Space');
     await expect(menu).toBeVisible();
@@ -189,6 +202,21 @@ test('TextInput and InlineForm support labels, empty validation, Enter, and Esca
   await story(page, 'composites-inlineform--empty', colorScheme!);
   const field = page.getByRole('textbox', { name: 'Watchlist topic' });
   const add = page.getByRole('button', { name: 'Add', exact: true });
+  const cancel = page.getByRole('button', { name: 'Cancel', exact: true });
+  const row = field.locator('..');
+  const [inputBox, addBox, cancelBox, rowBox] = await Promise.all([
+    field.boundingBox(),
+    add.boundingBox(),
+    cancel.boundingBox(),
+    row.boundingBox(),
+  ]);
+  expect(inputBox!.width).toBeCloseTo(rowBox!.width, 1);
+  expect(addBox!.y - inputBox!.y - inputBox!.height).toBe(8);
+  expect(addBox!.x).toBe(inputBox!.x);
+  expect(cancelBox!.y).toBe(addBox!.y);
+  expect(cancelBox!.x - addBox!.x - addBox!.width).toBeCloseTo(8, 1);
+  expect(addBox!.height).toBe(40);
+  expect(cancelBox!.height).toBe(40);
   await expect(add).toBeDisabled();
   await field.fill('   ');
   await field.press('Enter');
@@ -207,4 +235,66 @@ test('TextInput and InlineForm support labels, empty validation, Enter, and Esca
   await expect
     .poll(() => page.evaluate(() => document.documentElement.scrollWidth))
     .toBe(390);
+});
+
+async function tokenColor(element: Locator, name: string) {
+  return element.evaluate((element, name) => {
+    const probe = document.createElement('span');
+    probe.style.color = 'var(' + name + ')';
+    element.append(probe);
+    const color = getComputedStyle(probe).color;
+    probe.remove();
+    return color;
+  }, name);
+}
+
+test('Toast controls show the approved hover, pressed, and focus states', async ({
+  page,
+  colorScheme,
+}) => {
+  await story(page, 'primitives-toast--default', colorScheme!);
+  const undo = page.getByRole('button', { name: 'Undo', exact: true });
+  const close = page.getByRole('button', { name: 'Close confirmation' });
+  const link = await tokenColor(undo, '--color-on-ink-link');
+  const muted = await tokenColor(close, '--color-on-ink-muted');
+  const onInk = await tokenColor(close, '--color-on-ink');
+  await expect(undo).toHaveCSS('color', link);
+  await expect(undo).toHaveCSS('text-decoration-line', 'none');
+  await expect(close).toHaveCSS('color', muted);
+  await undo.hover();
+  await expect(undo).toHaveCSS('text-decoration-line', 'underline');
+  await expect(undo).toHaveCSS('text-underline-offset', '2px');
+  await page.mouse.down();
+  await expect(undo).toHaveCSS('text-decoration-line', 'underline');
+  await expect(undo).toHaveCSS('color', link);
+  await expect(undo).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await page.mouse.move(0, 0);
+  await page.mouse.up();
+  await close.hover();
+  await expect(close).toHaveCSS('color', onInk);
+  await page.mouse.down();
+  await expect(close).toHaveCSS('color', onInk);
+  await expect(close).toHaveCSS('background-color', 'rgba(0, 0, 0, 0)');
+  await page.mouse.move(0, 0);
+  await page.mouse.up();
+  await undo.focus();
+  await page.keyboard.press('Tab');
+  await expect(close).toBeFocused();
+  await expect(close).toHaveCSS('outline-style', 'solid');
+  await expect(close).toHaveCSS('outline-width', '2px');
+  await expect(close).toHaveCSS('outline-offset', '2px');
+  for (const id of ['hovered', 'pressed']) {
+    await story(page, 'primitives-toast--' + id, colorScheme!);
+    await expect(
+      page.getByRole('button', { name: 'Undo', exact: true }),
+    ).toHaveCSS('text-decoration-line', 'underline');
+  }
+  for (const id of ['close-hovered', 'close-pressed']) {
+    await story(page, 'primitives-toast--' + id, colorScheme!);
+    const control = page.getByRole('button', { name: 'Close confirmation' });
+    await expect(control).toHaveCSS(
+      'color',
+      await tokenColor(control, '--color-on-ink'),
+    );
+  }
 });

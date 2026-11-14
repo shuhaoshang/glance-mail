@@ -6,11 +6,12 @@ const meta = {
   component: ToastExample,
   parameters: {
     layout: 'fullscreen',
+    pseudo: { rootSelector: 'body' },
     docs: {
       story: { inline: false },
       description: {
         component:
-          'One confirmation at a time, with a six-second timer paused while the pointer or focus is inside. Use the example buttons to replay or replace it. The provider accepts the open dialog as its portal container and measures the phone action bar. Undo and close keep their base colors on hover and press pending an inverse-surface state decision.',
+          'One confirmation at a time, with a six-second timer paused while the pointer or focus is inside. Use the example buttons to replay or replace it. The provider accepts the open dialog as its portal container and measures the phone action bar. Undo keeps its link color and gains an underline on hover and press. The close icon changes from on-ink-muted to on-ink. Both fills remain transparent, and keyboard focus uses the shared outline.',
       },
     },
   },
@@ -33,6 +34,7 @@ export const Focused: Story = {
   },
 };
 export const Hovered: Story = {
+  parameters: { pseudo: { hover: '[role="status"] button:first-of-type' } },
   play: async ({ canvasElement }) => {
     await userEvent.hover(
       within(canvasElement.ownerDocument.body).getByRole('button', {
@@ -40,6 +42,24 @@ export const Hovered: Story = {
       }),
     );
   },
+};
+export const CloseHovered: Story = {
+  parameters: { pseudo: { hover: '[aria-label="Close confirmation"]' } },
+  play: async ({ canvasElement }) => {
+    await userEvent.hover(
+      within(canvasElement.ownerDocument.body).getByRole('button', {
+        name: 'Close confirmation',
+      }),
+    );
+  },
+};
+export const Pressed: Story = {
+  ...Hovered,
+  parameters: { pseudo: { active: '[role="status"] button:first-of-type' } },
+};
+export const ClosePressed: Story = {
+  ...CloseHovered,
+  parameters: { pseudo: { active: '[aria-label="Close confirmation"]' } },
 };
 export const Replacement: Story = {
   args: { initiallyVisible: false },
@@ -88,9 +108,7 @@ export const InSheet: Story = {
       within(dialog).getByRole('button', { name: 'Show confirmation' }),
     );
     await expect(
-      within(canvasElement.ownerDocument.body).getByRole('button', {
-        name: 'Undo',
-      }),
+      within(canvasElement.ownerDocument.body).getByRole('status'),
     ).toHaveTextContent('Moved to Heads-up.');
   },
 };

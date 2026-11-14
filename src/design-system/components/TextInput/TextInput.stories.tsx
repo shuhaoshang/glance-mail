@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { useArgs } from 'storybook/preview-api';
 import { expect, fn, userEvent } from 'storybook/test';
 import { TextInput } from './TextInput';
+import { TextInputExample } from './TextInputExample';
 import maya from '../../../../docs/handoff/v2/provided/data/maya.json';
 import styles from '../feedbackExamples.module.css';
 const meta = {
@@ -21,18 +21,9 @@ const meta = {
       </div>
     ),
   ],
-  render: function Render(args) {
-    const [, update] = useArgs();
-    return (
-      <TextInput
-        {...args}
-        onChange={(event) => {
-          args.onChange?.(event);
-          update({ value: event.currentTarget.value });
-        }}
-      />
-    );
-  },
+  render: (args) => (
+    <TextInputExample key={String(args.value ?? '')} {...args} />
+  ),
 } satisfies Meta<typeof TextInput>;
 export default meta;
 type Story = StoryObj<typeof meta>;

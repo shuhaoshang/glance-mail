@@ -3,7 +3,7 @@ import { InlineForm } from './InlineForm';
 import { Button } from '../Button/Button';
 import styles from '../feedbackExamples.module.css';
 export function InlineFormExample(args: ComponentProps<typeof InlineForm>) {
-  const value = args.value;
+  const [value, setValue] = useState(args.value);
   const [open, setOpen] = useState(true),
     [trigger, setTrigger] = useState<HTMLButtonElement | null>(null),
     [result, setResult] = useState('');
@@ -24,6 +24,7 @@ export function InlineFormExample(args: ComponentProps<typeof InlineForm>) {
             {...args}
             value={value}
             onValueChange={(v) => {
+              setValue(v);
               args.onValueChange(v);
             }}
             onSubmit={(v) => {

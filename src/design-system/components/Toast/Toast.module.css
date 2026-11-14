@@ -47,8 +47,12 @@
   --pressed-fill: transparent;
   flex: none;
 }
+.surface .undo:is(:hover, :active) {
+  text-decoration: underline;
+  text-underline-offset: var(--space-2);
+}
 .surface .close {
-  --control-ink: var(--color-on-ink);
+  --control-ink: var(--color-on-ink-muted);
   --hover-ink: var(--color-on-ink);
   --pressed-ink: var(--color-on-ink);
   --hover-fill: transparent;

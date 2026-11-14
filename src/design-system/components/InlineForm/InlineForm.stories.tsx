@@ -1,8 +1,8 @@
-import { useArgs } from 'storybook/preview-api';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { expect, fn, userEvent } from 'storybook/test';
 import { InlineForm } from './InlineForm';
 import { InlineFormExample } from './InlineFormExample';
+import styles from './InlineForm.stories.module.css';
 import maya from '../../../../docs/handoff/v2/provided/data/maya.json';
 const meta = {
   title: 'Composites/InlineForm',
@@ -17,18 +17,7 @@ const meta = {
     onCancel: fn(),
     note: 'Glance looks for emails about it and puts them at the top.',
   },
-  render: function Render(args) {
-    const [, updateArgs] = useArgs();
-    return (
-      <InlineFormExample
-        {...args}
-        onValueChange={(value) => {
-          args.onValueChange(value);
-          updateArgs({ value });
-        }}
-      />
-    );
-  },
+  render: (args) => <InlineFormExample key={args.value} {...args} />,
 } satisfies Meta<typeof InlineForm>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -43,6 +32,16 @@ export const Memory: Story = {
     placeholder: 'Tell Glance a rule, in your own words',
     note: 'Glance follows it from the next email.',
   },
+};
+export const PhoneLongPlaceholder: Story = {
+  args: { ...Memory.args, mobile: true },
+  decorators: [
+    (Story) => (
+      <div className={styles.phonePreview}>
+        <Story />
+      </div>
+    ),
+  ],
 };
 export const Focused: Story = { args: { autoFocus: true } };
 export const Dark: Story = { globals: { theme: 'dark' } };
