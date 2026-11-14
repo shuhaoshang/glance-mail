@@ -6,7 +6,7 @@ The app now uses Needs you, Heads-up, and Other mail. Each tab keeps its selecte
 
 ## Screenshots
 
-All 68 images were captured with isolated Chromium color-scheme and reduced-motion emulation. No system settings were changed. Desktop: 1280 × 1000. Phone: 390 × 844. Full-page images include content below the viewport. The brief stories use the existing clean-start option so initial source and reasoning panels do not obscure the page structure.
+All 72 images were captured with isolated Chromium color-scheme and reduced-motion emulation. No system settings were changed. Desktop: 1280 × 1000. Phone: 390 × 844. Full-page images include content below the viewport. The brief stories use the existing clean-start option so initial source and reasoning panels do not obscure the page structure.
 
 | Persona and tab | Desktop light | Desktop dark | Phone light | Phone dark |
 | --- | --- | --- | --- | --- |
@@ -63,9 +63,9 @@ Compared with [Needs you](../../screens/v2/needs-you.png), [done and snoozed](..
 ## Validation
 
 - App and Storybook builds, lint, formatting, English checks, and data validation pass.
-- 92 Playwright checks pass in light/dark and normal/reduced motion. Two Move to scenarios are explicitly marked `fixme` with [task 27 / #59](https://github.com/shuhaoshang/glance-mail/issues/59), producing eight skipped project cases.
+- 96 Playwright checks pass in light/dark and normal/reduced motion. Two Move to scenarios are explicitly marked `fixme` with [task 27 / #59](https://github.com/shuhaoshang/glance-mail/issues/59), producing eight skipped project cases.
 - The tab checks cover all three personas at 1280, 1024, and 390 widths, every visible email's account destination, one greeting h1, named panels, keyboard order, phone close/focus return, and no horizontal overflow.
-- 69 related Storybook stories pass in both themes at 1280 and 390: 276 renders and interaction runs. These include Brief, New mail, Item lifecycle, Ask, Demo, AllDone, and ReasonPanel.
+- 109 related Storybook stories pass in both themes at 1280 and 390: 436 renders and interaction runs. These include Brief, New mail, Item lifecycle, Ask, Demo, AllDone, ReasonPanel, DetailPanel, and SceneCard.
 
 ## Review updates
 
@@ -78,6 +78,22 @@ Implemented all three proposals approved in the [PR #71 review](https://github.c
 Section 9.5 now documents the header behavior, AllDone wording, and attribution fallback. The approved “2 of 4 done” count remains unchanged.
 
 New review stories: Patterns/Brief → WatchlistReasoning and WatchlistHeadsUp; Composites/AllDone → TabbedComplete and TabbedSnoozed; Composites/ReasonPanel → WatchlistWithoutNavigation.
+
+### Second review: card space and action groups
+
+Implemented the [1024 layout review](https://github.com/shuhaoshang/glance-mail/pull/71#issuecomment-6876410228):
+
+- Deal values stay intact. The card measures the space needed by its values and uses the existing two-column layout when three columns do not fit, without a new page breakpoint. Resizing the card while keeping the browser width fixed verifies that it returns to three columns when space is available.
+- Outline actions remain together. When the primary and outline group do not fit, the primary appears first and the group follows on its own row, start-aligned, with `--space-8` between them. Checklist completion still promotes Mark done to the primary; the phone keeps its full-width primary and equal-width outline controls.
+- The deal row and section 9.6 now document these rules. The SnoozeOpen story waits for the scheduled focus transfer before checking it.
+
+| 1024-wide state | Light | Dark |
+| --- | --- | --- |
+| Maya, intact deal fields and grouped actions | [Light](maya-narrow-desktop-light.jpg) | [Dark](maya-narrow-desktop-dark.jpg) |
+| Sarah, Checklist incomplete | [Light](sarah-narrow-desktop-light.jpg) | [Dark](sarah-narrow-desktop-dark.jpg) |
+| Sarah, Checklist complete | [Light](sarah-checked-narrow-desktop-light.jpg) | [Dark](sarah-checked-narrow-desktop-dark.jpg) |
+
+Before this correction: [light](https://github.com/shuhaoshang/glance-mail/blob/799a6d3e42ea53990ea7811803b81e3b6ce79fcd/docs/reviews/26-brief-in-tabs/maya-narrow-desktop-light.jpg), [dark](https://github.com/shuhaoshang/glance-mail/blob/799a6d3e42ea53990ea7811803b81e3b6ce79fcd/docs/reviews/26-brief-in-tabs/maya-narrow-desktop-dark.jpg).
 
 ## Open questions
 

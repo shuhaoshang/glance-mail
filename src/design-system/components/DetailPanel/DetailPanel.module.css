@@ -144,13 +144,25 @@
 .actions {
   gap: var(--space-8);
   align-items: center;
-  flex-wrap: wrap;
+  justify-content: space-between;
 }
-.snoozeTrigger {
-  margin-inline-start: auto;
+.actions > .inbox,
+.actions > .done,
+.secondaryActions > a,
+.secondaryActions > button {
+  flex: none;
+  white-space: nowrap;
 }
-.complete .done {
-  margin-inline-start: auto;
+.secondaryActions {
+  display: flex;
+  align-items: center;
+  inline-size: max-content;
+  gap: var(--space-8);
+  flex: none;
+}
+.stackedActions {
+  flex-direction: column;
+  align-items: flex-start;
 }
 .snooze {
   position: absolute;
@@ -159,42 +171,28 @@
   padding-block-end: var(--space-12);
   z-index: 2;
 }
-.mobile .actions > a,
-.mobile .actions > button {
+.mobile .actions {
+  flex-direction: column;
+  align-items: stretch;
+}
+.mobile .actions > .inbox,
+.mobile .actions > .done,
+.mobile .secondaryActions {
+  inline-size: 100%;
+}
+.mobile .secondaryActions > a,
+.mobile .secondaryActions > button {
   flex: 1 1 0;
   min-inline-size: 0;
-  margin-inline-start: 0;
-}
-.mobile .actions .inbox {
-  inline-size: 100%;
-  flex-basis: 100%;
-}
-.mobile .complete .done {
-  flex-basis: 100%;
-  order: -1;
-  inline-size: 100%;
-  margin: 0;
-}
-.mobile .complete .inbox {
-  flex-basis: 0;
-  inline-size: auto;
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  padding-inline: var(--space-8);
 }
 .mobile .snooze {
   inset-inline: var(--space-20);
 }
 .mobile .navigation > [data-appearance='segmented'] > button {
   padding-inline: var(--space-8);
-}
-.mobile .actions > button,
-.mobile .complete .inbox {
-  font-size: var(--font-size-14);
-  line-height: var(--line-height-14);
-  padding-inline: var(--space-8);
-}
-.mobile .complete .done {
-  font-size: var(--font-size-16);
-  line-height: var(--line-height-16);
-  padding-inline: var(--space-20);
 }
 
 .snoozeTrigger[aria-expanded='true'] {

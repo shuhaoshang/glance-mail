@@ -431,7 +431,7 @@ A scene card holds **only facts from the email**, laid out by the email's struct
 
 | Type        | Use when the email…                                   | Layout                                                                                     | Examples                                           |
 | ----------- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------ | -------------------------------------------------- |
-| `deal`      | is about an account with a value, a date and a status | three Fields in a row on desktop, two columns on the phone (default size)                                                       | Maya · Fernway renewal; Halden new lead            |
+| `deal`      | is about an account with a value, a date and a status | three Fields in a row on desktop, two columns on the phone (default size); when the card cannot fit three intact values, use the same two-column layout based on card space, not a page breakpoint. Field values never break inside themselves                                                       | Maya · Fernway renewal; Halden new lead            |
 | `decision`  | offers named options and asks you to choose           | two option tiles (key badge, title, small Field); one per row in the phone sheet                                           | Daniel · Checkout redesign                         |
 | `approval`  | asks you to approve an amount                         | large amount Field, then small Fields (for, requested by, deadline), then an optional note | Daniel · Expense report                            |
 | `payment`   | is a bill or fee                                      | large amount Field, then due and payee                                                     | Sarah · City Water                                 |
@@ -682,6 +682,7 @@ One primary, then outline buttons (D12, D53). Ask is no longer in the bar; it is
 
 - Icons: Snooze clock, Move to the move icon and a trailing chevron-down, Done check.
 - Phone: the primary is full width on its own row; the outline buttons share the second row equally (`touch` size, 44).
+- **Narrow action bar:** if the primary and outline actions do not fit together, keep the outline buttons in one group and move that group to its own row below the primary, start-aligned, with the existing `--space-8` gap.
 - Outline buttons use the built states (`--color-sunken-hover`, `--color-sunken-pressed`); the button whose menu is open keeps the pressed fill.
 
 ### 9.7 MoveMenu and Toast (new)

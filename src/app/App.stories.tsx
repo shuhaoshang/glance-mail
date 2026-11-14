@@ -152,3 +152,22 @@ export const WatchlistHeadsUp: Story = {
     ).not.toBeInTheDocument();
   },
 };
+
+export const ChecklistComplete: Story = {
+  ...Sarah,
+  play: async ({ canvas }) => {
+    await userEvent.click(
+      within(canvas.getByRole('list', { name: 'Needs you' })).getByRole(
+        'button',
+        { name: /Lincoln Elementary/ },
+      ),
+    );
+    await userEvent.click(
+      canvas.getByRole('checkbox', { name: 'Sign the permission slip' }),
+    );
+    await userEvent.click(canvas.getByRole('checkbox', { name: 'Pay $12' }));
+    await expect(
+      canvas.getByRole('button', { name: 'Mark done' }),
+    ).toBeVisible();
+  },
+};

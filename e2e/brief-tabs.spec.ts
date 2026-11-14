@@ -308,3 +308,110 @@ test('Review states keep header words intact, update AllDone, and show plain Wat
     );
   }
 });
+
+test('Deal fields and action groups respond to their available space', async ({
+  page,
+  colorScheme,
+}) => {
+  for (const width of [1280, 1024, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await cleanStart(page, 'maya');
+    await row(page, 'Fernway Logistics').click();
+    const scene = detail(page).getByRole('region', exact('Renewal'));
+    const fields = scene.locator('[data-deal-field]');
+    await expect
+      .poll(async () => {
+        const rects = await fields.evaluateAll((nodes) =>
+          nodes.map((node) => node.getBoundingClientRect().y),
+        );
+        return new Set(rects).size;
+      })
+      .toBe(width === 1280 ? 1 : 2);
+    const values = fields.locator(':scope > * > :last-child');
+    for (const value of await values.all()) {
+      const lines = await value.evaluate((node) => {
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        return new Set([...range.getClientRects()].map((rect) => rect.y)).size;
+      });
+      expect(lines).toBe(1);
+    }
+    const open = detail(page).getByRole('link', exact('Open in Outlook'));
+    const snooze = detail(page).getByRole('button', exact('Snooze'));
+    const done = detail(page).getByRole('button', exact('Done'));
+    await expect
+      .poll(async () => {
+        const [o, s, d] = await Promise.all([
+          open.boundingBox(),
+          snooze.boundingBox(),
+          done.boundingBox(),
+        ]);
+        return (
+          Math.abs(s!.y - d!.y) < 1 &&
+          (width === 1280
+            ? Math.abs(o!.y + o!.height / 2 - s!.y - s!.height / 2) < 1
+            : Math.abs(s!.y - o!.y - o!.height - 8) < 1 && s!.x === o!.x)
+        );
+      })
+      .toBe(true);
+    await snooze.click();
+    await detail(page).getByRole('button', exact('Tomorrow, 8:00 AM')).click();
+    await expect(
+      page.getByRole('button', exact('Undo Fernway Logistics')),
+    ).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+
+    await cleanStart(page, 'sarah');
+    await row(page, 'Lincoln Elementary').click();
+    const before = detail(page).getByRole('button', exact('Snooze'));
+    const normalDone = detail(page).getByRole('button', exact('Done'));
+    await expect
+      .poll(
+        async () =>
+          (await before.boundingBox())!.y - (await normalDone.boundingBox())!.y,
+      )
+      .toBe(0);
+    await detail(page)
+      .getByRole('checkbox', exact('Sign the permission slip'))
+      .check();
+    await detail(page).getByRole('checkbox', exact('Pay $12')).check();
+    const mark = detail(page).getByRole('button', exact('Mark done'));
+    const yahoo = detail(page).getByRole('link', exact('Open in Yahoo Mail'));
+    await expect(before).toHaveCount(0);
+    if (width === 390) {
+      const [m, y] = await Promise.all([
+        mark.boundingBox(),
+        yahoo.boundingBox(),
+      ]);
+      expect(y!.y - m!.y - m!.height).toBe(8);
+    }
+    await mark.click();
+    await expect(
+      page.getByRole('button', exact('Undo Lincoln Elementary')),
+    ).toBeVisible();
+    await expect(page.getByRole('dialog')).toHaveCount(0);
+  }
+  // Hold the viewport fixed while resizing the card itself, then expand it again.
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto(
+    'http://127.0.0.1:6196/iframe.html?id=scene-cards-scenecard--deal&viewMode=story&globals=theme:' +
+      colorScheme,
+  );
+  const card = page.getByRole('region', exact('Renewal'));
+  const positions = () =>
+    card
+      .locator('[data-deal-field]')
+      .evaluateAll(
+        (nodes) =>
+          new Set(nodes.map((node) => node.getBoundingClientRect().y)).size,
+      );
+  await expect.poll(positions).toBe(1);
+  await card.evaluate((node) => {
+    node.style.inlineSize = 'calc(var(--column-list) - var(--space-32))';
+  });
+  await expect.poll(positions).toBe(2);
+  await card.evaluate((node) => {
+    node.style.removeProperty('inline-size');
+  });
+  await expect.poll(positions).toBe(1);
+});
