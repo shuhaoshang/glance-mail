@@ -46,3 +46,5 @@ Task 21 changes the reasoning trigger to “Why it’s first” and keeps Ask in
 The shared-component spec also checks selection during real hover and press, compact-segment keyboard and touch behavior, the eleven-item reasoning example, the optional Watchlist callback, and desktop/phone action-bar geometry. Storybook interaction functions must finish without errors before assertions continue.
 
 Task 22 adds TabBar and HeaderButton checks for the two named keyboard groups, linked panels, news states, pointer states, and 44-pixel hit areas. The 390-pixel layout check verifies equal tab widths, single-line names/counts, and keyboard activation of the phone header buttons. These are isolated Storybook examples; the application remains on its current layout.
+
+Task 23 adds feedback-component checks: MoveMenu keyboard and outside-click dismissal, blocked current destinations, Toast replacement/expiration with controlled browser time, combined hover/focus pause, Undo once, focused replacement, phone placement above a resized sheet footer, and TextInput/InlineForm naming and keyboard submission. The tests operate only on component examples and do not move any email.

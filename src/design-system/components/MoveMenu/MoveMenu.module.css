@@ -1,0 +1,83 @@
+.menu {
+  position: fixed;
+  z-index: 2;
+  inset-block-end: calc(var(--move-bottom) + var(--space-8));
+  inset-inline-end: var(--move-end);
+  inline-size: var(--size-menu);
+  max-inline-size: calc(100vw - var(--space-16) * 2);
+  padding: var(--space-8);
+  border-radius: var(--radius-panel);
+  background: var(--color-surface);
+  color: var(--color-text);
+  box-shadow:
+    inset 0 0 0 var(--border-hairline) var(--color-border),
+    var(--shadow-popover);
+}
+.phone {
+  max-inline-size: none;
+  inset-inline-start: var(--move-start);
+  inset-inline-end: auto;
+  inline-size: var(--move-width);
+}
+.heading {
+  padding: var(--space-8) var(--space-12) var(--space-4);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  font-weight: var(--font-weight-semibold);
+}
+.item {
+  --control-fill: transparent;
+  --control-ink: var(--color-text);
+  --hover-fill: var(--color-row-hover);
+  --pressed-fill: var(--color-row-pressed);
+  display: flex;
+  align-items: center;
+  gap: var(--space-12);
+  inline-size: 100%;
+  block-size: calc(var(--space-48) + var(--space-4));
+  padding: var(--space-8) var(--space-12);
+  border: 0;
+  border-radius: var(--radius-panel-small);
+  text-align: start;
+}
+.item[aria-disabled='true'] {
+  cursor: default;
+  color: var(--color-text);
+}
+.check {
+  display: flex;
+  flex: none;
+  inline-size: var(--size-icon);
+  color: var(--color-brand);
+}
+.item[aria-disabled='true'] .check svg {
+  color: var(--color-brand);
+}
+.copy {
+  display: grid;
+}
+.label {
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
+.description {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+  font-weight: var(--font-weight-regular);
+}
+.note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-block-start: var(--space-8);
+  padding: var(--space-12) var(--space-12) var(--space-4);
+  border-block-start: var(--border-hairline) solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+}
+.note svg {
+  flex: none;
+}

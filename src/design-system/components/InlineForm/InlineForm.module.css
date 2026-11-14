@@ -1,0 +1,38 @@
+.form {
+  display: grid;
+  gap: var(--space-8);
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-8);
+}
+.row > input {
+  flex: 1;
+}
+.row > button {
+  flex: none;
+}
+.note {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-4);
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+}
+.note svg {
+  color: var(--color-brand);
+  flex: none;
+  margin-block-start: var(--space-2);
+}
+
+.phone .row {
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+.phone .row > input {
+  flex: 1 1 100%;
+  inline-size: 100%;
+}

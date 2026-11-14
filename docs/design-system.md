@@ -697,6 +697,7 @@ One primary, then outline buttons (D12, D53). Ask is no longer in the bar; it is
 
 - Centered at the bottom of the viewport, 24 from the edge (16 on the phone, above the safe area). `--color-ink` fill, `--color-on-ink` text, `--radius-panel`, `--shadow-popover`, padding 12 16, 12 between parts. Desktop width between `--size-toast-min` and `--content-narrow`; phone full width minus 16 margins.
 - Parts: a check icon; the message (14/20: the first sentence semibold, the rest regular at 72% via `--color-on-ink-muted`); “Undo” (text button, `--color-on-ink-link`, semibold); a close IconButton.
+- Control states: the close icon uses `--color-on-ink-muted` at rest and `--color-on-ink` on hover and press. Undo keeps `--color-on-ink-link`; hover and press add `text-decoration: underline` with an offset of `--space-2`. Fills stay transparent, and both controls keep the shared keyboard-focus outline.
 - One toast at a time; a new one replaces the old. It stays 6 seconds, pauses while hovered or focused, and enters with the enter motion.
 - `role="status"`. Undo restores the exact previous state, including selection.
 
@@ -755,6 +756,8 @@ Watchlist and Memory changes last for the session and reset with the persona, li
 ### 9.11 TextInput (new)
 
 48 tall, padding 0 16, radius 12, `--color-surface`, 16/24 `--color-text`, placeholder `--color-text-muted`. Ring: `--border-hairline` inset in `--color-border-strong`; focused: `--border-selected` in `--color-brand` and no extra outline. It always has a visible or `aria-label` label. Placeholders: “What are you waiting on?” (Watchlist), “Tell Glance a rule, in your own words” (Memory).
+
+**InlineForm on the phone:** below the existing desktop breakpoint, the input fills the first row; the compact submit and Cancel buttons keep that order on a second row, start-aligned with 8 between them.
 
 ### 9.12 Account menu and theme (new)
 
