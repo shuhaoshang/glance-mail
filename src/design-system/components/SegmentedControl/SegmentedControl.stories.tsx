@@ -123,3 +123,13 @@ export const SmallKeyboardNavigation: Story = {
   ...KeyboardNavigation,
   args: { ...WithDisabledTab.args, ...Small.args },
 };
+
+export const Underline: Story = { args: { appearance: 'underline' } };
+export const UnderlineKeyboard: Story = {
+  ...KeyboardNavigation,
+  args: { ...WithDisabledTab.args, appearance: 'underline' },
+};
+export const UnderlineFocus: Story = {
+  ...FocusAdjacentHover,
+  args: { appearance: 'underline' },
+};

@@ -118,7 +118,11 @@ function Content({
   switch (scene.type) {
     case 'deal':
       body = (
-        <div className={styles.deal}>
+        <div
+          className={[styles.deal, mobile && styles.phoneFields]
+            .filter(Boolean)
+            .join(' ')}
+        >
           {scene.fields.map((spec, i) => slot(spec, 'fields.' + i, 'default'))}
         </div>
       );

@@ -39,7 +39,7 @@ function PanelExample(args: ComponentProps<typeof SourcePanel>) {
             setEmail(true);
           }}
           onClose={() => {
-            args.onClose();
+            args.onClose?.();
             setOpen(false);
           }}
         />

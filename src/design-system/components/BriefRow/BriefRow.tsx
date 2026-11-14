@@ -1,3 +1,4 @@
+import type { MovedRow } from '../MailRows/movedEmail';
 import type { Item, Account, Fact } from '../../../data/types';
 import { FactChip } from '../FactChip/FactChip';
 import { AccountLabel } from '../AccountLabel/AccountLabel';
@@ -16,7 +17,7 @@ export type BriefRowItem = Pick<Item, 'id' | 'name' | 'isNew'> & {
 };
 
 interface BriefRowProps {
-  item: BriefRowItem;
+  item: BriefRowItem | MovedRow;
   rank: number;
   account?: Account;
   selected?: boolean;
@@ -36,8 +37,13 @@ export function BriefRow({
   onLeaveComplete,
 }: BriefRowProps) {
   const desktop = useDesktopLayout();
+  const moved = 'moved' in item;
+  const name = moved ? item.title : item.name;
+  const request = moved
+    ? { type: item.requestType, text: item.line }
+    : item.request;
   // Keep the supplied first two facts; order only that pair by urgency.
-  const facts = item.facts
+  const facts = (moved ? [] : item.facts)
     .slice(0, 2)
     .map((fact, index) => ({ fact, index }))
     .sort(
@@ -51,7 +57,7 @@ export function BriefRow({
       className={[
         motion.shell,
         !desktop && styles.phone,
-        (item.isNew || entering) && motion.enter,
+        ((!moved && item.isNew) || entering) && motion.enter,
         leaving && motion.leaving,
       ]
         .filter(Boolean)
@@ -85,23 +91,27 @@ export function BriefRow({
           </span>
           <span className={row.content}>
             <span className={row.heading}>
-              <span className={row.name}>{item.name}</span>
+              <span className={row.name}>{name}</span>
               {account && <AccountLabel account={account} />}
-              {item.isNew && <Badge />}
+              {!moved && item.isNew && <Badge />}
             </span>
             <span className={row.request}>
-              {item.request.type === 'summary' && (
+              {request.type === 'summary' && (
                 <>
                   <GlanceMark />{' '}
                 </>
               )}
-              {item.request.text}
+              {request.text}
             </span>
-            <span className={row.facts}>
-              {facts.map(({ fact }) => (
-                <FactChip key={fact.id} {...fact} />
-              ))}
-            </span>
+            {moved ? (
+              <span className={styles.moved}>Moved by you</span>
+            ) : (
+              <span className={row.facts}>
+                {facts.map(({ fact }) => (
+                  <FactChip key={fact.id} {...fact} />
+                ))}
+              </span>
+            )}
           </span>
           <Icon
             name="chevron"

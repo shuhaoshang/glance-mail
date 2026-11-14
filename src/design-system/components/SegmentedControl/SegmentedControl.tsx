@@ -14,6 +14,7 @@ interface SegmentedControlProps {
   'aria-label': string;
   options: readonly Segment[];
   size?: 'default' | 'small';
+  appearance?: 'segmented' | 'underline';
   value: string;
   onValueChange: (value: string) => void;
 }
@@ -56,6 +57,7 @@ export function SegmentedControl({
   value,
   onValueChange,
   size = 'default',
+  appearance = 'segmented',
 }: SegmentedControlProps) {
   const entry =
     options.find((option) => option.value === value && !option.disabled) ??
@@ -63,8 +65,13 @@ export function SegmentedControl({
   return (
     <div
       role="tablist"
+      data-appearance={appearance}
       aria-label={label}
-      className={[styles.track, size === 'small' && styles.small]
+      className={[
+        styles.track,
+        size === 'small' && styles.small,
+        appearance === 'underline' && styles.underline,
+      ]
         .filter(Boolean)
         .join(' ')}
       onKeyDown={moveFocus}

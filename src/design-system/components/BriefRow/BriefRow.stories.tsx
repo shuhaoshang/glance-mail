@@ -84,6 +84,8 @@ export const KeyboardSelection: Story = {
     button.focus();
     await userEvent.keyboard('{Enter}');
     await expect(args.onSelect).toHaveBeenCalledWith(args.item.id, button);
+    if ('moved' in args.item)
+      throw new Error('This story requires a supplied Needs you item.');
     await expect(canvas.getByText(args.item.request.text)).toBeVisible();
     await expect(canvas.getAllByText(/^(time|money|people):$/)).toHaveLength(
       Math.min(2, args.item.facts.length),

@@ -106,7 +106,7 @@
 .mobile .navigation > [role='tablist'] {
   display: flex;
 }
-.mobile .navigation > [role='tablist'] > button {
+.mobile .navigation > [data-appearance='segmented'] > button {
   flex: 1;
 }
 .mobile .title {
@@ -174,7 +174,7 @@
 .mobile .snooze {
   inset-inline: var(--space-20);
 }
-.mobile .navigation > [role='tablist'] > button {
+.mobile .navigation > [data-appearance='segmented'] > button {
   padding-inline: var(--space-8);
 }
 .mobile .actions > button,
