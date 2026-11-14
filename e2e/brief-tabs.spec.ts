@@ -26,7 +26,7 @@ test('Three email tabs expose counts, accounts, keyboard order, and responsive p
       await expect(tabs.getByRole('tab')).toHaveCount(3);
       await expect(page.getByRole('tablist', exact('Glance'))).toHaveCount(0);
       await expect(
-        page.getByRole('button', { name: /set aside|Show in brief|Move to/ }),
+        page.getByRole('button', { name: /set aside|Show in brief/ }),
       ).toHaveCount(0);
       await expect(page.getByRole('dialog')).toHaveCount(0);
       if (width < 960) await expect(detail(page)).toHaveCount(0);

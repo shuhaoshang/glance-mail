@@ -13,6 +13,9 @@ import { Highlight } from '../Highlight/Highlight';
 import { Button } from '../Button/Button';
 import { IconButton } from '../IconButton/IconButton';
 import { inboxUrls } from './detailSelection';
+import { MoveMenu, type Destination } from '../MoveMenu/MoveMenu';
+import { SnoozeMenu } from '../SnoozeMenu/SnoozeMenu';
+import { useActionLayout } from './useActionLayout';
 import styles from './DetailPanel.module.css';
 import mail from './MailDetails.module.css';
 export type MailDetailProps = {
@@ -22,6 +25,11 @@ export type MailDetailProps = {
   mobile?: boolean;
   onClose?: () => void;
   movedTo?: EmailTab;
+  currentTab?: Destination;
+  onMoveTo?: (destination: Destination) => void;
+  onDone?: () => void;
+  onSnooze?: (label: string) => void;
+  busy?: boolean;
   watchlist?: { name: string; onOpen?: () => void };
   initialTab?: 'details' | 'email';
 } & (
@@ -44,8 +52,33 @@ export function MailDetails(props: MailDetailProps) {
     onClose,
     movedTo,
     watchlist,
+    currentTab = props.variant,
+    onMoveTo,
+    onDone,
+    onSnooze,
+    busy,
   } = props;
+  const {
+    bar: actionBar,
+    setBar: setActionBar,
+    stacked,
+  } = useActionLayout(
+    mobile,
+    [account.app, currentTab, !!onMoveTo, !!onDone, !!onSnooze].join(':'),
+  );
+  const [moveOpen, setMoveOpen] = useState(false);
+  const [moveTrigger, setMoveTrigger] = useState<HTMLButtonElement | null>(
+    null,
+  );
+  const [snoozeOpen, setSnoozeOpen] = useState(false);
+  const snoozeTrigger = useRef<HTMLButtonElement>(null);
+  const closeSnooze = () => {
+    setSnoozeOpen(false);
+    snoozeTrigger.current?.focus();
+  };
   const prefix = useId();
+  const moveId = prefix + '-move',
+    snoozeId = prefix + '-snooze';
   const detailsId = prefix + '-details',
     emailId = prefix + '-email',
     reasonId = prefix + '-reason';
@@ -58,6 +91,8 @@ export function MailDetails(props: MailDetailProps) {
   const sender = heads ? heads.fact.source.from : other!.sender;
   const when = heads ? heads.fact.source.when : other!.when;
   const openEmail = () => {
+    setMoveOpen(false);
+    setSnoozeOpen(false);
     setTab('email');
     requestAnimationFrame(() =>
       document.getElementById(emailId + '-tab')?.focus(),
@@ -72,7 +107,11 @@ export function MailDetails(props: MailDetailProps) {
         { value: 'details', label: 'Details', panelId: detailsId },
         { value: 'email', label: 'Original email', panelId: emailId },
       ]}
-      onValueChange={(value) => setTab(value as 'details' | 'email')}
+      onValueChange={(value) => {
+        setMoveOpen(false);
+        setSnoozeOpen(false);
+        setTab(value as 'details' | 'email');
+      }}
     />
   );
   const kinds = new Set(
@@ -89,6 +128,15 @@ export function MailDetails(props: MailDetailProps) {
         .filter(Boolean)
         .join(' ')}
       onKeyDown={(event) => {
+        if (event.key === 'Escape' && (moveOpen || snoozeOpen)) {
+          event.preventDefault();
+          event.stopPropagation();
+          if (moveOpen) {
+            setMoveOpen(false);
+            moveTrigger?.focus();
+          } else closeSnooze();
+          return;
+        }
         if (
           event.key === 'Escape' &&
           !movedTo &&
@@ -288,7 +336,25 @@ export function MailDetails(props: MailDetailProps) {
         )}
       </div>
       <div className={styles.actionArea}>
-        <footer className={styles.actions}>
+        {snoozeOpen && onSnooze && (
+          <div className={styles.snooze}>
+            <SnoozeMenu
+              id={snoozeId}
+              onClose={closeSnooze}
+              onChoose={(label) => {
+                setSnoozeOpen(false);
+                onSnooze(label);
+              }}
+            />
+          </div>
+        )}
+        <footer
+          ref={setActionBar}
+          data-detail-actions
+          className={[styles.actions, stacked && styles.stackedActions]
+            .filter(Boolean)
+            .join(' ')}
+        >
           <Button
             className={styles.inbox}
             href={inboxUrls[account.app]}
@@ -298,7 +364,88 @@ export function MailDetails(props: MailDetailProps) {
           >
             Open in {account.app}
           </Button>
+          {(onMoveTo ||
+            (currentTab === 'needs-you' && (onDone || onSnooze))) && (
+            <div className={styles.secondaryActions} data-action-group>
+              {currentTab === 'needs-you' && onSnooze && (
+                <Button
+                  ref={snoozeTrigger}
+                  variant="outline"
+                  size={mobile ? 'touch' : 'compact'}
+                  leadingIcon="clock"
+                  className={styles.snoozeTrigger}
+                  aria-expanded={snoozeOpen}
+                  aria-controls={snoozeId}
+                  disabled={busy}
+                  onClick={() => {
+                    if (snoozeOpen) closeSnooze();
+                    else {
+                      setMoveOpen(false);
+                      setSnoozeOpen(true);
+                      requestAnimationFrame(() =>
+                        document
+                          .getElementById(snoozeId)
+                          ?.querySelector<HTMLButtonElement>('button')
+                          ?.focus(),
+                      );
+                    }
+                  }}
+                >
+                  Snooze
+                </Button>
+              )}
+              {onMoveTo && (
+                <Button
+                  ref={setMoveTrigger}
+                  variant="outline"
+                  size={mobile ? 'touch' : 'compact'}
+                  leadingIcon="move"
+                  trailingIcon="chevron-down"
+                  className={styles.moveTrigger}
+                  aria-haspopup="menu"
+                  aria-expanded={moveOpen}
+                  aria-controls={moveId}
+                  disabled={busy}
+                  onClick={() => {
+                    setSnoozeOpen(false);
+                    setMoveOpen((value) => !value);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key === 'ArrowDown') {
+                      event.preventDefault();
+                      setSnoozeOpen(false);
+                      setMoveOpen(true);
+                    }
+                  }}
+                >
+                  Move to
+                </Button>
+              )}
+              {currentTab === 'needs-you' && onDone && (
+                <Button
+                  variant="outline"
+                  size={mobile ? 'touch' : 'compact'}
+                  leadingIcon="check"
+                  disabled={busy}
+                  onClick={onDone}
+                >
+                  Done
+                </Button>
+              )}
+            </div>
+          )}
         </footer>
+        {onMoveTo && (
+          <MoveMenu
+            id={moveId}
+            open={moveOpen}
+            current={currentTab}
+            trigger={moveTrigger}
+            actionBar={actionBar}
+            onClose={() => setMoveOpen(false)}
+            onChoose={onMoveTo}
+          />
+        )}
       </div>
     </section>
   );

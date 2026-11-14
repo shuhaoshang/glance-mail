@@ -696,7 +696,7 @@ One primary, then outline buttons (D12, D53). Ask is no longer in the bar; it is
 - Foot, above a hairline: a bulb icon and “Glance learns from every move.” (12/16, muted).
 - `role="menu"` with `menuitem`s; focus moves to the first enabled item; Escape and an outside click close it and return focus to the button.
 
-**Choosing a tab:** the email leaves its list with the collapse motion, joins the end of the destination list as a moved row, the counts update, the next row in the source list becomes selected (on the phone the sheet closes), and the toast appears. Moving an email back to where it came from removes “Moved by you”.
+**Choosing a tab:** the email leaves its list with the collapse motion, joins the end of the destination list as a moved row, the counts update, the next row in the source list becomes selected (on the phone the sheet closes), and the toast appears. Moving an email back to where it came from removes “Moved by you” and appends it to the end of that list; only Undo restores its previous position.
 
 **Toast:**
 
@@ -704,7 +704,7 @@ One primary, then outline buttons (D12, D53). Ask is no longer in the bar; it is
 - Parts: a check icon; the message (14/20: the first sentence semibold, the rest regular at 72% via `--color-on-ink-muted`); “Undo” (text button, `--color-on-ink-link`, semibold); a close IconButton.
 - Control states: the close icon uses `--color-on-ink-muted` at rest and `--color-on-ink` on hover and press. Undo keeps `--color-on-ink-link`; hover and press add `text-decoration: underline` with an offset of `--space-2`. Fills stay transparent, and both controls keep the shared keyboard-focus outline.
 - One toast at a time; a new one replaces the old. It stays 6 seconds, pauses while hovered or focused, and enters with the enter motion.
-- `role="status"`. Undo restores the exact previous state, including selection.
+- `role="status"`. Undo restores the exact previous state, including selection. On the phone, it returns to the original list and focuses the restored row; the detail sheet stays closed.
 
 Messages:
 

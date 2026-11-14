@@ -1,4 +1,4 @@
-import { useId, useLayoutEffect, useRef, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import type { Account, Item } from '../../../data/types';
 import { Text } from '../Text/Text';
 import { Person } from '../Person/Person';
@@ -18,11 +18,15 @@ import { SnoozeMenu } from '../SnoozeMenu/SnoozeMenu';
 import { firstFieldForFact, inboxUrls } from './detailSelection';
 import { MailDetails, MovedNote, type MailDetailProps } from './MailDetails';
 import type { EmailTab } from '../MailRows/movedEmail';
+import { MoveMenu, type Destination } from '../MoveMenu/MoveMenu';
+import { useActionLayout } from './useActionLayout';
 import styles from './DetailPanel.module.css';
 
 export interface NeedsYouDetailProps {
   variant?: 'needs-you';
   movedTo?: EmailTab;
+  currentTab?: Destination;
+  onMoveTo?: (destination: Destination) => void;
   item: Item;
   position: number;
   total: number;
@@ -52,6 +56,8 @@ function Content({
   initialReasonOpen = false,
   initialTab = 'details',
   movedTo,
+  currentTab = 'needs-you',
+  onMoveTo,
   askedQuestions,
   onAskQuestion,
   onDone,
@@ -83,41 +89,21 @@ function Content({
     snoozeTrigger.current?.focus();
   }
 
-  const actionBar = useRef<HTMLElement>(null);
-  const [stackedActions, setStackedActions] = useState(false);
-  useLayoutEffect(() => {
-    const bar = actionBar.current;
-    if (!bar || mobile) return;
-    const measure = () => {
-      if (!bar.clientWidth) return;
-      const style = getComputedStyle(bar);
-      const available =
-        bar.clientWidth -
-        parseFloat(style.paddingLeft) -
-        parseFloat(style.paddingRight);
-      const groups = Array.from(bar.children);
-      const required =
-        groups.reduce(
-          (sum, group) => sum + group.getBoundingClientRect().width,
-          0,
-        ) +
-        Math.max(0, groups.length - 1) * parseFloat(style.columnGap);
-      setStackedActions(required > available);
-    };
-    const observer = new ResizeObserver(measure);
-    observer.observe(bar);
-    Array.from(bar.children).forEach((group) => observer.observe(group));
-    let active = true;
-    document.fonts.ready.then(() => {
-      if (active) measure();
-    });
-    measure();
-    return () => {
-      active = false;
-      observer.disconnect();
-    };
-  }, [mobile, complete, onDone, onSnooze, movedTo, account.app]);
-
+  const {
+    bar: actionBar,
+    setBar: setActionBar,
+    stacked: stackedActions,
+  } = useActionLayout(
+    mobile,
+    [account.app, complete, !!onDone, !!onSnooze, !!onMoveTo, movedTo].join(
+      ':',
+    ),
+  );
+  const [moveOpen, setMoveOpen] = useState(false);
+  const [moveTrigger, setMoveTrigger] = useState<HTMLButtonElement | null>(
+    null,
+  );
+  const moveId = prefix + '-move';
   const [highlighted, setHighlighted] = useState(true);
   const reasonTrigger = useRef<HTMLButtonElement>(null);
   const [reasonOpen, setReasonOpen] = useState(initialReasonOpen && !movedTo);
@@ -148,6 +134,7 @@ function Content({
       value={tab}
       onValueChange={(value) => {
         setSnoozeOpen(false);
+        setMoveOpen(false);
         setTab(value as 'details' | 'email' | 'ask');
       }}
     />
@@ -226,14 +213,48 @@ function Content({
       {complete ? 'Mark done' : 'Done'}
     </Button>
   );
+  const moveAction = onMoveTo && (
+    <Button
+      ref={setMoveTrigger}
+      variant="outline"
+      size={mobile ? 'touch' : 'compact'}
+      leadingIcon="move"
+      trailingIcon="chevron-down"
+      className={styles.moveTrigger}
+      aria-haspopup="menu"
+      aria-expanded={moveOpen}
+      aria-controls={moveId}
+      disabled={busy}
+      onClick={() => {
+        setSnoozeOpen(false);
+        setMoveOpen((value) => !value);
+      }}
+      onKeyDown={(event) => {
+        if (event.key === 'ArrowDown') {
+          event.preventDefault();
+          setSnoozeOpen(false);
+          setMoveOpen(true);
+        }
+      }}
+    >
+      Move to
+    </Button>
+  );
   const primaryAction = markDonePrimary ? doneAction : inboxAction;
-  const secondaryActions = (markDonePrimary || snoozeAction || doneAction) && (
-    <div key="secondary" className={styles.secondaryActions}>
+  const secondaryActions = (markDonePrimary ||
+    snoozeAction ||
+    moveAction ||
+    doneAction) && (
+    <div key="secondary" className={styles.secondaryActions} data-action-group>
       {markDonePrimary ? (
-        inboxAction
+        <>
+          {inboxAction}
+          {moveAction}
+        </>
       ) : (
         <>
           {snoozeAction}
+          {moveAction}
           {doneAction}
         </>
       )}
@@ -245,6 +266,13 @@ function Content({
       aria-label="Selected item"
       onKeyDown={(event) => {
         if (event.key !== 'Escape') return;
+        if (moveOpen) {
+          event.preventDefault();
+          event.stopPropagation();
+          setMoveOpen(false);
+          moveTrigger?.focus();
+          return;
+        }
         if (
           ((!movedTo || movedTo === 'Needs you') && snoozeOpen) ||
           (tab === 'details' && (selection || (!movedTo && reasonOpen)))
@@ -422,8 +450,13 @@ function Content({
             </div>
           )}
         <footer
-          ref={actionBar}
-          className={[styles.actions, stackedActions && styles.stackedActions]
+          ref={setActionBar}
+          data-detail-actions
+          className={[
+            styles.actions,
+            markDonePrimary && styles.complete,
+            stackedActions && styles.stackedActions,
+          ]
             .filter(Boolean)
             .join(' ')}
         >
@@ -439,6 +472,17 @@ function Content({
             </>
           )}
         </footer>
+        {onMoveTo && (
+          <MoveMenu
+            id={moveId}
+            open={moveOpen}
+            current={currentTab}
+            trigger={moveTrigger}
+            actionBar={actionBar}
+            onClose={() => setMoveOpen(false)}
+            onChoose={onMoveTo}
+          />
+        )}
       </div>
     </section>
   );
