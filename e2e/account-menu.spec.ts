@@ -59,6 +59,11 @@ test('Account menu restores avatar focus on dismissal and has full-width phone c
     await avatar.press('Enter');
     await expect(menu).toHaveText(/maya@example.com/);
     await expect(menu.getByRole('menuitemradio')).toHaveCount(3);
+    const inboxes = menu.getByRole('menuitem', exact('Inboxes 1 connected'));
+    await expect(inboxes).toBeFocused();
+    await page.keyboard.press('ArrowDown');
+    await expect(menu.getByRole('menuitem', exact('Settings'))).toBeFocused();
+    await page.keyboard.press('ArrowDown');
     await expect(system).toBeFocused();
     const triggerBox = (await avatar.boundingBox())!;
     const menuBox = (await menu.boundingBox())!;

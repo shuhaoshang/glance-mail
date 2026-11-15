@@ -17,7 +17,16 @@ import { WatchlistPanel } from '../design-system/components/WatchlistPanel/Watch
 import { Text } from '../design-system/components/Text/Text';
 import { Icon } from '../design-system/components/Icon/Icon';
 import { Avatar } from '../design-system/components/Avatar/Avatar';
-import { AccountMenu } from '../design-system/components/AccountMenu/AccountMenu';
+import {
+  AccountMenu,
+  type AccountAction,
+} from '../design-system/components/AccountMenu/AccountMenu';
+import {
+  SettingsPanel,
+  type SettingsEntry,
+} from '../design-system/components/SettingsPanel/SettingsPanel';
+import { defaultSettings } from '../design-system/components/SettingsPanel/preferences';
+import { SignedOutPanel } from '../design-system/components/SignedOutPanel/SignedOutPanel';
 import type { ThemeControl } from '../design-system/components/AccountMenu/themeOptions';
 import { DetailSheet } from '../design-system/components/DetailSheet/DetailSheet';
 import {
@@ -50,6 +59,10 @@ import { useToast } from '../design-system/components/Toast/toastContext';
 import styles from './App.module.css';
 
 type UtilityView = 'watchlist' | 'memory';
+type Page =
+  | { kind: 'brief' }
+  | { kind: 'settings'; entry: SettingsEntry }
+  | { kind: 'signed-out' };
 
 type BriefTab = 'needs-you' | 'heads-up' | 'other-mail';
 function emailName(email: EmailOrigin) {
@@ -89,6 +102,14 @@ function Brief({
   const desktop = useDesktopLayout();
   const prefix = useId();
   const [tab, setTab] = useState<BriefTab>('needs-you');
+  const [page, setPage] = useState<Page>({ kind: 'brief' });
+  const [preferences, setPreferences] = useState(() =>
+    defaultSettings(personaId === 'daniel'),
+  );
+  const focusBrief = useRef(false);
+  const alternatePage = page.kind !== 'brief';
+  const signedOut = page.kind === 'signed-out';
+
   const [utilityView, setUtilityView] = useState<UtilityView | null>(null);
   const watchOpen = utilityView === 'watchlist';
   const memoryOpen = utilityView === 'memory';
@@ -107,6 +128,7 @@ function Brief({
     setSheetOpen(false);
     afterSheetsClose(() => {
       restore();
+      setPage({ kind: 'brief' });
       setUtilityView('memory');
       setFocusRequest({ kind: 'memory', id });
     });
@@ -155,10 +177,10 @@ function Brief({
   useEffect(() => {
     if (
       life.pending &&
-      (utilityView || tab !== life.pending.source || children)
+      (utilityView || alternatePage || tab !== life.pending.source || children)
     )
       life.settle(life.pending.id);
-  }, [life, tab, children, utilityView]);
+  }, [life, tab, children, utilityView, alternatePage]);
 
   useEffect(() => {
     const id = focusResult;
@@ -178,7 +200,7 @@ function Brief({
 
   useLayoutEffect(() => {
     const dialog =
-      !desktop && sheetOpen && !children
+      !desktop && sheetOpen && !children && !alternatePage
         ? (appRoot.current?.querySelector<HTMLDialogElement>('dialog[open]') ??
           null)
         : null;
@@ -186,7 +208,15 @@ function Brief({
       dialog,
       dialog?.querySelector<HTMLElement>('[data-detail-actions]') ?? null,
     );
-  }, [desktop, sheetOpen, children, tab, selectedId, onToastSurface]);
+  }, [
+    desktop,
+    sheetOpen,
+    children,
+    tab,
+    selectedId,
+    onToastSurface,
+    alternatePage,
+  ]);
   const rowElement = useCallback(
     (key: BriefTab, id?: string) => {
       return Array.from(
@@ -202,7 +232,7 @@ function Brief({
     [prefix],
   );
   useLayoutEffect(() => {
-    if (!focusRequest) return;
+    if (!focusRequest || alternatePage) return;
     const panel = document.getElementById(watchId);
     let target: HTMLElement | null | undefined;
     if (focusRequest.kind === 'mail')
@@ -241,6 +271,7 @@ function Brief({
     }
   }, [
     focusRequest,
+    alternatePage,
     rowElement,
     watchId,
     utilityView,
@@ -293,6 +324,7 @@ function Brief({
           life.undoMove(receipt);
           setSheetOpen(false);
           afterSheetsClose(() => {
+            setPage({ kind: 'brief' });
             setUtilityView(null);
             setTab(before.tab);
             setSelections(before.selections);
@@ -303,6 +335,57 @@ function Brief({
       });
     });
   }, [life, showToast, tab, selectedId, prefix, rowElement]);
+
+  function openAccountPage(action: AccountAction) {
+    setSheetOpen(false);
+    if (action === 'log-out') {
+      dismissToast();
+      setPage({ kind: 'signed-out' });
+    } else
+      setPage({
+        kind: 'settings',
+        entry: { section: action === 'inboxes' ? 'inboxes' : undefined },
+      });
+  }
+
+  function backToBrief() {
+    focusBrief.current = true;
+    setPage({ kind: 'brief' });
+  }
+
+  useLayoutEffect(() => {
+    if (alternatePage || !focusBrief.current) return;
+    focusBrief.current = false;
+    const document = appRoot.current?.ownerDocument;
+    const activeTab = document?.getElementById(
+      prefix + '-' + (utilityView ?? tab) + '-tab',
+    );
+    const shortcutId = utilityView === 'watchlist' ? watchId : memoryId;
+    const phoneShortcut =
+      !desktop && utilityView
+        ? Array.from(
+            appRoot.current?.querySelectorAll<HTMLButtonElement>(
+              'button[aria-controls]',
+            ) ?? [],
+          ).find(
+            (button) => button.getAttribute('aria-controls') === shortcutId,
+          )
+        : undefined;
+    const target =
+      phoneShortcut ??
+      (children ? appRoot.current?.querySelector('h1') : activeTab);
+    target?.focus({ preventScroll: true });
+    document?.defaultView?.scrollTo(0, 0);
+  }, [
+    alternatePage,
+    children,
+    desktop,
+    memoryId,
+    prefix,
+    tab,
+    utilityView,
+    watchId,
+  ]);
 
   function act(id: string, result: Resolution) {
     setFocusResult(id);
@@ -359,6 +442,7 @@ function Brief({
     setSheetOpen(false);
     afterSheetsClose(() => {
       change();
+      setPage({ kind: 'brief' });
       setUtilityView('watchlist');
       focusWatch(id);
     });
@@ -526,7 +610,11 @@ function Brief({
   return (
     <main
       ref={appRoot}
-      className={[styles.page, desktop && styles.desktop]
+      className={[
+        styles.page,
+        desktop && styles.desktop,
+        signedOut && styles.signedOut,
+      ]
         .filter(Boolean)
         .join(' ')}
     >
@@ -536,8 +624,8 @@ function Brief({
             <Icon name="star" className={styles.star} />
             glance
           </Text>
-          <div className={styles.headerActions}>
-            {!desktop && !children && (
+          <div className={styles.headerActions} hidden={signedOut}>
+            {!desktop && !children && !alternatePage && (
               <>
                 <HeaderButton
                   icon="eye"
@@ -562,6 +650,10 @@ function Brief({
                 initial={persona.initial}
                 email={persona.email}
                 theme={theme}
+                navigation={{
+                  connected: persona.accounts.length,
+                  onSelect: openAccountPage,
+                }}
               />
             ) : (
               <Avatar initial={persona.initial} label={persona.name} />
@@ -570,12 +662,12 @@ function Brief({
         </div>
         <div
           className={styles.greeting}
-          hidden={!desktop && !!utilityView && !children}
+          hidden={alternatePage || (!desktop && !!utilityView && !children)}
         >
           <Text as="p" variant="meta" className={styles.date}>
             {persona.date}
           </Text>
-          <Text as="h1" variant="greeting">
+          <Text as="h1" variant="greeting" tabIndex={-1}>
             {persona.greeting}
           </Text>
           <Text
@@ -593,8 +685,20 @@ function Brief({
           )}
         </div>
       </header>
-      {children}
-      <div hidden={!!children} className={styles.brief}>
+      {page.kind === 'settings' && theme && (
+        <SettingsPanel
+          persona={persona}
+          theme={theme}
+          entry={page.entry}
+          preferences={preferences}
+          onPreferencesChange={setPreferences}
+          onBack={backToBrief}
+          onLogout={() => openAccountPage('log-out')}
+        />
+      )}
+      {signedOut && <SignedOutPanel onSignIn={backToBrief} />}
+      {children && <div hidden={alternatePage}>{children}</div>}
+      <div hidden={!!children || alternatePage} className={styles.brief}>
         <div hidden={!desktop && !!utilityView}>
           <TabBar
             left={(Object.keys(labels) as BriefTab[]).map((key) => ({
@@ -829,6 +933,7 @@ function Brief({
                   key={props.item.id}
                   open={
                     !children &&
+                    !alternatePage &&
                     !utilityView &&
                     tab === key &&
                     active &&
