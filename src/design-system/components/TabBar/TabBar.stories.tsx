@@ -1,6 +1,7 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useArgs } from 'storybook/preview-api';
-import { expect, fn, userEvent, within } from 'storybook/test';
+import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
 import { TabBar } from './TabBar';
 import { TabBarExample } from './TabBarExample';
 import { emailTabs, glanceTabs } from './tabSamples';
@@ -13,7 +14,7 @@ const meta = {
     docs: {
       description: {
         component:
-          'Two named groups of count-bearing tabs on desktop; only the Email group is rendered on the phone. These controlled examples use supplied Maya data and simple preview panels. The application is not wired to this component yet. Each tab id identifies its panel; label that panel with the tab id plus "-tab". Unselected hover and press use the glass state token. Selected tabs keep their ink fill, count color, and shadow.',
+          'Two named groups of count-bearing tabs on desktop; only the Email group is rendered on the phone. These controlled examples use supplied Maya data and simple preview panels. Each tab id identifies its panel; label that panel with the tab id plus "-tab". Unselected hover and press use the glass state token. Selected tabs keep their ink fill, count color, and shadow.',
       },
     },
   },
@@ -78,6 +79,19 @@ export const SelectedPressed: Story = {
   parameters: { pseudo: { active: '[role="tab"][aria-selected="true"]' } },
 };
 export const KeyboardNavigation: Story = {
+  render: function KeyboardExample(args) {
+    const [selected, setSelected] = useState(args.selected);
+    return (
+      <TabBarExample
+        {...args}
+        selected={selected}
+        onSelect={(id) => {
+          args.onSelect(id);
+          setSelected(id);
+        }}
+      />
+    );
+  },
   play: async ({ canvas, args }) => {
     const email = within(canvas.getByRole('tablist', { name: 'Email' }));
     const needs = email.getByRole('tab', { name: 'Needs you 3' });
@@ -85,7 +99,7 @@ export const KeyboardNavigation: Story = {
     await userEvent.keyboard('{ArrowLeft}');
     const other = email.getByRole('tab', { name: 'Other mail 31' });
     await expect(other).toHaveFocus();
-    await expect(other).toHaveAttribute('aria-selected', 'true');
+    await waitFor(() => expect(other).toHaveAttribute('aria-selected', 'true'));
     await expect(
       canvas.getByRole('tabpanel', { name: 'Other mail 31' }),
     ).toBeVisible();
@@ -106,11 +120,15 @@ export const KeyboardNavigation: Story = {
       await userEvent.keyboard('{ArrowLeft}');
       const memory = within(glance).getByRole('tab', { name: 'Memory 5' });
       await expect(memory).toHaveFocus();
-      await expect(memory).toHaveAttribute('aria-selected', 'true');
+      await waitFor(() =>
+        expect(memory).toHaveAttribute('aria-selected', 'true'),
+      );
       await expect(needs).toHaveAttribute('aria-selected', 'false');
       await userEvent.keyboard('{ArrowRight}');
       await expect(watchlist).toHaveFocus();
-      await expect(watchlist).toHaveAttribute('aria-selected', 'true');
+      await waitFor(() =>
+        expect(watchlist).toHaveAttribute('aria-selected', 'true'),
+      );
       await userEvent.tab();
       await expect(
         canvas.getByRole('tabpanel', { name: 'Watchlist 8, new' }),
@@ -134,7 +152,9 @@ export const SelectionAndNews: Story = {
       const name = tab.label + ' ' + tab.count + (tab.hasNews ? ', new' : '');
       const button = canvas.getByRole('tab', { name });
       await userEvent.click(button);
-      await expect(button).toHaveAttribute('aria-selected', 'true');
+      await waitFor(() =>
+        expect(button).toHaveAttribute('aria-selected', 'true'),
+      );
       const panel = canvas.getByRole('tabpanel', { name });
       await expect(panel).toHaveAttribute(
         'id',
