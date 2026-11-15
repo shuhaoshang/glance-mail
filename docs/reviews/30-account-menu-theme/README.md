@@ -22,7 +22,18 @@ Compare the [previous desktop header](../29-memory/maya-desktop-light.jpg) and [
 4. At 390 wide, the Appearance label sits above three equal-width, 44-pixel segments. Check Daniel and Sarah for the corresponding avatar and email.
 5. Expand the demo bar and check the persona, level, and Simulate reply controls.
 
+## Review follow-up
+
+The account menu stays open after each Appearance choice so people can compare themes. Move to closes when its action runs. The avatar trigger uses the brand tint hover and pressed tokens and the shared keyboard focus ring.
+
+| Avatar state | Light | Dark |
+| --- | --- | --- |
+| Previous fill and current rest | ![Light avatar at rest](avatar-rest-light.jpg) | ![Dark avatar at rest](avatar-rest-dark.jpg) |
+| Hover | ![Light avatar hovered](avatar-hover-light.jpg) | ![Dark avatar hovered](avatar-hover-dark.jpg) |
+| Pressed | ![Light avatar pressed](avatar-pressed-light.jpg) | ![Dark avatar pressed](avatar-pressed-dark.jpg) |
+
+Storybook shows both pointer states under Composites / AccountMenu. The browser checks confirmed the tokens, keyboard focus ring, and menu behavior at 1280 and 390 in light and dark.
+
 ## Open questions
 
-- Keep the menu open after choosing an appearance so the person can compare palettes. The issue defines three dismissal events and leaves selection behavior open. This implementation keeps it open.
-- The avatar uses the specified brand tint and brand text with the shared keyboard focus ring. The spec leaves pointer states open. If a pointer treatment is desired, the proposal is to use the existing brand-tint hover and pressed tokens.
+None. The review approved both behaviors. [Review comment](https://github.com/shuhaoshang/glance-mail/pull/75#issuecomment-6893629243)

@@ -28,6 +28,17 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 export const Closed: Story = {};
+export const AvatarHover: Story = {
+  parameters: { pseudo: { hover: 'button[aria-haspopup="menu"]' } },
+};
+export const AvatarPressed: Story = {
+  parameters: {
+    pseudo: {
+      hover: 'button[aria-haspopup="menu"]',
+      active: 'button[aria-haspopup="menu"]',
+    },
+  },
+};
 export const KeyboardFocus: Story = {
   parameters: { pseudo: { focusVisible: 'button[aria-haspopup="menu"]' } },
 };

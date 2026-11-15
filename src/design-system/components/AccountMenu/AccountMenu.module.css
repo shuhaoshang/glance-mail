@@ -5,6 +5,8 @@
 .trigger {
   --control-fill: var(--color-brand-tint);
   --control-ink: var(--color-brand-text);
+  --hover-fill: var(--color-brand-tint-hover);
+  --pressed-fill: var(--color-brand-tint-pressed);
   inline-size: var(--size-touch-compact);
   block-size: var(--size-touch-compact);
   display: grid;
