@@ -11,3 +11,12 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 export const Default: Story = {};
 export const Family: Story = { args: getPersona('sarah').items[0].person };
+
+export const AccountIdentity: Story = {
+  args: {
+    variant: 'identity',
+    initial: 'M',
+    name: 'Maya',
+    role: 'maya@example.com',
+  },
+};

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
-import { expect } from 'storybook/test';
+import { expect, fn } from 'storybook/test';
 import { getPersona } from '../../../data';
 import { AccountMenu } from './AccountMenu';
 import type { ThemePreference } from './themeOptions';
@@ -67,4 +67,24 @@ export const KeyboardSelection: Story = {
       canvas.getByRole('button', { name: 'Account for Maya' }),
     ).toHaveFocus();
   },
+};
+
+export const Navigation: Story = {
+  args: { navigation: { connected: 2, onSelect: fn() } },
+  play: async ({ canvas, userEvent }) => {
+    await userEvent.click(
+      canvas.getByRole('button', { name: 'Account for Maya' }),
+    );
+    await expect(
+      canvas.getByRole('menuitem', { name: 'Inboxes 2 connected' }),
+    ).toHaveFocus();
+  },
+};
+export const NavigationHover: Story = {
+  ...Navigation,
+  parameters: { pseudo: { hover: 'button[role="menuitem"]:first-of-type' } },
+};
+export const NavigationPressed: Story = {
+  ...Navigation,
+  parameters: { pseudo: { active: 'button[role="menuitem"]:first-of-type' } },
 };

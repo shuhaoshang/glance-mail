@@ -1,0 +1,144 @@
+.back {
+  padding-inline: 0;
+}
+.page h1 {
+  margin: var(--space-16) 0 var(--space-32);
+  font-size: var(--font-size-32);
+  line-height: var(--line-height-32);
+  font-weight: var(--font-weight-semibold);
+}
+.page h1:focus,
+.panel h2:focus {
+  outline: none;
+}
+.desktop .layout {
+  display: grid;
+  grid-template-columns: calc(var(--space-40) * 5) minmax(0, 1fr);
+  gap: var(--space-48);
+}
+.navigation {
+  display: grid;
+  gap: var(--space-4);
+  align-self: start;
+}
+.navigation a {
+  display: flex;
+  align-items: center;
+  min-block-size: var(--size-touch-compact);
+  padding-inline: var(--space-16);
+  background: transparent;
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  text-decoration: none;
+}
+.navigation a[aria-current] {
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+}
+.navigation a:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-brand);
+  outline-offset: var(--focus-ring-offset);
+}
+.sections {
+  display: grid;
+  gap: var(--space-16);
+  min-inline-size: 0;
+}
+.panel {
+  padding: var(--space-24) calc(var(--space-24) + var(--space-4));
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-panel);
+  min-inline-size: 0;
+}
+.panel h2 {
+  margin: 0;
+  padding-block-end: var(--space-8);
+  font-size: var(--font-size-20);
+  line-height: var(--line-height-20);
+  font-weight: var(--font-weight-semibold);
+  scroll-margin-block-start: var(--space-16);
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-8) var(--space-16);
+  padding-block: var(--space-12);
+  border-block-start: var(--border-hairline) solid var(--color-border);
+}
+.row > button {
+  flex: none;
+}
+.row strong {
+  font-weight: var(--font-weight-semibold);
+}
+.identity {
+  display: flex;
+  align-items: center;
+  gap: var(--space-16);
+  min-inline-size: 0;
+}
+.copy {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.tile {
+  display: grid;
+  place-items: center;
+  flex: none;
+  inline-size: var(--size-tile);
+  block-size: var(--size-tile);
+  border-radius: var(--radius-tile);
+  background-color: var(--color-people-tint);
+  color: var(--color-people-text);
+}
+.neutral {
+  background-color: var(--color-surface-sunken);
+  color: var(--color-text-secondary);
+}
+.inboxes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.meta,
+.privacy,
+.confirmation p {
+  margin: 0;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
+.privacy,
+.times {
+  border-block-start: var(--border-hairline) solid var(--color-border);
+  padding-block-start: var(--space-12);
+}
+.times {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-12);
+}
+.danger {
+  color: var(--color-danger-text);
+}
+.row .delete {
+  --control-ink: var(--color-danger-text);
+  --hover-ink: var(--color-danger-text);
+  --pressed-ink: var(--color-danger-text);
+}
+.panel .confirmation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block: var(--space-4) var(--space-12);
+}
+.confirmation button {
+  flex: none;
+}
+.page:not(.desktop) .appearance {
+  flex-wrap: wrap;
+}
