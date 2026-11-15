@@ -16,12 +16,15 @@ interface TabBarProps {
   left: readonly Tab[];
   right?: readonly Tab[];
   selected: string;
-  onSelect: (id: string) => void;
+  onSelect: (id: string, via?: 'arrow-key') => void;
   /** Defaults to the shared responsive breakpoint. */
   mobile?: boolean;
 }
 
-function moveFocus(event: KeyboardEvent<HTMLDivElement>) {
+function moveFocus(
+  event: KeyboardEvent<HTMLDivElement>,
+  onMove: (index: number) => void,
+) {
   if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
   const tabs = Array.from(
     event.currentTarget.querySelectorAll<HTMLButtonElement>('[role="tab"]'),
@@ -47,7 +50,7 @@ function moveFocus(event: KeyboardEvent<HTMLDivElement>) {
   }
   event.preventDefault();
   tabs[next].focus();
-  tabs[next].click();
+  onMove(next);
 }
 
 export function TabBar({
@@ -66,7 +69,12 @@ export function TabBar({
       <div
         role="tablist"
         aria-label={label}
-        onKeyDown={moveFocus}
+        onKeyDown={(event) =>
+          moveFocus(event, (index) => {
+            const next = tabs[index];
+            if (next.id !== selected) onSelect(next.id, 'arrow-key');
+          })
+        }
         className={[styles.group, label === 'Glance' && styles.right]
           .filter(Boolean)
           .join(' ')}
