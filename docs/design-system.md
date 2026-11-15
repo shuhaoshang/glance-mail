@@ -767,7 +767,7 @@ Watchlist and Memory changes last for the session and reset with the persona, li
 
 ### 9.12 Account menu and theme (new)
 
-The avatar is a 40 × 40 round button on desktop and phone (`--color-brand-tint`, `--color-brand-text` initial, 14/20 semibold). It opens a menu under it, right-aligned, 8 below:
+The avatar is a 40 × 40 round button on desktop and phone (`--color-brand-tint`, `--color-brand-text` initial, 14/20 semibold). Hover uses `--color-brand-tint-hover` and press uses `--color-brand-tint-pressed`. Keyboard focus uses the shared focus ring. It opens a menu under it, right-aligned, 8 below:
 
 - `--size-menu` wide, `--color-surface`, `--radius-panel`, hairline ring, `--shadow-popover`, 8 padding.
 - Identity: the avatar (32), the name (14/20 semibold) and the email (12/16, muted). A hairline.
@@ -775,6 +775,7 @@ The avatar is a 40 × 40 round button on desktop and phone (`--color-brand-tint`
 - “Appearance” with the theme control on the right: SegmentedControl `small` with System, Light, Dark. On the phone the label sits above a full-width regular SegmentedControl.
 - A hairline, then “Log out”, which opens the signed-out page.
 - Menu roles and closing as MoveMenu.
+- The account menu stays open after an Appearance choice so people can compare themes. Move to closes when its action runs.
 
 The theme choice is stored as today (`themePreference`), applies at once, and is the same control in Settings.
 

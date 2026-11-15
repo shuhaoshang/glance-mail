@@ -9,7 +9,7 @@ export function DetailTabsExample(
   const prefix = useId();
   const options = props.options.map((option) => ({
     ...option,
-    panelId: prefix + option.panelId,
+    panelId: prefix + (option.panelId ?? option.value),
   }));
   return (
     <div className={styles.example}>

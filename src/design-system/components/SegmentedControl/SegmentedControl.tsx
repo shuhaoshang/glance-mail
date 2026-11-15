@@ -6,30 +6,36 @@ import styles from './SegmentedControl.module.css';
 export interface Segment {
   value: string;
   label: string;
-  panelId: string;
+  panelId?: string;
   disabled?: boolean;
 }
 
 interface SegmentedControlProps {
   'aria-label': string;
   options: readonly Segment[];
+  fullWidth?: boolean;
   size?: 'default' | 'small';
   appearance?: 'segmented' | 'underline';
   value: string;
   onValueChange: (value: string) => void;
+  mode?: 'tabs' | 'menu-radio';
 }
 
-function moveFocus(event: KeyboardEvent<HTMLDivElement>) {
+function moveFocus(event: KeyboardEvent<HTMLDivElement>, menuRadio: boolean) {
   if (event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
   const tabs = Array.from(
-    event.currentTarget.querySelectorAll<HTMLButtonElement>(
-      '[role="tab"]:enabled',
-    ),
+    event.currentTarget.querySelectorAll<HTMLButtonElement>('button:enabled'),
   );
   const index = tabs.indexOf(event.target as HTMLButtonElement);
   if (index < 0) return;
   let next: number;
-  switch (event.key) {
+  const key =
+    menuRadio && event.key === 'ArrowDown'
+      ? 'ArrowRight'
+      : menuRadio && event.key === 'ArrowUp'
+        ? 'ArrowLeft'
+        : event.key;
+  switch (key) {
     case 'ArrowRight':
       next = (index + 1) % tabs.length;
       break;
@@ -47,53 +53,63 @@ function moveFocus(event: KeyboardEvent<HTMLDivElement>) {
   }
   event.preventDefault();
   tabs[next].focus();
-  tabs[next].click();
+  if (!menuRadio) tabs[next].click();
 }
 
 /** Each panel uses its option's panelId and aria-labelledby={panelId + '-tab'}. */
 export function SegmentedControl({
   'aria-label': label,
   options,
+  mode = 'tabs',
+  fullWidth = false,
   value,
   onValueChange,
   size = 'default',
   appearance = 'segmented',
 }: SegmentedControlProps) {
+  const menuRadio = mode === 'menu-radio';
   const entry =
     options.find((option) => option.value === value && !option.disabled) ??
     options.find((option) => !option.disabled);
   return (
     <div
-      role="tablist"
+      role={menuRadio ? 'group' : 'tablist'}
       data-appearance={appearance}
       aria-label={label}
       className={[
         styles.track,
+        fullWidth && styles.fullWidth,
         size === 'small' && styles.small,
         appearance === 'underline' && styles.underline,
       ]
         .filter(Boolean)
         .join(' ')}
-      onKeyDown={moveFocus}
+      onKeyDown={(event) => moveFocus(event, menuRadio)}
     >
-      {options.map((option) => (
-        <button
-          key={option.value}
-          type="button"
-          role="tab"
-          id={option.panelId + '-tab'}
-          aria-controls={option.panelId}
-          aria-selected={option.value === value}
-          tabIndex={option === entry ? 0 : -1}
-          disabled={option.disabled}
-          className={[control.control, hitTarget.target, styles.tab].join(' ')}
-          onClick={() => {
-            if (option.value !== value) onValueChange(option.value);
-          }}
-        >
-          {option.label}
-        </button>
-      ))}
+      {options.map((option) => {
+        const panelId = menuRadio ? undefined : option.panelId;
+        return (
+          <button
+            key={option.value}
+            type="button"
+            role={menuRadio ? 'menuitemradio' : 'tab'}
+            id={panelId ? panelId + '-tab' : undefined}
+            aria-controls={panelId}
+            aria-selected={menuRadio ? undefined : option.value === value}
+            aria-checked={menuRadio ? option.value === value : undefined}
+            tabIndex={!menuRadio && option === entry ? 0 : -1}
+            disabled={option.disabled}
+            className={[control.control, hitTarget.target, styles.tab].join(
+              ' ',
+            )}
+            onClick={() => {
+              if (option.value !== value) onValueChange(option.value);
+            }}
+          >
+            {option.label}
+          </button>
+        );
+      })}
     </div>
   );
 }

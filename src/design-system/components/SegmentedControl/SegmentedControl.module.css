@@ -22,7 +22,7 @@
   font-size: var(--font-size-14);
   overflow-wrap: anywhere;
 }
-.tab[aria-selected='true'] {
+.tab:is([aria-selected='true'], [aria-checked='true']) {
   --control-fill: var(--color-ink);
   --control-ink: var(--color-on-ink);
   --hover-fill: var(--color-ink);
@@ -30,6 +30,16 @@
   --hover-ink: var(--color-on-ink);
   --pressed-ink: var(--color-on-ink);
   box-shadow: none;
+}
+
+.fullWidth {
+  display: flex;
+  inline-size: 100%;
+}
+.fullWidth .tab {
+  flex: 1;
+  min-block-size: var(--size-touch);
+  padding-inline: var(--space-8);
 }
 
 .small {
