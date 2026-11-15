@@ -24,7 +24,9 @@ test('Three email tabs expose counts, accounts, keyboard order, and responsive p
       await expect(page.getByRole('heading', { level: 1 })).toHaveCount(1);
       const tabs = page.getByRole('tablist', exact('Email'));
       await expect(tabs.getByRole('tab')).toHaveCount(3);
-      await expect(page.getByRole('tablist', exact('Glance'))).toHaveCount(0);
+      await expect(page.getByRole('tablist', exact('Glance'))).toHaveCount(
+        width >= 960 ? 1 : 0,
+      );
       await expect(
         page.getByRole('button', { name: /set aside|Show in brief/ }),
       ).toHaveCount(0);
@@ -109,6 +111,12 @@ test('Three email tabs expose counts, accounts, keyboard order, and responsive p
         tabs.getByRole('tab', { name: /^Heads-up/ }),
       ).toHaveAttribute('aria-selected', 'true');
       await page.keyboard.press('Tab');
+      if (width >= 960) {
+        await expect(
+          page.getByRole('tab', { name: /^Watchlist/ }),
+        ).toBeFocused();
+        await page.keyboard.press('Tab');
+      }
       const first = page
         .getByRole('list', exact('Heads-up'))
         .getByRole('button')
@@ -211,7 +219,7 @@ test('Tab and item changes preserve source, reasoning, Ask, checklist, and email
   }
 });
 
-test('Review states keep header words intact, update AllDone, and show plain Watchlist attribution', async ({
+test('Review states keep header words intact, update AllDone, and open Watchlist attribution', async ({
   page,
 }) => {
   for (const width of [1280, 1024, 390]) {
@@ -245,13 +253,12 @@ test('Review states keep header words intact, update AllDone, and show plain Wat
     await detail(page)
       .getByRole('button', { name: /^Why it’s first:/ })
       .click();
-    const attribution = 'Based on Watchlist: Fernway renewal';
     await expect(
-      detail(page).getByText(attribution, { exact: true }),
+      detail(page).getByRole('button', exact('Watchlist: Fernway renewal')),
     ).toBeVisible();
     await expect(
       detail(page).getByRole('button', { name: /Watchlist:/ }),
-    ).toHaveCount(0);
+    ).toHaveCount(1);
     await expect(
       detail(page).getByRole('link', { name: /Watchlist:/ }),
     ).toHaveCount(0);
@@ -266,13 +273,11 @@ test('Review states keep header words intact, update AllDone, and show plain Wat
       .first()
       .click();
     await expect(
-      detail(page).getByText('Part of Watchlist: Fernway renewal', {
-        exact: true,
-      }),
+      detail(page).getByRole('button', exact('Watchlist: Fernway renewal')),
     ).toBeVisible();
     await expect(
       detail(page).getByRole('button', { name: /Watchlist:/ }),
-    ).toHaveCount(0);
+    ).toHaveCount(1);
     await expect(
       detail(page).getByRole('link', { name: /Watchlist:/ }),
     ).toHaveCount(0);
