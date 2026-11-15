@@ -5,7 +5,7 @@ import { personaFromSearch } from '../app/briefData';
 import { getPersona, type PersonaId } from '../data';
 import { DemoBar } from './DemoBar';
 import { TextLevels } from './TextLevels';
-import type { ThemeControl } from './themePreference';
+import type { ThemeControl } from '../design-system/components/AccountMenu/themeOptions';
 
 export type DemoLevel = 1 | 2 | 3;
 interface DemoAppProps {
@@ -81,7 +81,6 @@ function PersonaDemo({
           if (next !== 3 && session.pending) session.settle(session.pending.id);
           setLevel(next);
         }}
-        theme={theme}
         simulation={{
           label: session.simulateLabel,
           disabled: session.simulateDisabled,
@@ -91,6 +90,7 @@ function PersonaDemo({
       <App
         personaId={personaId}
         session={session}
+        theme={theme}
         startClean={
           syncUrl &&
           new URLSearchParams(window.location.search).get('start') === 'clean'

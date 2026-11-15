@@ -17,6 +17,8 @@ import { WatchlistPanel } from '../design-system/components/WatchlistPanel/Watch
 import { Text } from '../design-system/components/Text/Text';
 import { Icon } from '../design-system/components/Icon/Icon';
 import { Avatar } from '../design-system/components/Avatar/Avatar';
+import { AccountMenu } from '../design-system/components/AccountMenu/AccountMenu';
+import type { ThemeControl } from '../design-system/components/AccountMenu/themeOptions';
 import { DetailSheet } from '../design-system/components/DetailSheet/DetailSheet';
 import {
   DetailPanel,
@@ -68,12 +70,14 @@ function Brief({
   children,
   startClean = false,
   session,
+  theme,
   onToastSurface,
 }: {
   personaId: PersonaId;
   children?: ReactNode;
   startClean?: boolean;
   session?: ItemLifecycle;
+  theme?: ThemeControl;
   onToastSurface: (
     container: HTMLElement | null,
     actionBar: HTMLElement | null,
@@ -552,7 +556,16 @@ function Brief({
                 />
               </>
             )}
-            <Avatar initial={persona.initial} label={persona.name} />
+            {theme ? (
+              <AccountMenu
+                name={persona.name}
+                initial={persona.initial}
+                email={persona.email}
+                theme={theme}
+              />
+            ) : (
+              <Avatar initial={persona.initial} label={persona.name} />
+            )}
           </div>
         </div>
         <div
@@ -847,6 +860,7 @@ export function App(props: {
   children?: ReactNode;
   startClean?: boolean;
   session?: ItemLifecycle;
+  theme?: ThemeControl;
 }) {
   const [surface, setSurface] = useState<{
     container: HTMLElement | null;

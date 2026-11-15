@@ -1,15 +1,5 @@
-export const themeOptions = [
-  { value: 'system', label: 'System' },
-  { value: 'light', label: 'Light' },
-  { value: 'dark', label: 'Dark' },
-] as const;
-
-export type ThemePreference = (typeof themeOptions)[number]['value'];
-
-export interface ThemeControl {
-  value: ThemePreference;
-  onChange: (value: ThemePreference) => void;
-}
+import type { ThemePreference } from '../design-system/components/AccountMenu/themeOptions';
+export type { ThemePreference } from '../design-system/components/AccountMenu/themeOptions';
 
 // Keep this key in sync with the pre-paint script in index.html.
 const storageKey = 'glance-theme';
