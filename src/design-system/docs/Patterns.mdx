@@ -34,16 +34,22 @@ The narrow layout uses a Demo disclosure below the existing desktop breakpoint. 
 
 ## Completing and correcting the brief
 
-[Item lifecycle](?path=/story/patterns-item-lifecycle--maya) includes Done, Snooze, Undo, simulated replies, checklist completion, and the empty brief. The Maya, Daniel, and Sarah flow stories verify their documented counts. A snoozed item remains an unfinished action. Visual 2.0 removes the old ReasonPanel correction action in task 21; the new Move to control arrives in task 27.
+[Item lifecycle](?path=/story/patterns-item-lifecycle--maya) includes Done, Snooze, Undo, simulated replies, checklist completion, and the empty brief. The Maya, Daniel, and Sarah flow stories verify their documented counts. A snoozed item remains an unfinished action. Visual 2.0 removes the old ReasonPanel correction action in task 21; the Move to control now works across all three email tabs.
 
 [All done](?path=/docs/composites-alldone--docs) · [Snooze menu](?path=/docs/composites-snoozemenu--docs)
 
 ## New mail
 
-[New mail](?path=/story/patterns-new-mail--added-other-mail) verifies Maya’s explicit update: Okto Freight appends to Needs you and Revenue Ops Digest appends to Other mail. The coverage and tab counts update without changing existing selections. The legacy Set aside view has left the app; Move to arrives in task 27.
+[New mail](?path=/story/patterns-new-mail--added-other-mail) verifies Maya’s explicit update: Okto Freight appends to Needs you and Revenue Ops Digest appends to Other mail. The coverage and tab counts update without changing existing selections. The legacy Set aside view has left the app; Move to is available in every email detail.
 
 ## Edge states
 
 [First brief](?path=/story/patterns-edge-states--first-brief) · [New mail](?path=/story/patterns-edge-states--new-mail) · [Disconnected](?path=/story/patterns-edge-states--disconnected) · [Overload](?path=/story/patterns-edge-states--overload) · [Quiet hours](?path=/story/patterns-edge-states--quiet-hours)
 
 The phone stories show reading progress, pending new mail, partial inbox coverage, a ranked preview on a busy day, and a Personal-only evening brief. See [Maya’s new-mail flow](?path=/story/patterns-new-mail--added-other-mail) for actually adding mail and checking the resulting ranking and counts.
+
+## Move to
+
+[Move to patterns](?path=/story/patterns-move-to--menu) exercise the existing MoveMenu and Toast with live session state. An email joins the end of its destination list, keeps its original detail, and gains “Moved by you” while outside its original tab. Returning it manually appends it to the original list and clears that label. Toast Undo restores the previous order, counts, and selection. On the phone, Undo keeps the sheet closed and focuses the restored row.
+
+Review Menu, MovedDetail, Newsletter, ReturnedToOriginal, Undo, LastNeedsYou, and ChecklistComplete in both themes. The three-persona menu stories preserve each email's account destination.

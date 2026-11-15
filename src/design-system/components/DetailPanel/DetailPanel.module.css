@@ -195,7 +195,21 @@
   padding-inline: var(--space-8);
 }
 
-.snoozeTrigger[aria-expanded='true'] {
+.snoozeTrigger[aria-expanded='true'],
+.moveTrigger[aria-expanded='true'] {
   --control-fill: var(--color-sunken-pressed);
   --hover-fill: var(--color-sunken-pressed);
+}
+
+.actions.complete:not(.stackedActions) .secondaryActions {
+  flex: 1;
+}
+.actions.complete:not(.stackedActions) .secondaryActions .inbox {
+  margin-inline-end: auto;
+}
+.mobile .actions.complete .secondaryActions {
+  flex: none;
+}
+.mobile .actions.complete .secondaryActions .inbox {
+  margin-inline-end: 0;
 }

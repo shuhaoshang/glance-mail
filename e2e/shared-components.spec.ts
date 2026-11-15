@@ -177,6 +177,7 @@ test('Detail actions have one primary and keep the open menu state', async ({
     const footer = page.locator('footer').filter({ has: open });
     const snooze = footer.getByRole('button', { name: 'Snooze' });
     const done = footer.getByRole('button', { name: 'Done', exact: true });
+    const move = footer.getByRole('button', { name: 'Move to', exact: true });
     const primaryColor = await tokenColor(open, '--color-brand');
     async function onePrimary() {
       const colors = await footer
@@ -193,7 +194,7 @@ test('Detail actions have one primary and keep the open menu state', async ({
     await expect(
       page.getByRole('tab', { name: 'Ask', exact: true }),
     ).toBeVisible();
-    for (const button of [snooze, done]) {
+    for (const button of [snooze, move, done]) {
       await expect(button).toHaveCSS('height', width === 390 ? '44px' : '40px');
       await expect(button).toHaveCSS(
         'background-color',
@@ -233,11 +234,17 @@ test('Detail actions have one primary and keep the open menu state', async ({
       await tokenColor(open, '--color-surface'),
     );
     if (width === 390) {
-      const [primary, secondary] = await Promise.all([
+      const [primary, secondary, moveBox] = await Promise.all([
         markDone.boundingBox(),
         open.boundingBox(),
+        move.boundingBox(),
       ]);
-      expect(primary!.width).toBeCloseTo(secondary!.width, 1);
+      expect(secondary!.width).toBeCloseTo(moveBox!.width, 1);
+      expect(secondary!.y).toBe(moveBox!.y);
+      expect(primary!.width).toBeCloseTo(
+        secondary!.width + moveBox!.width + 8,
+        1,
+      );
       expect(primary!.y + primary!.height).toBeLessThan(secondary!.y);
       expect(secondary!.height).toBe(44);
     }

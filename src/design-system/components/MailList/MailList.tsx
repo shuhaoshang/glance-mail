@@ -61,22 +61,28 @@ export function OtherMailList({
   total,
   selected,
   onSelect,
+  pendingId,
+  onLeaveComplete,
 }: {
   items: readonly OtherMailRowProps['item'][];
   total: number;
   selected?: string;
   onSelect: OtherMailRowProps['onSelect'];
+  pendingId?: string;
+  onLeaveComplete?: (id: string) => void;
 }) {
   return (
     <MailList
       tab="Other mail"
-      empty={!items.length}
+      empty={total === 0}
       remaining={Math.max(0, total - items.length)}
     >
       {items.map((item) => (
         <OtherMailRow
           key={item.id}
           item={item}
+          leaving={pendingId === item.id}
+          onLeaveComplete={() => onLeaveComplete?.(item.id)}
           selected={selected === item.id}
           onSelect={onSelect}
         />
