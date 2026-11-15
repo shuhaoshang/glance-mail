@@ -1,0 +1,59 @@
+.panel {
+  min-inline-size: 0;
+  padding: var(--space-32) var(--space-40) var(--space-40);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-panel);
+}
+.phone {
+  padding: var(--space-24) var(--space-20);
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-16);
+}
+.header > button {
+  flex: none;
+}
+.intro {
+  min-inline-size: 0;
+  display: grid;
+  gap: var(--space-4);
+}
+.panel .title {
+  font-size: var(--font-size-24);
+  line-height: var(--line-height-24);
+  font-weight: var(--font-weight-semibold);
+}
+.panel .description {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-regular);
+  max-inline-size: calc(var(--space-40) * 14);
+}
+.add {
+  margin-block-start: var(--space-16);
+}
+.list {
+  margin: var(--space-24) 0 0;
+  padding: 0;
+}
+.empty {
+  display: grid;
+  gap: var(--space-8);
+  margin-block-start: var(--space-24);
+}
+.phone .header {
+  flex-wrap: wrap;
+}
+.phone .intro {
+  display: contents;
+}
+.phone .description {
+  order: 1;
+  flex-basis: 100%;
+}
+.preview {
+  max-inline-size: var(--content-max);
+}

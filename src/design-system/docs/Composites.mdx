@@ -26,6 +26,12 @@ MoveMenu exposes the three email destinations with keyboard navigation and a che
 
 Heads-up rows open details with a persistent source and an Original email tab. Other mail shows its reason, basis, original paragraphs, and a legend limited to the highlight kinds present. The moved-row matrix demonstrates each source kind in each destination without implementing moves. Phone details reuse DetailSheet and the underline appearance of SegmentedControl. KnowRow remains available for the current app and edge-state stories during migration.
 
+## Watchlist
+
+[WatchRow](?path=/docs/composites-watchrow--docs) · [WatchlistPanel](?path=/docs/composites-watchlistpanel--docs) · [Watchlist flows](?path=/story/patterns-watchlist--maya)
+
+WatchRow presents the supplied topic name, status, news, and rename/remove controls. News pills reuse tint-button states; icon controls reuse IconButton states. Its rename form uses InlineForm, rejecting blank input and returning focus to Rename. WatchlistPanel composes these rows, the add form, and the empty state. Only one edit form is active at a time. The app owns session changes, Toast Undo, counts, and email navigation.
+
 ## Detail views
 
 [AllDone](?path=/docs/composites-alldone--docs) · [SnoozeMenu](?path=/docs/composites-snoozemenu--docs) · [DetailPanel](?path=/docs/composites-detailpanel--docs) · [DetailSheet](?path=/docs/composites-detailsheet--docs) · [EmailView](?path=/docs/composites-emailview--docs) · [ReasonPanel](?path=/docs/composites-reasonpanel--docs)
