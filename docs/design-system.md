@@ -736,6 +736,7 @@ One panel, padding 32 40 40 (phone: 24 20).
 - **Add row** (shown after Add, 16 below the head): a TextInput and the buttons Add (primary, `compact`, disabled while the input is empty) and Cancel (outline, `compact`); below it “✦ Glance looks for emails about it and puts them at the top.” (12/16, muted). Enter adds, Escape cancels. The new item goes first with the status “Nothing yet” and no news. Focus returns to the Add button.
 - **WatchRow** (rows separated by hairlines, 12 16 padding, 64 min height): an eye icon (16, `--color-brand`); the name (16/24 semibold); the status (14/20, muted); then “N new” or “Nothing new”; then two IconButtons, Rename (pencil) and Remove (trash), `compact`, icon `--color-text-muted`.
   - “N new”: a pill button, `--color-brand-tint` fill, `--color-brand-text`, 14/20 semibold, padding 4 8 4 12, a trailing chevron. It opens the tab that holds `item` and selects it (on the phone it opens the sheet).
+    When the linked email is done or snoozed, show “N new” as plain text using the supplied count. A preview is unavailable in this state.
   - “Nothing new”: plain text, 14/20, muted.
   - Desktop: one line, the name and status on the left sharing the free space, then the news, then the buttons. Phone: two lines; name and buttons on the first, status and news on the second. Long names wrap.
 - **Rename** turns the row into a TextInput with Save (primary, `compact`) and Cancel. **Remove** removes the row and shows the toast.

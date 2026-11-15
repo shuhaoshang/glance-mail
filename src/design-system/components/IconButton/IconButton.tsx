@@ -1,4 +1,4 @@
-import type { ButtonHTMLAttributes } from 'react';
+import type { ButtonHTMLAttributes, Ref } from 'react';
 import { Icon, type IconName } from '../Icon/Icon';
 import control from '../Control.module.css';
 import hitTarget from '../HitTarget.module.css';
@@ -9,6 +9,7 @@ interface IconButtonProps extends Omit<
   'children'
 > {
   icon: IconName;
+  ref?: Ref<HTMLButtonElement>;
   'aria-label': string;
   size?: 'default' | 'compact';
 }

@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useArgs } from 'storybook/preview-api';
 import { expect, fn, userEvent } from 'storybook/test';
@@ -58,6 +59,19 @@ export const SelectedFocus: Story = {
 };
 export const Dark: Story = { globals: { theme: 'dark' } };
 export const KeyboardActivation: Story = {
+  render: function KeyboardExample(args) {
+    const [selected, setSelected] = useState(args.selected);
+    return (
+      <HeaderButton
+        {...args}
+        selected={selected}
+        onClick={() => {
+          args.onClick();
+          setSelected(true);
+        }}
+      />
+    );
+  },
   play: async ({ canvas, args }) => {
     const button = canvas.getByRole('button', { name: 'Watchlist, new' });
     button.focus();

@@ -8,6 +8,10 @@ import {
   type ReactNode,
 } from 'react';
 import { getPersona, type PersonaId } from '../data';
+import type { WatchItem } from '../data/types';
+import { Button } from '../design-system/components/Button/Button';
+import { HeaderButton } from '../design-system/components/HeaderButton/HeaderButton';
+import { WatchlistPanel } from '../design-system/components/WatchlistPanel/WatchlistPanel';
 import { Text } from '../design-system/components/Text/Text';
 import { Icon } from '../design-system/components/Icon/Icon';
 import { Avatar } from '../design-system/components/Avatar/Avatar';
@@ -77,6 +81,13 @@ function Brief({
   const desktop = useDesktopLayout();
   const prefix = useId();
   const [tab, setTab] = useState<BriefTab>('needs-you');
+  const [watchOpen, setWatchOpen] = useState(false);
+  const [watchItems, setWatchItems] = useState<WatchItem[]>(
+    () => persona.watchlist,
+  );
+  const watchSequence = useRef(0);
+  const watchId = prefix + '-watchlist';
+  const hasWatchNews = watchItems.some((item) => item.news > 0);
   const [selections, setSelections] = useState<
     Partial<Record<BriefTab, string>>
   >({});
@@ -98,6 +109,12 @@ function Brief({
     position: { position: number; total: number };
   } | null>(null);
   const shownMove = useRef(0);
+  const [focusRequest, setFocusRequest] = useState<
+    | { kind: 'mail'; tab: BriefTab; id: string }
+    | { kind: 'watch'; id?: string }
+    | { kind: 'watch-heading' }
+    | null
+  >(null);
   const selected = (key: BriefTab) =>
     rows[key].find((email) => email.item.id === selections[key])?.item.id ??
     (desktop ? rows[key][0]?.item.id : undefined);
@@ -111,9 +128,9 @@ function Brief({
 
   // An offscreen row has no collapse animation to finish.
   useEffect(() => {
-    if (life.pending && (tab !== life.pending.source || children))
+    if (life.pending && (watchOpen || tab !== life.pending.source || children))
       life.settle(life.pending.id);
-  }, [life, tab, children]);
+  }, [life, tab, children, watchOpen]);
 
   useEffect(() => {
     const id = focusResult;
@@ -156,6 +173,39 @@ function Brief({
     },
     [prefix],
   );
+  useLayoutEffect(() => {
+    if (!focusRequest) return;
+    const panel = document.getElementById(watchId);
+    let target: HTMLElement | null | undefined;
+    if (focusRequest.kind === 'mail')
+      target = rowElement(focusRequest.tab, focusRequest.id);
+    else if (focusRequest.kind === 'watch-heading')
+      target = panel?.querySelector<HTMLElement>('[data-watch-heading]');
+    else {
+      const row = Array.from(
+        panel?.querySelectorAll<HTMLElement>('[data-watch-id]') ?? [],
+      ).find((node) => node.dataset.watchId === focusRequest.id);
+      target =
+        row?.querySelector<HTMLElement>('[data-watch-action="rename"]') ??
+        panel?.querySelector<HTMLElement>('[data-watch-add]');
+    }
+    if (
+      target &&
+      !target.closest('[hidden]') &&
+      target.getClientRects().length
+    ) {
+      target.focus({ preventScroll: focusRequest.kind === 'mail' });
+      setFocusRequest(null);
+    }
+  }, [
+    focusRequest,
+    rowElement,
+    watchId,
+    watchOpen,
+    tab,
+    watchItems,
+    life.orders,
+  ]);
   function afterSheetsClose(action: () => void) {
     requestAnimationFrame(function wait() {
       if (!appRoot.current?.isConnected) return;
@@ -199,12 +249,11 @@ function Brief({
           life.undoMove(receipt);
           setSheetOpen(false);
           afterSheetsClose(() => {
+            setWatchOpen(false);
             setTab(before.tab);
             setSelections(before.selections);
             setSheetPosition(before.position);
-            requestAnimationFrame(() =>
-              rowElement(before.tab, before.id)?.focus({ preventScroll: true }),
-            );
+            setFocusRequest({ kind: 'mail', tab: before.tab, id: before.id });
           });
         },
       });
@@ -236,6 +285,7 @@ function Brief({
     if (!desktop) setSheetOpen(true);
   }
   function selectTab(key: BriefTab) {
+    setWatchOpen(false);
     // Save the automatically selected desktop row before leaving its tab.
     if (desktop)
       setSelections((current) => ({ ...current, [tab]: selectedId }));
@@ -249,9 +299,108 @@ function Brief({
     const account = accountFor(id);
     return account.minority ? account : undefined;
   };
+  function showWatchlist() {
+    setSheetOpen(false);
+    afterSheetsClose(() => {
+      setWatchOpen(true);
+      setFocusRequest({ kind: 'watch-heading' });
+    });
+  }
+  function focusWatch(id?: string) {
+    setFocusRequest({ kind: 'watch', id });
+  }
+  function undoWatch(change: () => void, id?: string) {
+    setSheetOpen(false);
+    afterSheetsClose(() => {
+      change();
+      setWatchOpen(true);
+      focusWatch(id);
+    });
+  }
+  function addWatch(name: string, returnFocus: HTMLElement | null) {
+    const item: WatchItem = {
+      id: prefix + '-watch-' + ++watchSequence.current,
+      name,
+      status: 'Nothing yet',
+      news: 0,
+    };
+    setWatchItems((current) => [item, ...current]);
+    showToast({
+      title: 'Added to Watchlist.',
+      description: 'Emails about it will go to the top.',
+      returnFocus,
+      onUndo: () =>
+        undoWatch(() =>
+          setWatchItems((current) =>
+            current.filter((entry) => entry.id !== item.id),
+          ),
+        ),
+    });
+  }
+  function renameWatch(
+    id: string,
+    name: string,
+    returnFocus: HTMLElement | null,
+  ) {
+    const previous = watchItems.find((item) => item.id === id);
+    if (!previous) return;
+    setWatchItems((current) =>
+      current.map((item) => (item.id === id ? { ...item, name } : item)),
+    );
+    showToast({
+      title: 'Saved.',
+      returnFocus,
+      onUndo: () =>
+        undoWatch(
+          () =>
+            setWatchItems((current) =>
+              current.map((item) =>
+                item.id === id ? { ...item, name: previous.name } : item,
+              ),
+            ),
+          id,
+        ),
+    });
+  }
+  function removeWatch(id: string, returnFocus: HTMLElement | null) {
+    const index = watchItems.findIndex((item) => item.id === id);
+    const removed = watchItems[index];
+    if (!removed) return;
+    setWatchItems((current) => current.filter((item) => item.id !== id));
+    showToast({
+      title: 'Removed from Watchlist.',
+      returnFocus,
+      onUndo: () =>
+        undoWatch(
+          () =>
+            setWatchItems((current) => {
+              if (current.some((item) => item.id === id)) return current;
+              const restored = [...current];
+              restored.splice(index, 0, removed);
+              return restored;
+            }),
+          id,
+        ),
+    });
+  }
+  const isWatchEmailAvailable = (id: string) => {
+    const location = life.location(id);
+    return !!location && rows[location].some((email) => email.item.id === id);
+  };
+  function openWatchEmail(id: string) {
+    const location = life.location(id);
+    if (!location || !isWatchEmailAvailable(id)) return;
+    const trigger = rowElement(location, id);
+    if (!trigger) return;
+    setWatchOpen(false);
+    setTab(location);
+    selectRow(location, id, trigger);
+    if (desktop)
+      requestAnimationFrame(() => trigger.focus({ preventScroll: true }));
+  }
   const watchlistFor = (id?: string) => {
-    const entry = persona.watchlist.find((watch) => watch.id === id);
-    return entry ? { name: entry.name } : undefined;
+    const entry = watchItems.find((watch) => watch.id === id);
+    return entry ? { name: entry.name, onOpen: showWatchlist } : undefined;
   };
   const detailActions = (id: string) => ({
     busy: !!life.pending,
@@ -339,9 +488,24 @@ function Brief({
             <Icon name="star" className={styles.star} />
             glance
           </Text>
-          <Avatar initial={persona.initial} label={persona.name} />
+          <div className={styles.headerActions}>
+            {!desktop && !children && (
+              <HeaderButton
+                icon="eye"
+                label="Watchlist"
+                selected={watchOpen}
+                hasNews={hasWatchNews}
+                controls={watchId}
+                onClick={showWatchlist}
+              />
+            )}
+            <Avatar initial={persona.initial} label={persona.name} />
+          </div>
         </div>
-        <div className={styles.greeting}>
+        <div
+          className={styles.greeting}
+          hidden={!desktop && watchOpen && !children}
+        >
           <Text as="p" variant="meta" className={styles.date}>
             {persona.date}
           </Text>
@@ -365,22 +529,71 @@ function Brief({
       </header>
       {children}
       <div hidden={!!children} className={styles.brief}>
-        <TabBar
-          left={(Object.keys(labels) as BriefTab[]).map((key) => ({
-            id: prefix + '-' + key,
-            label: labels[key],
-            count: tabCounts[key],
-          }))}
-          selected={prefix + '-' + tab}
-          onSelect={(id) => selectTab(id.slice(prefix.length + 1) as BriefTab)}
-        />
+        <div hidden={!desktop && watchOpen}>
+          <TabBar
+            left={(Object.keys(labels) as BriefTab[]).map((key) => ({
+              id: prefix + '-' + key,
+              label: labels[key],
+              count: tabCounts[key],
+            }))}
+            right={[
+              {
+                id: watchId,
+                label: 'Watchlist',
+                count: watchItems.length,
+                hasNews: hasWatchNews,
+              },
+            ]}
+            selected={watchOpen ? watchId : prefix + '-' + tab}
+            onSelect={(id) =>
+              id === watchId
+                ? showWatchlist()
+                : selectTab(id.slice(prefix.length + 1) as BriefTab)
+            }
+          />
+        </div>
+        {!desktop && watchOpen && (
+          <Button
+            variant="text"
+            size="touch"
+            className={styles.back}
+            aria-label="Back to brief"
+            onClick={() => {
+              setWatchOpen(false);
+              requestAnimationFrame(() =>
+                document
+                  .getElementById(prefix + '-' + tab + '-tab')
+                  ?.focus({ preventScroll: true }),
+              );
+            }}
+          >
+            ‹ Brief
+          </Button>
+        )}
+        <div
+          id={watchId}
+          role={desktop ? 'tabpanel' : undefined}
+          aria-labelledby={desktop ? watchId + '-tab' : undefined}
+          hidden={!watchOpen}
+          className={styles.watchPanel}
+        >
+          <WatchlistPanel
+            items={watchItems}
+            onAdd={addWatch}
+            onRename={renameWatch}
+            onRemove={removeWatch}
+            onOpenItem={openWatchEmail}
+            isItemAvailable={isWatchEmailAvailable}
+            mobile={!desktop}
+          />
+        </div>
         {(Object.keys(labels) as BriefTab[]).map((key) => (
           <div
             key={key}
             role="tabpanel"
             id={prefix + '-' + key}
             aria-labelledby={prefix + '-' + key + '-tab'}
-            hidden={tab !== key}
+            hidden={watchOpen || tab !== key}
             className={styles.layout}
           >
             <div className={styles.list}>
@@ -526,7 +739,13 @@ function Brief({
               ) : (
                 <DetailSheet
                   key={props.item.id}
-                  open={!children && tab === key && active && sheetOpen}
+                  open={
+                    !children &&
+                    !watchOpen &&
+                    tab === key &&
+                    active &&
+                    sheetOpen
+                  }
                   onClose={() => setSheetOpen(false)}
                   returnFocus={returnFocus}
                   label={

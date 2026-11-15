@@ -51,6 +51,10 @@ const verifyBrief: NonNullable<Story['play']> = async ({ canvas, args }) => {
   await expect(canvas.getByRole('list', { name: 'Heads-up' })).toBeVisible();
   await userEvent.keyboard('{Home}');
   await userEvent.tab();
+  if (desktop) {
+    await expect(canvas.getByRole('tab', { name: /^Watchlist/ })).toHaveFocus();
+    await userEvent.tab();
+  }
   // Maya's new-mail action comes before her first row.
   if (persona.newMail) await userEvent.tab();
   await expect(rows[0]).toHaveFocus();
@@ -131,11 +135,8 @@ export const WatchlistReasoning: Story = {
       panel.getByRole('button', { name: /^Why it’s first:/ }),
     );
     await expect(
-      panel.getByText('Based on Watchlist: Fernway renewal', { exact: true }),
+      panel.getByRole('button', { name: 'Watchlist: Fernway renewal' }),
     ).toBeVisible();
-    await expect(
-      panel.queryByRole('button', { name: /Watchlist:/ }),
-    ).not.toBeInTheDocument();
   },
 };
 export const WatchlistHeadsUp: Story = {
@@ -145,11 +146,8 @@ export const WatchlistHeadsUp: Story = {
       context.canvas.getByRole('region', { name: 'Selected item' }),
     );
     await expect(
-      panel.getByText('Part of Watchlist: Fernway renewal', { exact: true }),
+      panel.getByRole('button', { name: 'Watchlist: Fernway renewal' }),
     ).toBeVisible();
-    await expect(
-      panel.queryByRole('button', { name: /Watchlist:/ }),
-    ).not.toBeInTheDocument();
   },
 };
 
