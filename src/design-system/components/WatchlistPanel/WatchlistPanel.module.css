@@ -27,6 +27,9 @@
   line-height: var(--line-height-24);
   font-weight: var(--font-weight-semibold);
 }
+.title[data-watch-heading]:focus {
+  outline: none;
+}
 .panel .description {
   color: var(--color-text-secondary);
   font-weight: var(--font-weight-regular);

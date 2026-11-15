@@ -52,6 +52,10 @@ The implementation uses the written panel padding and row sizes. It keeps the bu
 - Checks cover all personas, both news destinations, blank input, add/rename/remove/Undo, focus, empty state, news-dot removal, long names, moved-email navigation, live attribution, level changes, persona reset, and unchanged ranking.
 - Existing Move to, Done, Snooze, Ask, and demo flows remain covered.
 
+## Review follow-up
+
+The Watchlist heading still receives focus when the view opens. Its outline is suppressed for that heading alone. The screenshots above show the updated heading, and the interactive controls keep their shared focus rings. Compare the previous [desktop light](https://github.com/shuhaoshang/glance-mail/blob/38778ed0280761f37a69e862767b43c272e60b09/docs/reviews/28-watchlist/maya-desktop-light.jpg) and [phone dark](https://github.com/shuhaoshang/glance-mail/blob/38778ed0280761f37a69e862767b43c272e60b09/docs/reviews/28-watchlist/maya-phone-dark.jpg) captures.
+
 ## Open questions
 
-**News linked to a done or snoozed email:** the specification does not define how to preview a linked email that is no longer in an open list. Its “N new” currently renders as plain text under the no-dead-controls rule, retaining the supplied count. Proposal: open a read-only original-email view in the existing detail area/sheet while preserving the Done/Snooze state, with Open in {app} available and no automatic Undo or reactivation. Please confirm the intended preview and its position/status wording before adding that state.
+None. The review confirmed the plain-text “N new” state for done or snoozed emails. Section 9.9 records that decision.
