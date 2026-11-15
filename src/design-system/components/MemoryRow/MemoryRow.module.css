@@ -1,0 +1,51 @@
+.row {
+  border-block-start: var(--border-hairline) solid var(--color-border);
+  padding-block: var(--space-16);
+}
+.content {
+  display: grid;
+  grid-template-columns: var(--size-icon) minmax(0, 1fr) auto;
+  gap: var(--space-8) var(--space-16);
+  align-items: center;
+}
+.mark {
+  display: grid;
+  place-items: center;
+  align-self: start;
+  block-size: var(--line-height-16);
+  color: var(--color-brand);
+  font-size: var(--font-size-24);
+  line-height: var(--line-height-16);
+  font-weight: var(--font-weight-semibold);
+}
+.copy {
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+}
+.text,
+.meta {
+  margin: 0;
+}
+.text {
+  color: var(--color-text);
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-16);
+}
+.meta {
+  color: var(--color-text-muted);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+}
+.actions {
+  display: flex;
+}
+.actions > button {
+  --control-ink: var(--color-text-muted);
+}
+.phone {
+  grid-template-columns: var(--size-icon) minmax(0, 1fr);
+}
+.phone .actions {
+  grid-column: 2;
+  justify-self: end;
+}

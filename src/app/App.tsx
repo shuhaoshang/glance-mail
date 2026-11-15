@@ -8,6 +8,8 @@ import {
   type ReactNode,
 } from 'react';
 import { getPersona, type PersonaId } from '../data';
+import { useMemory } from './useMemory';
+import { MemoryPanel } from '../design-system/components/MemoryPanel/MemoryPanel';
 import type { WatchItem } from '../data/types';
 import { Button } from '../design-system/components/Button/Button';
 import { HeaderButton } from '../design-system/components/HeaderButton/HeaderButton';
@@ -45,6 +47,8 @@ import { ToastProvider } from '../design-system/components/Toast/ToastProvider';
 import { useToast } from '../design-system/components/Toast/toastContext';
 import styles from './App.module.css';
 
+type UtilityView = 'watchlist' | 'memory';
+
 type BriefTab = 'needs-you' | 'heads-up' | 'other-mail';
 function emailName(email: EmailOrigin) {
   return email.kind === 'needs-you'
@@ -81,12 +85,28 @@ function Brief({
   const desktop = useDesktopLayout();
   const prefix = useId();
   const [tab, setTab] = useState<BriefTab>('needs-you');
-  const [watchOpen, setWatchOpen] = useState(false);
+  const [utilityView, setUtilityView] = useState<UtilityView | null>(null);
+  const watchOpen = utilityView === 'watchlist';
+  const memoryOpen = utilityView === 'memory';
   const [watchItems, setWatchItems] = useState<WatchItem[]>(
     () => persona.watchlist,
   );
   const watchSequence = useRef(0);
   const watchId = prefix + '-watchlist';
+  const memoryId = prefix + '-memory';
+  const {
+    memory,
+    add: addInstruction,
+    edit: editMemoryNote,
+    remove: removeMemoryNote,
+  } = useMemory(persona.memory, memoryId, (restore, id) => {
+    setSheetOpen(false);
+    afterSheetsClose(() => {
+      restore();
+      setUtilityView('memory');
+      setFocusRequest({ kind: 'memory', id });
+    });
+  });
   const hasWatchNews = watchItems.some((item) => item.news > 0);
   const [selections, setSelections] = useState<
     Partial<Record<BriefTab, string>>
@@ -112,7 +132,8 @@ function Brief({
   const [focusRequest, setFocusRequest] = useState<
     | { kind: 'mail'; tab: BriefTab; id: string }
     | { kind: 'watch'; id?: string }
-    | { kind: 'watch-heading' }
+    | { kind: 'utility-heading'; view: UtilityView }
+    | { kind: 'memory'; id?: string }
     | null
   >(null);
   const selected = (key: BriefTab) =>
@@ -128,9 +149,12 @@ function Brief({
 
   // An offscreen row has no collapse animation to finish.
   useEffect(() => {
-    if (life.pending && (watchOpen || tab !== life.pending.source || children))
+    if (
+      life.pending &&
+      (utilityView || tab !== life.pending.source || children)
+    )
       life.settle(life.pending.id);
-  }, [life, tab, children, watchOpen]);
+  }, [life, tab, children, utilityView]);
 
   useEffect(() => {
     const id = focusResult;
@@ -179,9 +203,23 @@ function Brief({
     let target: HTMLElement | null | undefined;
     if (focusRequest.kind === 'mail')
       target = rowElement(focusRequest.tab, focusRequest.id);
-    else if (focusRequest.kind === 'watch-heading')
-      target = panel?.querySelector<HTMLElement>('[data-watch-heading]');
-    else {
+    else if (focusRequest.kind === 'utility-heading') {
+      const view = focusRequest.view;
+      target =
+        view === 'memory'
+          ? document
+              .getElementById(memoryId)
+              ?.querySelector<HTMLElement>('[data-memory-heading]')
+          : panel?.querySelector<HTMLElement>('[data-watch-heading]');
+    } else if (focusRequest.kind === 'memory') {
+      const memoryPanel = document.getElementById(memoryId);
+      const row = Array.from(
+        memoryPanel?.querySelectorAll<HTMLElement>('[data-memory-note]') ?? [],
+      ).find((node) => node.dataset.memoryNote === focusRequest.id);
+      target =
+        row?.querySelector<HTMLElement>('[data-memory-edit]') ??
+        memoryPanel?.querySelector<HTMLElement>('[data-memory-add]');
+    } else {
       const row = Array.from(
         panel?.querySelectorAll<HTMLElement>('[data-watch-id]') ?? [],
       ).find((node) => node.dataset.watchId === focusRequest.id);
@@ -201,7 +239,9 @@ function Brief({
     focusRequest,
     rowElement,
     watchId,
-    watchOpen,
+    utilityView,
+    memoryId,
+    memory,
     tab,
     watchItems,
     life.orders,
@@ -249,7 +289,7 @@ function Brief({
           life.undoMove(receipt);
           setSheetOpen(false);
           afterSheetsClose(() => {
-            setWatchOpen(false);
+            setUtilityView(null);
             setTab(before.tab);
             setSelections(before.selections);
             setSheetPosition(before.position);
@@ -285,7 +325,7 @@ function Brief({
     if (!desktop) setSheetOpen(true);
   }
   function selectTab(key: BriefTab) {
-    setWatchOpen(false);
+    setUtilityView(null);
     // Save the automatically selected desktop row before leaving its tab.
     if (desktop)
       setSelections((current) => ({ ...current, [tab]: selectedId }));
@@ -299,12 +339,14 @@ function Brief({
     const account = accountFor(id);
     return account.minority ? account : undefined;
   };
-  function showWatchlist() {
+  function showUtility(view: UtilityView, focusHeading = true) {
     setSheetOpen(false);
-    afterSheetsClose(() => {
-      setWatchOpen(true);
-      setFocusRequest({ kind: 'watch-heading' });
-    });
+    const open = () => {
+      setUtilityView(view);
+      if (focusHeading) setFocusRequest({ kind: 'utility-heading', view });
+    };
+    if (desktop) open();
+    else afterSheetsClose(open);
   }
   function focusWatch(id?: string) {
     setFocusRequest({ kind: 'watch', id });
@@ -313,7 +355,7 @@ function Brief({
     setSheetOpen(false);
     afterSheetsClose(() => {
       change();
-      setWatchOpen(true);
+      setUtilityView('watchlist');
       focusWatch(id);
     });
   }
@@ -392,7 +434,7 @@ function Brief({
     if (!location || !isWatchEmailAvailable(id)) return;
     const trigger = rowElement(location, id);
     if (!trigger) return;
-    setWatchOpen(false);
+    setUtilityView(null);
     setTab(location);
     selectRow(location, id, trigger);
     if (desktop)
@@ -400,7 +442,9 @@ function Brief({
   }
   const watchlistFor = (id?: string) => {
     const entry = watchItems.find((watch) => watch.id === id);
-    return entry ? { name: entry.name, onOpen: showWatchlist } : undefined;
+    return entry
+      ? { name: entry.name, onOpen: () => showUtility('watchlist') }
+      : undefined;
   };
   const detailActions = (id: string) => ({
     busy: !!life.pending,
@@ -490,21 +534,30 @@ function Brief({
           </Text>
           <div className={styles.headerActions}>
             {!desktop && !children && (
-              <HeaderButton
-                icon="eye"
-                label="Watchlist"
-                selected={watchOpen}
-                hasNews={hasWatchNews}
-                controls={watchId}
-                onClick={showWatchlist}
-              />
+              <>
+                <HeaderButton
+                  icon="eye"
+                  label="Watchlist"
+                  selected={watchOpen}
+                  hasNews={hasWatchNews}
+                  controls={watchId}
+                  onClick={() => showUtility('watchlist')}
+                />
+                <HeaderButton
+                  icon="star"
+                  label="Memory"
+                  selected={memoryOpen}
+                  controls={memoryId}
+                  onClick={() => showUtility('memory')}
+                />
+              </>
             )}
             <Avatar initial={persona.initial} label={persona.name} />
           </div>
         </div>
         <div
           className={styles.greeting}
-          hidden={!desktop && watchOpen && !children}
+          hidden={!desktop && !!utilityView && !children}
         >
           <Text as="p" variant="meta" className={styles.date}>
             {persona.date}
@@ -529,7 +582,7 @@ function Brief({
       </header>
       {children}
       <div hidden={!!children} className={styles.brief}>
-        <div hidden={!desktop && watchOpen}>
+        <div hidden={!desktop && !!utilityView}>
           <TabBar
             left={(Object.keys(labels) as BriefTab[]).map((key) => ({
               id: prefix + '-' + key,
@@ -543,23 +596,31 @@ function Brief({
                 count: watchItems.length,
                 hasNews: hasWatchNews,
               },
+              {
+                id: memoryId,
+                label: 'Memory',
+                count: memory.instructions.length + memory.learned.length,
+              },
             ]}
-            selected={watchOpen ? watchId : prefix + '-' + tab}
-            onSelect={(id) =>
-              id === watchId
-                ? showWatchlist()
-                : selectTab(id.slice(prefix.length + 1) as BriefTab)
+            selected={
+              utilityView ? prefix + '-' + utilityView : prefix + '-' + tab
             }
+            onSelect={(id, via) => {
+              if (id === watchId) showUtility('watchlist', via !== 'arrow-key');
+              else if (id === memoryId)
+                showUtility('memory', via !== 'arrow-key');
+              else selectTab(id.slice(prefix.length + 1) as BriefTab);
+            }}
           />
         </div>
-        {!desktop && watchOpen && (
+        {!desktop && utilityView && (
           <Button
             variant="text"
             size="touch"
             className={styles.back}
             aria-label="Back to brief"
             onClick={() => {
-              setWatchOpen(false);
+              setUtilityView(null);
               requestAnimationFrame(() =>
                 document
                   .getElementById(prefix + '-' + tab + '-tab')
@@ -575,7 +636,7 @@ function Brief({
           role={desktop ? 'tabpanel' : undefined}
           aria-labelledby={desktop ? watchId + '-tab' : undefined}
           hidden={!watchOpen}
-          className={styles.watchPanel}
+          className={styles.utilityPanel}
         >
           <WatchlistPanel
             items={watchItems}
@@ -587,13 +648,27 @@ function Brief({
             mobile={!desktop}
           />
         </div>
+        <div
+          id={memoryId}
+          role={desktop ? 'tabpanel' : undefined}
+          aria-labelledby={desktop ? memoryId + '-tab' : undefined}
+          hidden={!memoryOpen}
+          className={styles.utilityPanel}
+        >
+          <MemoryPanel
+            memory={memory}
+            onAdd={addInstruction}
+            onEdit={editMemoryNote}
+            onRemove={removeMemoryNote}
+          />
+        </div>
         {(Object.keys(labels) as BriefTab[]).map((key) => (
           <div
             key={key}
             role="tabpanel"
             id={prefix + '-' + key}
             aria-labelledby={prefix + '-' + key + '-tab'}
-            hidden={watchOpen || tab !== key}
+            hidden={!!utilityView || tab !== key}
             className={styles.layout}
           >
             <div className={styles.list}>
@@ -741,7 +816,7 @@ function Brief({
                   key={props.item.id}
                   open={
                     !children &&
-                    !watchOpen &&
+                    !utilityView &&
                     tab === key &&
                     active &&
                     sheetOpen

@@ -1,0 +1,54 @@
+.panel {
+  min-inline-size: 0;
+  padding: var(--space-32) var(--space-40) var(--space-40);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--shadow-panel);
+}
+.phone {
+  padding: var(--space-24) var(--space-20);
+}
+.panel .title {
+  font-size: var(--font-size-24);
+  line-height: var(--line-height-24);
+  font-weight: var(--font-weight-semibold);
+}
+.title[data-memory-heading]:focus {
+  outline: none;
+}
+.panel .description {
+  margin-block-start: var(--space-4);
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-regular);
+}
+.section {
+  margin-block-start: var(--space-32);
+}
+.sectionHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-16);
+}
+.sectionHeader > button {
+  flex: none;
+}
+.sectionHeader .sectionTitle {
+  font-weight: var(--font-weight-semibold);
+}
+.count,
+.sectionHeader .hint {
+  color: var(--color-text-muted);
+  font-weight: var(--font-weight-regular);
+}
+.hint {
+  margin-block-start: var(--space-4);
+}
+.add {
+  margin-block-start: var(--space-16);
+}
+.list {
+  list-style: none;
+  margin: var(--space-8) 0 0;
+  padding: 0;
+}

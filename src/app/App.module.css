@@ -71,10 +71,10 @@
 .greeting[hidden] {
   display: none;
 }
-.watchPanel {
+.utilityPanel {
   margin-block-start: var(--space-12);
 }
-.watchPanel[hidden] {
+.utilityPanel[hidden] {
   display: none;
 }
 .back {
