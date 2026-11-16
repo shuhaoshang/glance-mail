@@ -84,3 +84,7 @@ export const KeyboardAndLabel: Story = {
     );
   },
 };
+
+export const VisuallyHiddenLabel: Story = {
+  args: { hideLabel: true, label: 'Brief is ready' },
+};

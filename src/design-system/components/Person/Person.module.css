@@ -6,3 +6,20 @@
   font-size: var(--font-size-14);
   line-height: var(--line-height-14);
 }
+
+.identity .details {
+  display: grid;
+  min-inline-size: 0;
+  overflow-wrap: anywhere;
+  color: var(--color-text-muted);
+}
+.identity strong {
+  color: var(--color-text);
+  font-size: var(--font-size-16);
+  line-height: var(--line-height-16);
+  font-weight: var(--font-weight-semibold);
+}
+
+.identity .details > span {
+  white-space: nowrap;
+}

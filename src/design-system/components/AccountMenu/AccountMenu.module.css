@@ -64,3 +64,30 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr);
 }
+
+.item {
+  --control-ink: var(--color-text);
+  --hover-fill: var(--color-row-hover);
+  --pressed-fill: var(--color-row-pressed);
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-block-size: var(--size-touch);
+  gap: var(--space-12);
+  padding-inline: var(--space-12);
+  border: 0;
+  border-radius: var(--radius-panel-small);
+  font-size: var(--font-size-14);
+  line-height: var(--line-height-14);
+  font-weight: var(--font-weight-medium);
+  text-align: start;
+}
+.connected {
+  margin-inline-start: auto;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-12);
+  line-height: var(--line-height-12);
+}
+.footer {
+  border-block-start: var(--border-hairline) solid var(--color-border);
+}

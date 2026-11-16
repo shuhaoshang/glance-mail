@@ -7,7 +7,21 @@ export function Person({
   name,
   role,
   separator = ', ',
-}: Item['person'] & { separator?: ', ' | ' · ' }) {
+  variant = 'inline',
+}: Item['person'] & {
+  separator?: ', ' | ' · ';
+  variant?: 'inline' | 'identity';
+}) {
+  if (variant === 'identity')
+    return (
+      <span className={[styles.person, styles.identity].join(' ')}>
+        <Avatar initial={initial} />
+        <span className={styles.details}>
+          <strong>{name}</strong>
+          <span>{role}</span>
+        </span>
+      </span>
+    );
   return (
     <span className={styles.person}>
       <Avatar initial={initial} size="small" />

@@ -26,6 +26,7 @@
 }
 .track {
   position: relative;
+  pointer-events: none;
   flex: none;
   inline-size: var(--size-switch-track-width);
   block-size: var(--size-switch-track-height);

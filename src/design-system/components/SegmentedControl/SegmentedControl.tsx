@@ -18,7 +18,7 @@ interface SegmentedControlProps {
   appearance?: 'segmented' | 'underline';
   value: string;
   onValueChange: (value: string) => void;
-  mode?: 'tabs' | 'menu-radio';
+  mode?: 'tabs' | 'radio' | 'menu-radio';
 }
 
 function moveFocus(event: KeyboardEvent<HTMLDivElement>, menuRadio: boolean) {
@@ -29,10 +29,12 @@ function moveFocus(event: KeyboardEvent<HTMLDivElement>, menuRadio: boolean) {
   const index = tabs.indexOf(event.target as HTMLButtonElement);
   if (index < 0) return;
   let next: number;
+  if (menuRadio && (event.key === 'Home' || event.key === 'End')) return;
+  const radioGroup = event.currentTarget.getAttribute('role') === 'radiogroup';
   const key =
-    menuRadio && event.key === 'ArrowDown'
+    radioGroup && event.key === 'ArrowDown'
       ? 'ArrowRight'
-      : menuRadio && event.key === 'ArrowUp'
+      : radioGroup && event.key === 'ArrowUp'
         ? 'ArrowLeft'
         : event.key;
   switch (key) {
@@ -68,12 +70,13 @@ export function SegmentedControl({
   appearance = 'segmented',
 }: SegmentedControlProps) {
   const menuRadio = mode === 'menu-radio';
+  const tabs = mode === 'tabs';
   const entry =
     options.find((option) => option.value === value && !option.disabled) ??
     options.find((option) => !option.disabled);
   return (
     <div
-      role={menuRadio ? 'group' : 'tablist'}
+      role={menuRadio ? 'group' : tabs ? 'tablist' : 'radiogroup'}
       data-appearance={appearance}
       aria-label={label}
       className={[
@@ -87,16 +90,16 @@ export function SegmentedControl({
       onKeyDown={(event) => moveFocus(event, menuRadio)}
     >
       {options.map((option) => {
-        const panelId = menuRadio ? undefined : option.panelId;
+        const panelId = tabs ? option.panelId : undefined;
         return (
           <button
             key={option.value}
             type="button"
-            role={menuRadio ? 'menuitemradio' : 'tab'}
+            role={menuRadio ? 'menuitemradio' : tabs ? 'tab' : 'radio'}
             id={panelId ? panelId + '-tab' : undefined}
             aria-controls={panelId}
-            aria-selected={menuRadio ? undefined : option.value === value}
-            aria-checked={menuRadio ? option.value === value : undefined}
+            aria-selected={tabs ? option.value === value : undefined}
+            aria-checked={tabs ? undefined : option.value === value}
             tabIndex={!menuRadio && option === entry ? 0 : -1}
             disabled={option.disabled}
             className={[control.control, hitTarget.target, styles.tab].join(

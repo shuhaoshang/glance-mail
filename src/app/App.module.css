@@ -80,3 +80,21 @@
 .back {
   padding-inline: 0;
 }
+
+.headerActions[hidden] {
+  display: none;
+}
+.signedOut {
+  min-block-size: 70dvh;
+  display: grid;
+  align-content: center;
+}
+.signedOut .header {
+  margin-block-end: 0;
+}
+.signedOut .brand {
+  justify-content: center;
+}
+.greeting h1:focus {
+  outline: none;
+}
