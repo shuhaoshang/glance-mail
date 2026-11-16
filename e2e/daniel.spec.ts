@@ -94,13 +94,20 @@ async function journey(
       ).toBeVisible();
       await expect(field(decision, option.value)).toBeVisible();
     }
-    const first = await field(decision, a.value).boundingBox();
-    const second = await field(decision, b.value).boundingBox();
+    const choices = field(decision, a.value).or(field(decision, b.value));
+    await expect(choices).toHaveCount(2);
+    // Measure both controls in the same frame while the phone sheet can move.
+    const [first, second] = await choices.evaluateAll((buttons) =>
+      buttons.map((button) => {
+        const { x, y, width } = button.getBoundingClientRect();
+        return { x, y, width };
+      }),
+    );
     if (phone) {
-      expect(first!.y).toBeLessThan(second!.y);
+      expect(first.y).toBeLessThan(second.y);
     } else {
-      expect(first!.x + first!.width).toBeLessThan(second!.x);
-      expect(first!.y).toBe(second!.y);
+      expect(first.x + first.width).toBeLessThan(second.x);
+      expect(first.y).toBe(second.y);
     }
     const urgent = chip(decision, {
       ...checkout.facts[0],
