@@ -93,7 +93,7 @@ docs/
 
 - Do not change system settings on the designer's computer, such as Appearance (light or dark), Reduce motion, Increase contrast, display scaling or text size.
 - Emulate color scheme and reduced motion in the browser, for example with Playwright's `colorScheme` and `reducedMotion` options or the Rendering panel in Chrome DevTools.
-- Do not link to localhost or 127.0.0.1 in pull requests or comments. Those links only work on the designer's computer. Name the Storybook story (for example, Composites/SetAsideList) or the app URL path instead.
+- Do not link to localhost or 127.0.0.1 in pull requests or comments. Those links only work on the designer's computer. Name the Storybook story (for example, Patterns/Settings) or the app URL path instead.
 
 ## Language
 

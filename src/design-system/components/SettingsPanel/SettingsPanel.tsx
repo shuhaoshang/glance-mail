@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import {
   useId,
   useLayoutEffect,
@@ -210,7 +211,7 @@ export function SettingsPanel({
                               ) : (
                                 account.app
                               ))}{' '}
-                            · connected Oct 28
+                            {keepDatesTogether('· connected Oct 28')}
                           </p>
                         </div>
                       </div>

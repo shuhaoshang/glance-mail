@@ -85,13 +85,12 @@ export const FocusVisible: Story = {
 
 export const PersonaAndLevelSelection: Story = {
   play: async ({ canvas, args }) => {
-    let trigger = canvas.queryByRole('button', {
-      name: 'Demo',
-    });
-    if (trigger) {
-      trigger.focus();
+    const demo = () => canvas.getByRole('button', { name: 'Demo' });
+    const phone = !!canvas.queryByRole('button', { name: 'Demo' });
+    if (phone) {
+      demo().focus();
       await userEvent.keyboard('{Enter}');
-      await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+      await expect(demo()).toHaveAttribute('aria-expanded', 'true');
     }
 
     const personaGroup = () =>
@@ -106,11 +105,6 @@ export const PersonaAndLevelSelection: Story = {
           canvas.getByRole('heading', { name: getPersona(personaId).greeting }),
         ).toBeVisible();
       });
-      // Changing persona remounts the existing phone disclosure. Use its live controls.
-      trigger = canvas.queryByRole('button', { name: 'Demo' });
-      if (trigger?.getAttribute('aria-expanded') === 'false')
-        await userEvent.click(trigger);
-
       await waitFor(async () => {
         await expect(
           personaGroup().getByRole('button', {
@@ -173,9 +167,6 @@ export const PersonaAndLevelSelection: Story = {
       await expect(
         text.getByRole('heading', { name: 'Heads-up' }),
       ).toBeVisible();
-      await expect(
-        text.queryByRole('heading', { name: 'Good to know' }),
-      ).not.toBeInTheDocument();
       const lists = text.getAllByRole('list');
       await expect(lists).toHaveLength(formatted.done.length ? 3 : 2);
       const needs = within(lists[0]).getAllByRole('listitem');
@@ -210,9 +201,14 @@ export const PersonaAndLevelSelection: Story = {
         );
         currentPersona = personaId;
         await checkSelection(personaId, level);
+        await expect(
+          personaGroup().getByRole('button', {
+            name: personaLabels[personaId],
+          }),
+        ).toHaveFocus();
         await checkText(personaId, level);
-        if (trigger) {
-          await expect(trigger).toHaveAttribute('aria-expanded', 'true');
+        if (phone) {
+          await expect(demo()).toHaveAttribute('aria-expanded', 'true');
         }
       }
     }
@@ -224,17 +220,18 @@ export const PersonaAndLevelSelection: Story = {
     await userEvent.keyboard('{Enter}');
     await checkSelection('maya', 2);
 
-    if (trigger) {
+    if (phone) {
       await userEvent.keyboard('{Escape}');
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
-      await expect(trigger).toHaveFocus();
+      await expect(demo()).toHaveAttribute('aria-expanded', 'false');
+      await expect(demo()).toHaveFocus();
       await expect(
         canvas.queryByRole('group', { name: 'Demo persona' }),
       ).not.toBeInTheDocument();
       await userEvent.keyboard(' ');
       await checkSelection('maya', 2);
-      await userEvent.click(trigger);
-      await expect(trigger).toHaveAttribute('aria-expanded', 'false');
+      await userEvent.click(demo());
+      await expect(demo()).toHaveAttribute('aria-expanded', 'false');
+      await expect(demo()).toHaveFocus();
       await expect(
         canvas.queryByRole('group', { name: 'Demo level' }),
       ).not.toBeInTheDocument();

@@ -31,7 +31,33 @@ test('Three email tabs expose counts, accounts, keyboard order, and responsive p
         page.getByRole('button', { name: /set aside|Show in brief/ }),
       ).toHaveCount(0);
       await expect(page.getByRole('dialog')).toHaveCount(0);
-      if (width < 960) await expect(detail(page)).toHaveCount(0);
+      await expect(
+        tabs.getByRole('tab', { name: /^Needs you /, selected: true }),
+      ).toBeVisible();
+      const watch = page.getByRole(width >= 960 ? 'tab' : 'button', {
+        name: /^Watchlist/,
+      });
+      const hasNews = persona.watchlist.some((item) => item.news > 0);
+      if (hasNews) await expect(watch).toHaveAttribute('aria-label', /, new$/);
+      if (width < 960) {
+        await expect(detail(page)).toHaveCount(0);
+        await expect(page.getByRole('button', exact('Memory'))).toBeVisible();
+      } else {
+        await expect(detail(page)).toContainText(persona.items[0].name);
+        await expect(watch).toHaveAccessibleName(
+          'Watchlist ' + persona.watchlist.length + (hasNews ? ', new' : ''),
+        );
+        await expect(
+          page.getByRole(
+            'tab',
+            exact(
+              'Memory ' +
+                (persona.memory.instructions.length +
+                  persona.memory.learned.length),
+            ),
+          ),
+        ).toBeVisible();
+      }
       const groups = [
         {
           label: 'Needs you',
@@ -419,4 +445,58 @@ test('Deal fields and action groups respond to their available space', async ({
     node.style.removeProperty('inline-size');
   });
   await expect.poll(positions).toBe(1);
+});
+
+test('Phone email sheets close by button, Escape, scrim, and drag and restore the row focus', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  for (const id of ['maya', 'daniel', 'sarah']) {
+    await cleanStart(page, id);
+    for (const name of ['Needs you', 'Heads-up', 'Other mail']) {
+      await page
+        .getByRole('tab', { name: new RegExp('^' + name + ' ') })
+        .click();
+      const first = page
+        .getByRole('list', exact(name))
+        .locator('[data-brief-item], [data-mail-item]')
+        .first();
+      const sheet = page.getByRole('dialog');
+      const close = sheet.getByRole('button', exact('Close detail'));
+      const dismiss = [
+        () => close.click(),
+        () => page.keyboard.press('Escape'),
+        () => page.mouse.click(8, 8),
+        async () => {
+          const handle = sheet.getByRole(
+            'separator',
+            exact('Drag down to close detail'),
+          );
+          await handle.hover();
+          const box = (await handle.boundingBox())!;
+          const x = box.x + box.width / 2;
+          const y = box.y + box.height / 2;
+          await page.mouse.move(x, y);
+          await page.mouse.down();
+          await page.mouse.move(x, y + 340, { steps: 8 });
+          await page.mouse.up();
+        },
+      ];
+      for (const action of dismiss) {
+        await first.click();
+        await expect(sheet).toBeVisible();
+        if (name === 'Other mail') {
+          await expect(sheet.getByRole('tab')).toHaveCount(0);
+        } else {
+          await expect(
+            sheet.getByRole('tab', { selected: true }),
+          ).toBeVisible();
+        }
+        await expect(close).toBeFocused();
+        await action();
+        await expect(sheet).toHaveCount(0);
+        await expect(first).toBeFocused();
+      }
+    }
+  }
 });

@@ -1,7 +1,12 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { fn, expect, userEvent } from 'storybook/test';
 import { CollapsedGroup } from './CollapsedGroup';
-import { maya } from '../listSamples';
+
+const groups = [
+  { count: 5, short: 'newsletters' },
+  { count: 3, short: 'promotions' },
+];
+
 const meta = {
   title: 'Composites/CollapsedGroup',
   component: CollapsedGroup,
@@ -13,7 +18,7 @@ const meta = {
       },
     },
   },
-  args: { groups: maya.setAside, onSelect: fn() },
+  args: { label: 'emails', groups, onSelect: fn() },
 } satisfies Meta<typeof CollapsedGroup>;
 export default meta;
 type Story = StoryObj<typeof meta>;
@@ -30,7 +35,7 @@ export const SelectedHover: Story = {
 };
 export const KeyboardSelection: Story = {
   play: async ({ canvas, args }) => {
-    const b = canvas.getByRole('button', { name: /31 set aside/ });
+    const b = canvas.getByRole('button', { name: /8 emails/ });
     b.focus();
     await userEvent.keyboard(' ');
     await expect(args.onSelect).toHaveBeenCalledOnce();
@@ -43,12 +48,12 @@ export const SelectedPressed: Story = {
 };
 
 export const Static: Story = {
-  render: () => <CollapsedGroup groups={maya.setAside} static />,
+  render: () => <CollapsedGroup label="emails" groups={groups} static />,
   play: async ({ canvas }) => {
-    const summary = canvas.getByRole('region', { name: 'Set aside' });
-    await expect(summary).toHaveTextContent('31 set aside');
+    const summary = canvas.getByRole('region', { name: 'Emails' });
+    await expect(summary).toHaveTextContent('8 emails');
     await expect(summary).toHaveTextContent(
-      maya.setAside.map((group) => group.count + ' ' + group.short).join(' · '),
+      groups.map((group) => group.count + ' ' + group.short).join(' · '),
     );
     await expect(canvas.queryByRole('button')).not.toBeInTheDocument();
     await expect(summary).not.toHaveAttribute('tabindex');
@@ -56,50 +61,5 @@ export const Static: Story = {
       summary.querySelector('[tabindex], a[href], input, select, textarea'),
     ).not.toBeInTheDocument();
     await expect(summary.querySelector('svg')).not.toBeInTheDocument();
-  },
-};
-
-export const GoodToKnow: Story = {
-  args: {
-    label: 'good to know',
-    groups: [{ count: 14, short: 'good to know' }],
-    summary: 'Schedule changes, deliveries and receipts',
-    onSelect: fn(),
-  },
-  play: async ({ canvas, args }) => {
-    const button = canvas.getByRole('button', {
-      name: '14 good to know Schedule changes, deliveries and receipts',
-    });
-    await expect(button.querySelector('svg')).toBeInTheDocument();
-    await userEvent.click(button);
-    await expect(args.onSelect).toHaveBeenCalledWith(button);
-  },
-};
-
-export const SetAsideSummary: Story = {
-  args: {
-    groups: [{ count: 8, short: 'set aside' }],
-    summary: 'Newsletters, promotions and CC’d',
-  },
-  play: async ({ canvas }) => {
-    await expect(
-      canvas.getByRole('button', {
-        name: '8 set aside Newsletters, promotions and CC’d',
-      }),
-    ).toBeVisible();
-  },
-};
-
-export const OverloadSetAside: Story = {
-  args: {
-    ...SetAsideSummary.args,
-    groups: [{ count: 210, short: 'set aside' }],
-  },
-};
-
-export const QuietHoursSetAside: Story = {
-  args: {
-    groups: [{ count: 3, short: 'set aside' }],
-    summary: 'Newsletters and promotions',
   },
 };

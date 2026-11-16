@@ -138,3 +138,37 @@ test('Demo controls retain persona, levels, and simulated replies after Appearan
     page.getByRole('button', exact('Undo Fernway Logistics')),
   ).toBeVisible();
 });
+
+test('Phone Demo retains disclosure, level, and focus when switching personas', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await cleanStart(page, 'maya');
+  const demo = page.getByRole('complementary', exact('Demo controls'));
+  const toggle = demo.getByRole('button', exact('Demo'));
+  const formatted = demo.getByRole('button', exact('2 Formatted'));
+  const personas = demo.getByRole('group', exact('Demo persona'));
+
+  await toggle.press('Enter');
+  await formatted.click();
+  for (const persona of ['Daniel · Manager', 'Sarah · Parent']) {
+    const choice = personas.getByRole('button', exact(persona));
+    await choice.press('Enter');
+    await expect(choice).toBeFocused();
+    await expect(choice).toHaveAttribute('aria-pressed', 'true');
+    await expect(formatted).toHaveAttribute('aria-pressed', 'true');
+    await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+    await expect(
+      page.getByRole('region', exact('Brief as formatted text')),
+    ).toBeVisible();
+  }
+  await page.keyboard.press('Escape');
+  await expect(toggle).toBeFocused();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+  await expect(personas).toHaveCount(0);
+  await toggle.press('Space');
+  await expect(formatted).toHaveAttribute('aria-pressed', 'true');
+  await toggle.click();
+  await expect(toggle).toBeFocused();
+  await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+});

@@ -86,6 +86,16 @@ test('Add, rename, remove, and Undo preserve order and focus and reject blank in
     await page.setViewportSize({ width, height: 844 });
     await cleanStart(page, 'maya');
     await openWatch(page);
+    await expect(topics(page).getByRole('listitem')).toHaveCount(8);
+    await expect(
+      topics(page).getByRole('button', { name: /^2 new for / }),
+    ).toHaveCount(1);
+    await expect(
+      topics(page).getByRole('button', { name: /^1 new for / }),
+    ).toHaveCount(2);
+    await expect(
+      topics(page).getByText('Nothing new', { exact: true }),
+    ).toHaveCount(5);
     const add = page.locator('[data-watch-add]');
     const original = await topics(page)
       .locator('[data-watch-id]')
@@ -101,9 +111,18 @@ test('Add, rename, remove, and Undo preserve order and focus and reject blank in
     await input.press('Escape');
     await expect(add).toBeFocused();
     await add.click();
+    await form.getByRole('button', exact('Cancel')).click();
+    await expect(form).toHaveCount(0);
+    await expect(add).toBeFocused();
+    await add.click();
     await input.fill('Okto renewal');
     await input.press('Enter');
     await expect(add).toBeFocused();
+    await expect(topics(page).getByRole('listitem')).toHaveCount(9);
+    if (width !== 390)
+      await expect(
+        page.getByRole('tab', { name: /^Watchlist 9/ }),
+      ).toBeVisible();
     await expect(topics(page).getByRole('listitem').first()).toContainText(
       'Okto renewal',
     );
@@ -112,6 +131,9 @@ test('Add, rename, remove, and Undo preserve order and focus and reject blank in
     );
     await expect(
       page.getByText('Added to Watchlist.', { exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByText('Emails about it will go to the top.', { exact: true }),
     ).toBeVisible();
     await undo(page).click();
     await expect(topics(page).getByRole('listitem')).toHaveCount(8);

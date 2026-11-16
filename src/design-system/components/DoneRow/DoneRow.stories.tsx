@@ -39,14 +39,6 @@ export const Snoozed: Story = {
     onUndo: fn(),
   },
 };
-export const MovedToSetAside: Story = {
-  args: {
-    name: maya.items[2].name,
-    note: 'moved to Set aside by you',
-    kind: 'moved',
-    onUndo: fn(),
-  },
-};
 export const Undo: Story = {
   args: { ...SessionDone.args },
   play: async ({ canvas, args }) => {

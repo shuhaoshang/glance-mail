@@ -1,9 +1,10 @@
 import type { QA } from '../src/data/types';
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page, type BrowserContext } from '@playwright/test';
 import maya from '../src/data/maya.json' with { type: 'json' };
 import {
   chip,
   cleanStart,
+  closeDetail,
   detail,
   exact,
   expectNeeds,
@@ -26,15 +27,26 @@ const discount = fernway.qa[2] as QA;
 const notFound = fernway.qa[0];
 const newsletter = maya.otherMail.rows[0];
 
-test('Maya — protect a renewal before Friday', async ({
-  page,
-  context,
-  reducedMotion,
-}) => {
+async function journey(
+  {
+    page,
+    context,
+    reducedMotion,
+  }: {
+    page: Page;
+    context: BrowserContext;
+    reducedMotion: 'reduce' | 'no-preference' | null;
+  },
+  width: number,
+) {
+  const phone = width === 390;
+  await page.setViewportSize({ width, height: phone ? 844 : 800 });
   await test.step('Maya 1 · Open and scan: Sees what can’t wait', async () => {
     await cleanStart(page, 'maya');
     await expect(
-      page.getByText(maya.coverage.text.replace('{n}', '38'), { exact: true }),
+      page.getByText(maya.coverage.text.replace('{n}', '38'), {
+        exact: true,
+      }),
     ).toBeVisible();
     await expectNeeds(page, [fernway.name, brightline.name, halden.name]);
     for (const fact of fernway.facts.slice(0, 2))
@@ -53,8 +65,12 @@ test('Maya — protect a renewal before Friday', async ({
     ).toBeVisible();
     await expect(row(page, fernway.name)).toHaveAttribute(
       'aria-pressed',
-      'true',
+      String(!phone),
     );
+    if (phone) {
+      await expect(detail(page)).toHaveCount(0);
+      await row(page, fernway.name).click();
+    }
     await expect(
       detail(page).getByRole('region', exact(fernway.scene.label!)),
     ).toBeVisible();
@@ -122,6 +138,16 @@ test('Maya — protect a renewal before Friday', async ({
     await expect(
       reasoning.getByRole('button', exact('Move to Set aside')),
     ).toHaveCount(0);
+    await reasoning
+      .getByRole('button', exact('Watchlist: Fernway renewal'))
+      .click();
+    await expect(page.getByRole('heading', exact('Watchlist'))).toBeVisible();
+    if (phone) {
+      await page.getByRole('button', exact('Back to brief')).click();
+      await row(page, fernway.name).click();
+    } else {
+      await page.getByRole('tab', exact('Needs you 3')).click();
+    }
   });
 
   await test.step('Maya 4 · Ask: Confirms the discount', async () => {
@@ -207,6 +233,7 @@ test('Maya — protect a renewal before Friday', async ({
     expect(parseFloat(duration) * (duration.endsWith('ms') ? 1 : 1000)).toBe(
       reducedMotion === 'reduce' ? 1 : 320,
     );
+    await closeDetail(page);
     await simulate(page, maya.demo.simulate.label);
     await expect(row(page, fernway.name)).toHaveCount(0);
     await expect(
@@ -220,7 +247,7 @@ test('Maya — protect a renewal before Friday', async ({
     await progress(page, 2, 4);
     await expect(row(page, brightline.name)).toHaveAttribute(
       'aria-pressed',
-      'true',
+      String(!phone),
     );
     await needs(page)
       .getByRole('button', exact('Undo ' + fernway.name))
@@ -231,6 +258,7 @@ test('Maya — protect a renewal before Friday', async ({
 
   await test.step('Maya 7 · Return: Adds new mail on her terms', async () => {
     // Step 6 exercises Undo; restore this step's documented Given through the UI.
+    await closeDetail(page);
     await simulate(page, maya.demo.simulate.label);
     await expect(row(page, fernway.name)).toHaveCount(0);
     await expect(needs(page).getByRole('listitem').first()).toContainText(
@@ -246,7 +274,9 @@ test('Maya — protect a renewal before Friday', async ({
       row(page, okto.name).getByText('New', { exact: true }),
     ).toBeVisible();
     await expect(
-      page.getByText(maya.coverage.text.replace('{n}', '40'), { exact: true }),
+      page.getByText(maya.coverage.text.replace('{n}', '40'), {
+        exact: true,
+      }),
     ).toBeVisible();
     await progress(page, 2, 5);
     await row(page, okto.name).click();
@@ -258,6 +288,7 @@ test('Maya — protect a renewal before Friday', async ({
     ).toBeVisible();
     const due = okto.scene.fields![0];
     await expect(field(invoice, due.value, due.label)).toBeVisible();
+    await closeDetail(page);
     await expectNeeds(page, [brightline.name, halden.name, okto.name]);
   });
 
@@ -284,7 +315,15 @@ test('Maya — protect a renewal before Friday', async ({
           detail(page).getByText(segment.t, { exact: true }),
           '--color-judgment-ink',
         );
+    await closeDetail(page);
     await page.getByRole('tab', exact('Heads-up 3')).click();
+    if (phone) {
+      await page
+        .getByRole('list', exact('Heads-up'))
+        .getByRole('button')
+        .first()
+        .click();
+    }
     await expect(detail(page)).toContainText(maya.goodToKnow[0].summary);
     await expect(
       detail(page).getByRole(
@@ -297,4 +336,14 @@ test('Maya — protect a renewal before Friday', async ({
       detail(page).getByRole('region', exact('Original email')),
     ).toContainText(maya.goodToKnow[0].email.subject);
   });
-});
+}
+for (const [layout, width] of [
+  ['desktop', 1280],
+  ['phone', 390],
+] as const) {
+  test(
+    'Maya — protect a renewal before Friday (' + layout + ')',
+    async ({ page, context, reducedMotion }) =>
+      journey({ page, context, reducedMotion }, width),
+  );
+}

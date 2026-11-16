@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import type { MovedRow } from '../MailRows/movedEmail';
 import type { Item, Account, Fact } from '../../../data/types';
 import { FactChip } from '../FactChip/FactChip';
@@ -101,7 +102,7 @@ export function BriefRow({
                   <GlanceMark />{' '}
                 </>
               )}
-              {request.text}
+              {keepDatesTogether(request.text)}
             </span>
             {moved ? (
               <span className={styles.moved}>Moved by you</span>

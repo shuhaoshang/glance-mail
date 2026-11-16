@@ -22,7 +22,6 @@ export interface Persona {
   newMail: NewMail | null; // mail that arrives while reading (Maya only)
   items: Item[]; // Needs you, already ranked: urgency first, then value
   goodToKnow: KnowItem[]; // shown as the Heads-up tab
-  setAside: SetAsideGroup[]; // deprecated: the old Set aside view; removed in issue 32
   otherMail: OtherMail; // the Other mail tab
   watchlist: WatchItem[];
   memory: { instructions: MemoryNote[]; learned: MemoryNote[] };
@@ -189,13 +188,6 @@ export interface KnowItem {
       post: string;
     };
   };
-}
-
-export interface SetAsideGroup {
-  title: string; // "Newsletters"
-  short: string; // "newsletters" (used in the summary line)
-  count: number; // total in the group, including rows not listed
-  rows: { id: string; title: string; sub: string; isNew?: boolean }[];
 }
 
 export interface OtherMail {

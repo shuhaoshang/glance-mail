@@ -159,8 +159,7 @@ interface Persona {
   otherMail: OtherMail;     // the Other mail tab
   watchlist: WatchItem[];
   memory: { instructions: MemoryNote[]; learned: MemoryNote[] };
-  setAside: SetAsideGroup[]; // deprecated; removed with the old view in the last issue
-  // everything else as in version 1
+  // everything else as in version 1, except the legacy group data
 }
 
 interface Item {
@@ -205,7 +204,7 @@ interface MemoryNote {
 }
 ```
 
-`demo.levels.l2.setAside` is renamed `otherMail`.
+`demo.levels.l2.setAside` is renamed `otherMail`. Version 2 uses `otherMail` for all mail in that tab and has no legacy group data.
 
 Rules, enforced by `npm run check:data`:
 

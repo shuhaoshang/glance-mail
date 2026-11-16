@@ -153,19 +153,31 @@ for (const [origin, id] of [
 test('Maya 8: newsletter moves to Heads-up and Undo restores its exact place', async ({
   page,
 }) => {
-  await cleanStart(page, 'maya');
-  const id = maya.otherMail.rows[0].id;
-  await pick(page, 'Other mail', id);
-  const before = await state(page);
-  await move(page, 'Heads-up');
-  await expect(page.getByRole('tab', exact('Other mail 30'))).toBeVisible();
-  await expect(page.getByRole('tab', exact('Heads-up 4'))).toBeVisible();
-  await pick(page, 'Heads-up', id);
-  await expect(mailRow(page, 'Heads-up', id)).toContainText(
-    'SaaS Sales Weekly: Five renewal plays for Q4',
-  );
-  await page.getByRole('button', exact('Undo')).click();
-  await expect.poll(() => state(page)).toEqual(before);
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await cleanStart(page, 'maya');
+    const id = maya.otherMail.rows[0].id;
+    await page.getByRole('tab', exact('Other mail 31')).click();
+    await expect(
+      page.getByRole('list', exact('Other mail')).getByRole('listitem'),
+    ).toHaveCount(4);
+    const before = await state(page);
+    await pick(page, 'Other mail', id);
+    await move(page, 'Heads-up');
+    await expect(
+      page.getByText('Glance will sort emails like this into Heads-up.', {
+        exact: true,
+      }),
+    ).toBeVisible();
+    await expect(page.getByRole('tab', exact('Other mail 30'))).toBeVisible();
+    await expect(page.getByRole('tab', exact('Heads-up 4'))).toBeVisible();
+    await pick(page, 'Heads-up', id);
+    await expect(mailRow(page, 'Heads-up', id)).toContainText(
+      'SaaS Sales Weekly: Five renewal plays for Q4',
+    );
+    await page.getByRole('button', exact('Undo')).click();
+    await expect.poll(() => state(page)).toEqual(before);
+  }
 });
 test('Correct a false alarm, preserve facts, and restore the last open Needs you item', async ({
   page,

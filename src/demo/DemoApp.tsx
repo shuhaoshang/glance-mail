@@ -1,4 +1,10 @@
-import { useEffect, useState } from 'react';
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type ComponentProps,
+} from 'react';
 import { useItemLifecycle } from '../app/useItemLifecycle';
 import { App } from '../app/App';
 import { personaFromSearch } from '../app/briefData';
@@ -27,6 +33,15 @@ export function DemoApp({
       (syncUrl ? personaFromSearch(window.location.search) : 'maya'),
   );
   const [level, setLevel] = useState<DemoLevel>(initialLevel);
+  const [expanded, setExpanded] = useState(false);
+  const selectedPersona = useRef<HTMLButtonElement>(null);
+  const restorePersonaFocus = useRef(false);
+  useLayoutEffect(() => {
+    if (restorePersonaFocus.current) {
+      restorePersonaFocus.current = false;
+      selectedPersona.current?.focus();
+    }
+  }, [personaId]);
   useEffect(() => {
     if (!syncUrl) return;
     const restorePersona = () =>
@@ -41,6 +56,7 @@ export function DemoApp({
       url.searchParams.set('persona', next);
       window.history.pushState(null, '', url);
     }
+    restorePersonaFocus.current = true;
     setPersonaId(next);
   }
   return (
@@ -48,7 +64,12 @@ export function DemoApp({
       key={personaId}
       personaId={personaId}
       level={level}
-      changePersona={changePersona}
+      disclosure={{
+        expanded,
+        onExpandedChange: setExpanded,
+        selectedPersona,
+        onPersonaChange: changePersona,
+      }}
       setLevel={setLevel}
       syncUrl={syncUrl}
       theme={theme}
@@ -58,14 +79,17 @@ export function DemoApp({
 function PersonaDemo({
   personaId,
   level,
-  changePersona,
+  disclosure,
   setLevel,
   syncUrl,
   theme,
 }: {
   personaId: PersonaId;
   level: DemoLevel;
-  changePersona: (id: PersonaId) => void;
+  disclosure: Pick<
+    ComponentProps<typeof DemoBar>,
+    'expanded' | 'onExpandedChange' | 'selectedPersona' | 'onPersonaChange'
+  >;
   setLevel: (level: DemoLevel) => void;
   syncUrl: boolean;
   theme?: ThemeControl;
@@ -76,7 +100,7 @@ function PersonaDemo({
       <DemoBar
         personaId={personaId}
         level={level}
-        onPersonaChange={changePersona}
+        {...disclosure}
         onLevelChange={(next) => {
           if (next !== 3 && session.pending) session.settle(session.pending.id);
           setLevel(next);

@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import type { Account, KnowItem } from '../../../data/types';
 import type { MovedRow } from '../MailRows/movedEmail';
 import { Icon } from '../Icon/Icon';
@@ -60,7 +61,7 @@ export function HeadsUpRow({
           <span className={styles.content}>
             <span className={styles.text}>
               <strong>{item.title}</strong>
-              {moved ? ': ' + item.line : item.text}
+              {keepDatesTogether(moved ? ': ' + item.line : item.text)}
             </span>
             {account?.minority && <AccountLabel account={account} />}
             {moved && <span className={styles.moved}>Moved by you</span>}

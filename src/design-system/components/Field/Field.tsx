@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import type { Ref } from 'react';
 import type { FactKind } from '../../../data/types';
 import { Text } from '../Text/Text';
@@ -72,10 +73,10 @@ export function Field({
           aria-controls={source.sourcePanelId}
           onClick={() => source.onSelect(source.fact)}
         >
-          {value}
+          {keepDatesTogether(value)}
         </button>
       ) : (
-        <span className={classes}>{value}</span>
+        <span className={classes}>{keepDatesTogether(value)}</span>
       )}
     </span>
   );

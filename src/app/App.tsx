@@ -839,11 +839,10 @@ function Brief({
                   {!items.length && (
                     <div role="listitem">
                       <AllDone
-                        wording="tabs"
                         done={counts.done}
                         total={counts.actions}
                         know={counts.know}
-                        aside={counts.other}
+                        other={counts.other}
                         snoozed={counts.snoozed}
                       />
                     </div>

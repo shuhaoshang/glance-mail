@@ -4,10 +4,9 @@ import { getPersona } from '../../data';
 import { FoundationPage } from '../foundations/catalog';
 import { SectionCard } from './SectionCard/SectionCard';
 import { BriefRow } from './BriefRow/BriefRow';
-import { KnowRow } from './KnowRow/KnowRow';
+import { HeadsUpRow } from './HeadsUpRow/HeadsUpRow';
 import { DoneRow } from './DoneRow/DoneRow';
 import { NewMailRow } from './NewMailRow/NewMailRow';
-import { CollapsedGroup } from './CollapsedGroup/CollapsedGroup';
 import { Button } from './Button/Button';
 import { maya } from './listSamples';
 import styles from './ListExamples.module.css';
@@ -57,26 +56,20 @@ export function ListOverview({ personaId }: { personaId: PersonaId }) {
               <DoneRow key={done.name} {...done} />
             ))}
           </SectionCard>
-          <CollapsedGroup
-            groups={persona.setAside}
-            selected={selected === 'set-aside'}
-            onSelect={() => {
-              setSelected('set-aside');
-              setAction('Selected: Set aside');
-            }}
-          />
         </div>
-        <SectionCard title="Good to know" count={persona.goodToKnow.length}>
+        <SectionCard title="Heads-up" count={persona.goodToKnow.length}>
           {persona.goodToKnow.map((item) => (
-            <KnowRow
-              key={item.title}
+            <HeadsUpRow
+              key={item.id}
               item={item}
               account={persona.accounts.find(
                 (account) => account.id === item.account,
               )}
-              onOpenEmail={(source) =>
-                setAction('Open email requested: ' + source.from)
-              }
+              selected={selected === item.id}
+              onSelect={(id) => {
+                setSelected(id);
+                setAction('Selected: ' + item.title);
+              }}
             />
           ))}
         </SectionCard>

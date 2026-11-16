@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import { useState } from 'react';
 import type { MemoryNote } from '../../../data/types';
 import { Icon } from '../Icon/Icon';
@@ -49,8 +50,8 @@ export function MemoryRow({
             {kind === 'instructions' ? '“' : <Icon name="bulb" />}
           </span>
           <div className={styles.copy}>
-            <p className={styles.text}>{note.text}</p>
-            <p className={styles.meta}>{note.meta}</p>
+            <p className={styles.text}>{keepDatesTogether(note.text)}</p>
+            <p className={styles.meta}>{keepDatesTogether(note.meta)}</p>
           </div>
           <div className={styles.actions}>
             <IconButton

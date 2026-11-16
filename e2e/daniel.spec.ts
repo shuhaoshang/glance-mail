@@ -1,9 +1,10 @@
 import type { QA } from '../src/data/types';
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import daniel from '../src/data/daniel.json' with { type: 'json' };
 import {
   chip,
   cleanStart,
+  closeDetail,
   detail,
   exact,
   expectNeeds,
@@ -23,10 +24,15 @@ const blocked = checkout.judgments[0];
 const waiting = checkout.qa[1] as QA;
 const clash = lea.judgments[0];
 
-test('Daniel — unblock the team, keep the evening', async ({
-  page,
-  colorScheme,
-}) => {
+async function journey(
+  {
+    page,
+    colorScheme,
+  }: { page: Page; colorScheme: 'dark' | 'light' | 'no-preference' | null },
+  width: number,
+) {
+  const phone = width === 390;
+  await page.setViewportSize({ width, height: phone ? 844 : 800 });
   await test.step('Daniel 1 · Open and scan: Sees who is waiting on him', async () => {
     await cleanStart(page, 'daniel');
     await expect(
@@ -58,6 +64,7 @@ test('Daniel — unblock the team, keep the evening', async ({
     await expect(
       detail(page).getByRole('link', exact('Open in Gmail')),
     ).toHaveAttribute('href', 'https://mail.google.com/');
+    await closeDetail(page);
     await page.getByRole('tab', exact('Needs you 4')).click();
     await expect(
       needs(page).getByText(
@@ -67,8 +74,9 @@ test('Daniel — unblock the team, keep the evening', async ({
     ).toBeVisible();
     await expect(row(page, checkout.name)).toHaveAttribute(
       'aria-pressed',
-      'true',
+      String(!phone),
     );
+    if (phone) await row(page, checkout.name).click();
   });
 
   await test.step('Daniel 2 · Decide: Compares the two options', async () => {
@@ -88,8 +96,12 @@ test('Daniel — unblock the team, keep the evening', async ({
     }
     const first = await field(decision, a.value).boundingBox();
     const second = await field(decision, b.value).boundingBox();
-    expect(first!.x + first!.width).toBeLessThan(second!.x);
-    expect(first!.y).toBe(second!.y);
+    if (phone) {
+      expect(first!.y).toBeLessThan(second!.y);
+    } else {
+      expect(first!.x + first!.width).toBeLessThan(second!.x);
+      expect(first!.y).toBe(second!.y);
+    }
     const urgent = chip(decision, {
       ...checkout.facts[0],
       label: checkout.scene.urgent!,
@@ -114,7 +126,9 @@ test('Daniel — unblock the team, keep the evening', async ({
       .click();
     const reasoning = page.getByRole('region', exact('Glance’s read'));
     await expect(
-      reasoning.getByText(blocked.label + ': ' + blocked.why, { exact: true }),
+      reasoning.getByText(blocked.label + ': ' + blocked.why, {
+        exact: true,
+      }),
     ).toBeVisible();
     await expect(
       reasoning.getByText(blocked.source!.hl, { exact: true }),
@@ -152,6 +166,7 @@ test('Daniel — unblock the team, keep the evening', async ({
   });
 
   await test.step('Daniel 5 · Act and close: Replies; Glance closes it', async () => {
+    await closeDetail(page);
     await simulate(page, daniel.demo.simulate.label);
     await expect(row(page, checkout.name)).toHaveCount(0);
     await expect(
@@ -163,7 +178,10 @@ test('Daniel — unblock the team, keep the evening', async ({
       needs(page).getByRole('button', exact('Undo ' + checkout.name)),
     ).toBeVisible();
     await progress(page, 2, 5);
-    await expect(row(page, riya.name)).toHaveAttribute('aria-pressed', 'true');
+    await expect(row(page, riya.name)).toHaveAttribute(
+      'aria-pressed',
+      String(!phone),
+    );
   });
 
   await test.step('Daniel 6 · Approve: Approves with the facts in view', async () => {
@@ -283,4 +301,13 @@ test('Daniel — unblock the team, keep the evening', async ({
       await expect(page.getByText(name, { exact: true })).toHaveCount(0);
     }
   });
-});
+}
+for (const [layout, width] of [
+  ['desktop', 1280],
+  ['phone', 390],
+] as const) {
+  test(
+    'Daniel — unblock the team, keep the evening (' + layout + ')',
+    async ({ page, colorScheme }) => journey({ page, colorScheme }, width),
+  );
+}

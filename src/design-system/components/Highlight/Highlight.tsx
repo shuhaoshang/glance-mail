@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import type { ReactNode } from 'react';
 import type { FactKind } from '../../../data/types';
 import tones from '../factStyles.module.css';
@@ -32,7 +33,7 @@ export function Highlight({
         .filter(Boolean)
         .join(' ')}
     >
-      {children}
+      {typeof children === 'string' ? keepDatesTogether(children) : children}
     </mark>
   );
 }
