@@ -70,9 +70,12 @@ export function SettingsPanel({
   const [active, setActive] = useState<Section>('inboxes');
   const [confirmation, setConfirmation] = useState<string | null>(null);
   const headingId = (id: Section) => prefix + '-' + id;
-  const work =
-    persona.accounts.find((account) => account.label === 'Work') ??
-    persona.accounts[0];
+  const workAccount = persona.accounts.find(
+    (account) => account.label === 'Work',
+  );
+  const quietHoursInbox = workAccount?.label
+    ? 'your ' + workAccount.label + ' inbox'
+    : persona.accounts[0].app;
   const { name, initial, email } = persona;
 
   useLayoutEffect(() => {
@@ -199,9 +202,14 @@ export function SettingsPanel({
                         <div className={styles.copy}>
                           <strong>{account.app}</strong>
                           <p className={styles.meta}>
-                            {persona.accounts.length === 1
-                              ? email
-                              : (account.label ?? account.app)}{' '}
+                            {account.label ??
+                              (persona.accounts.length === 1 ? (
+                                <span className={styles.inboxAddress}>
+                                  {email}
+                                </span>
+                              ) : (
+                                account.app
+                              ))}{' '}
                             · connected Oct 28
                           </p>
                         </div>
@@ -290,7 +298,8 @@ export function SettingsPanel({
                 <div className={styles.copy}>
                   <strong>Hold work email in the evening</strong>
                   <p className={styles.meta}>
-                    Nothing from {work.app} reaches you between these times.
+                    Nothing from {quietHoursInbox} reaches you between these
+                    times.
                   </p>
                 </div>
                 <Switch
@@ -339,7 +348,7 @@ export function SettingsPanel({
             'account',
             'Account',
             <>
-              <div className={styles.row}>
+              <div className={[styles.row, styles.accountIdentity].join(' ')}>
                 <Person
                   variant="identity"
                   initial={initial}
@@ -357,7 +366,7 @@ export function SettingsPanel({
               </div>
               <div className={styles.row}>
                 <div className={styles.copy}>
-                  <strong className={styles.danger}>Delete Glance data</strong>
+                  <strong>Delete Glance data</strong>
                   <p className={styles.meta}>
                     Removes your Memory: what you told Glance and what it
                     learned. Your inbox isn’t touched.

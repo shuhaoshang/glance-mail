@@ -785,10 +785,10 @@ The theme choice is stored as today (`themePreference`), applies at once, and is
 
 | Section | Content |
 | --- | --- |
-| Inboxes | One row per `accounts` entry: the app name (16/24 semibold), “{email} · connected Oct 28” (14/20, muted), an outline “Disconnect”. Then “Connect another inbox” with “Gmail, Outlook or Yahoo Mail” and an outline “Connect”. Then the note “Glance reads your email to brief you. It never sends, deletes or changes anything in your inbox.” |
+| Inboxes | One row per `accounts` entry: the app name (16/24 semibold), the account label (Work, Personal, or Family) followed by “· connected Oct 28” (14/20, muted), and an outline “Disconnect”. A persona with one unlabeled account shows the persona email in place of the label. Keep that address on one line. Then “Connect another inbox” with “Gmail, Outlook or Yahoo Mail” and an outline “Connect”. Then the note “Glance reads your email to brief you. It never sends, deletes or changes anything in your inbox.” |
 | Brief | “Morning brief” with “Each brief covers the email since your last one.” and a time select showing “7:30 AM”. |
 | Notifications | Three Switch rows: “Brief is ready” (on), “Something on your Watchlist changes” (on), “A Needs you item is due today” (off). |
-| Quiet hours | A Switch row “Hold work email in the evening” with “Nothing from {work app} reaches you between these times.”, then From “7:00 PM” and Until “7:00 AM” selects. On for Daniel, off for the others. |
+| Quiet hours | A Switch row “Hold work email in the evening” with “Nothing from your {label} inbox reaches you between these times.” when the work account has a label. Otherwise use “Nothing from {app} reaches you between these times.” Follow with From “7:00 PM” and Until “7:00 AM” selects. On for Daniel, off for the others. |
 | Appearance | “Theme” with the regular SegmentedControl: System, Light, Dark. |
 | Account | Avatar, name, email and an outline “Log out”. Below a hairline: “Delete Glance data”, “Removes your Memory: what you told Glance and what it learned. Your inbox isn’t touched.” and a text button “Delete” in `--color-danger-text`. |
 

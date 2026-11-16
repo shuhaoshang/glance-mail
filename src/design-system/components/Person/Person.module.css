@@ -19,3 +19,7 @@
   line-height: var(--line-height-16);
   font-weight: var(--font-weight-semibold);
 }
+
+.identity .details > span {
+  white-space: nowrap;
+}
