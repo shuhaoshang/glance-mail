@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { useArgs } from 'storybook/preview-api';
 import { expect, fn, userEvent, waitFor, within } from 'storybook/test';
@@ -99,8 +100,8 @@ export const KeyboardHighlighter: Story = {
       .flat()
       .map((segment) =>
         typeof segment === 'string'
-          ? segment
-          : segment.t +
+          ? keepDatesTogether(segment)
+          : keepDatesTogether(segment.t) +
             ', ' +
             (segment.kind === 'judg' ? 'judgment' : segment.kind),
       )
