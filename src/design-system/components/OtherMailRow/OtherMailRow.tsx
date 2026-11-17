@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import type { OtherMailRow as Mail } from '../../../data/types';
 import type { MovedRow } from '../MailRows/movedEmail';
 import { Icon } from '../Icon/Icon';
@@ -51,16 +52,21 @@ export function OtherMailRow({
               <span className={styles.sender}>
                 {moved ? item.title : item.sender}
               </span>
-              {!moved && <span className={styles.when}>{item.when}</span>}
+              {!moved && (
+                <span className={styles.when}>
+                  {keepDatesTogether(item.when)}
+                </span>
+              )}
             </span>
             <span className={[styles.text, styles.subject].join(' ')}>
-              {moved ? item.line : item.subject}
+              {keepDatesTogether(moved ? item.line : item.subject)}
             </span>
             {moved ? (
               <span className={styles.moved}>Moved by you</span>
             ) : (
               <span className={styles.reason}>
-                <Icon name="star" size="small" /> {item.reason}
+                <Icon name="star" size="small" />{' '}
+                {keepDatesTogether(item.reason)}
               </span>
             )}
           </span>

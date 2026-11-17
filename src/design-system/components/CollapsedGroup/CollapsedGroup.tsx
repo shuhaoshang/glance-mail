@@ -1,13 +1,12 @@
-import type { SetAsideGroup } from '../../../data/types';
 import { Icon } from '../Icon/Icon';
 import control from '../Control.module.css';
 import row from '../ListRow.module.css';
 import styles from './CollapsedGroup.module.css';
 
 type CollapsedGroupProps = {
-  label?: 'good to know' | 'set aside';
+  label: string;
   summary?: string;
-  groups: readonly Pick<SetAsideGroup, 'count' | 'short'>[];
+  groups: readonly { count: number; short: string }[];
 } & (
   | { static: true; selected?: never; onSelect?: never }
   | {
@@ -18,7 +17,7 @@ type CollapsedGroupProps = {
 );
 
 export function CollapsedGroup(props: CollapsedGroupProps) {
-  const label = props.label ?? 'set aside';
+  const { label } = props;
   const count = props.groups.reduce((sum, group) => sum + group.count, 0);
   const card = [styles.card, props.summary !== undefined && styles.withSummary]
     .filter(Boolean)
@@ -40,7 +39,7 @@ export function CollapsedGroup(props: CollapsedGroupProps) {
   if (props.static)
     return (
       <section
-        aria-label={label === 'set aside' ? 'Set aside' : 'Good to know'}
+        aria-label={label.charAt(0).toUpperCase() + label.slice(1)}
         className={[card, styles.static].join(' ')}
       >
         {content}

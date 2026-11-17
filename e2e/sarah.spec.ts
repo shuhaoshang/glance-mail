@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, type Page } from '@playwright/test';
 import sarah from '../src/data/sarah.json' with { type: 'json' };
 import {
   chip,
@@ -24,16 +24,21 @@ const steps = lincoln.scene.steps!;
 const stepNames = steps.map((step) => step.pre + (step.value ?? ''));
 const fee = lincoln.facts.find((fact) => fact.id === steps[1].fact)!;
 
-test.use({ viewport: { width: 390, height: 844 } });
-
-test('Sarah — clear the family’s to-dos before getting up', async ({
-  page,
-  colorScheme,
-}) => {
+async function journey(
+  {
+    page,
+    colorScheme,
+  }: { page: Page; colorScheme: 'dark' | 'light' | 'no-preference' | null },
+  width: number,
+) {
+  const phone = width === 390;
+  await page.setViewportSize({ width, height: phone ? 844 : 800 });
   await test.step('Sarah 1 · Wake and scan: Sees what Ella needs', async () => {
     await cleanStart(page, 'sarah');
     await expect(
-      page.getByText(sarah.coverage.text.replace('{n}', '23'), { exact: true }),
+      page.getByText(sarah.coverage.text.replace('{n}', '23'), {
+        exact: true,
+      }),
     ).toBeVisible();
     await expectNeeds(
       page,
@@ -59,17 +64,20 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
       'background-color',
       await tokenColor(urgent, '--color-urgent'),
     );
-    await expectProductFits(page, page.getByRole('list', exact('Needs you')));
+    if (phone)
+      await expectProductFits(page, page.getByRole('list', exact('Needs you')));
   });
 
   await test.step('Sarah 2 · Verify: Checks the fee', async () => {
     await row(page, lincoln.name).click();
-    const sheet = page.getByRole('dialog', exact(lincoln.name));
-    await expect(sheet).toBeVisible();
+    const panelScope = detail(page);
+    await expect(panelScope).toBeVisible();
+    if (phone)
+      await expect(page.getByRole('dialog', exact(lincoln.name))).toBeVisible();
     await expect(
-      sheet.getByText('Needs you · 1 of 3', { exact: true }),
+      panelScope.getByText('Needs you · 1 of 3', { exact: true }),
     ).toBeVisible();
-    const todo = sheet.getByRole('region', exact(lincoln.scene.label!));
+    const todo = panelScope.getByRole('region', exact(lincoln.scene.label!));
     for (const name of stepNames)
       await expect(todo.getByRole('checkbox', exact(name))).toBeVisible();
     for (const value of lincoln.scene.fields!)
@@ -80,14 +88,16 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
       'background-image',
       new RegExp('linear-gradient'),
     );
-    await panel.scrollIntoViewIfNeeded();
-    const sourceBox = await panel.boundingBox();
-    const actionBox = await sheet
-      .getByRole('link', exact('Open in Yahoo Mail'))
-      .boundingBox();
-    expect
-      .soft(sourceBox!.y + sourceBox!.height)
-      .toBeLessThanOrEqual(actionBox!.y);
+    if (phone) {
+      await panel.scrollIntoViewIfNeeded();
+      const sourceBox = await panel.boundingBox();
+      const actionBox = await panelScope
+        .getByRole('link', exact('Open in Yahoo Mail'))
+        .boundingBox();
+      expect(sourceBox!.y + sourceBox!.height).toBeLessThanOrEqual(
+        actionBox!.y,
+      );
+    }
   });
 
   await test.step('Sarah 3 · Read the original: Finds how to pay', async () => {
@@ -97,9 +107,16 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
       email.getByRole('heading', exact(lincoln.email.subject)),
     ).toBeVisible();
     await expect(
-      email.getByText(lincoln.email.from + ' · ' + lincoln.when + ' · Family', {
-        exact: true,
-      }),
+      email.getByText(
+        phone
+          ? lincoln.email.from + ' · ' + lincoln.when + ' · Family'
+          : 'From ' +
+              lincoln.email.from +
+              ' · to you · ' +
+              lincoln.when +
+              ' · Yahoo Mail, Family',
+        { exact: true },
+      ),
     ).toBeVisible();
     const highlights = lincoln.email.paras
       .flat()
@@ -157,23 +174,26 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
     ).toBeVisible();
     const done = detail(page).getByRole('button', exact('Mark done'));
     await primary(page, done);
-    const width = await done.evaluate((el) => {
-      const parent = el.parentElement!;
-      const style = getComputedStyle(parent);
-      return (
-        parent.clientWidth -
-        parseFloat(style.paddingLeft) -
-        parseFloat(style.paddingRight)
-      );
-    });
-    expect((await done.boundingBox())!.width).toBeCloseTo(width, 0);
+    if (phone) {
+      const available = await done.evaluate((el) => {
+        const parent = el.parentElement!;
+        const style = getComputedStyle(parent);
+        return (
+          parent.clientWidth -
+          parseFloat(style.paddingLeft) -
+          parseFloat(style.paddingRight)
+        );
+      });
+      expect((await done.boundingBox())!.width).toBeCloseTo(available, 0);
+    }
     const open = detail(page).getByRole('link', exact('Open in Yahoo Mail'));
     await expect(open).toHaveCSS(
       'background-color',
       await tokenColor(open, '--color-surface'),
     );
     await expect(page.getByRole('button', exact('Snooze'))).toHaveCount(0);
-    await expect(page.getByRole('dialog', exact(lincoln.name))).toBeVisible();
+    if (phone)
+      await expect(page.getByRole('dialog', exact(lincoln.name))).toBeVisible();
     await expect(
       detail(page).getByText('Needs you · 1 of 3', { exact: true }),
     ).toBeVisible();
@@ -245,7 +265,9 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
       page.getByRole('heading', exact('Welcome back, Sarah')),
     ).toBeVisible();
     await expect(
-      page.getByText('236 emails from 2 inboxes since Nov 7.', { exact: true }),
+      page.getByText('236 emails from 2 inboxes since Nov 7.', {
+        exact: true,
+      }),
     ).toBeVisible();
     const section = page.getByRole('region', exact('Needs you 12'));
     await expect(
@@ -259,10 +281,19 @@ test('Sarah — clear the family’s to-dos before getting up', async ({
       rows.nth(4).getByRole('button', { name: /Show 8 more/ }),
     ).toBeVisible();
     await expect(
-      rows
-        .nth(4)
-        .getByText('Ranked the same way, most urgent first', { exact: true }),
+      rows.nth(4).getByText('Ranked the same way, most urgent first', {
+        exact: true,
+      }),
     ).toBeVisible();
     await expectProductFits(page, section);
   });
-});
+}
+for (const [layout, width] of [
+  ['desktop', 1280],
+  ['phone', 390],
+] as const) {
+  test(
+    'Sarah — clear the family’s to-dos before getting up (' + layout + ')',
+    async ({ page, colorScheme }) => journey({ page, colorScheme }, width),
+  );
+}

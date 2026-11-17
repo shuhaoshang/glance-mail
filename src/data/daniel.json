@@ -627,59 +627,6 @@
       }
     }
   ],
-  "setAside": [
-    {
-      "title": "You were CC’d",
-      "short": "CC’d",
-      "count": 47,
-      "rows": [
-        {
-          "id": "c1",
-          "title": "Sam Patel → Payments team",
-          "sub": "Re: saved cards scope"
-        },
-        {
-          "id": "c2",
-          "title": "Priya Raman → Design",
-          "sub": "Accessibility audit, round 2"
-        }
-      ]
-    },
-    {
-      "title": "Newsletters",
-      "short": "newsletters",
-      "count": 11,
-      "rows": [
-        {
-          "id": "n1",
-          "title": "Design Systems Digest",
-          "sub": "Five ways teams name their tokens"
-        },
-        {
-          "id": "n2",
-          "title": "Product Ops Notes",
-          "sub": "Running a calm planning week"
-        }
-      ]
-    },
-    {
-      "title": "Calendar updates",
-      "short": "calendar updates",
-      "count": 6,
-      "rows": [
-        {
-          "id": "k1",
-          "title": "Sprint planning",
-          "sub": "Room changed to 4B"
-        },
-        {
-          "id": "k2",
-          "title": "1:1 with Sam",
-          "sub": "Accepted by Sam"
-        }
-      ]
-    }
-  ],
   "otherMail": {
     "total": 64,
     "rows": [

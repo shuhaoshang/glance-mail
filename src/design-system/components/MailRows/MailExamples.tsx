@@ -252,7 +252,7 @@ export function EmptyExamples() {
             done={4}
             total={4}
             know={p.goodToKnow.length}
-            aside={p.otherMail.total}
+            other={p.otherMail.total}
           />
         }
       />

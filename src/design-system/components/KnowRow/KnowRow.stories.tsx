@@ -10,7 +10,7 @@ const meta: Meta<typeof KnowRow> = {
   args: { item: maya.goodToKnow[0], onOpenEmail: fn() },
   decorators: [
     (Story) => (
-      <SectionCard title="Good to know" count={1}>
+      <SectionCard title="Heads-up" count={1}>
         <Story />
       </SectionCard>
     ),
@@ -28,7 +28,7 @@ export const PeopleAndJudgment: Story = { args: { item: upsell } };
 export const OnePanelPerCard: Story = {
   decorators: [],
   render: (args) => (
-    <SectionCard title="Good to know" count={2}>
+    <SectionCard title="Heads-up" count={2}>
       <KnowRow item={maya.goodToKnow[0]} onOpenEmail={args.onOpenEmail!} />
       <KnowRow item={upsell} onOpenEmail={args.onOpenEmail!} />
     </SectionCard>
@@ -71,17 +71,6 @@ export const OnePanelPerCard: Story = {
     await userEvent.click(canvas.getByRole('button', { name: 'Close source' }));
     await expect(reason).toHaveFocus();
     await expect(reason).toHaveAttribute('aria-expanded', 'false');
-  },
-};
-
-export const MovedByYou: Story = {
-  args: {
-    onOpenEmail: undefined,
-    item: {
-      title: maya.setAside[0].rows.find((row) => !row.isNew)!.title,
-      sub: maya.setAside[0].rows.find((row) => !row.isNew)!.sub,
-      movedByUser: true,
-    },
   },
 };
 

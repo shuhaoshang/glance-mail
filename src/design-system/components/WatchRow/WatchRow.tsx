@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { WatchItem } from '../../../data/types';
 import { Icon } from '../Icon/Icon';
@@ -57,9 +58,11 @@ export function WatchRow({
         <span className={styles.icon}>
           <Icon name="eye" />
         </span>
-        <span className={styles.name}>{item.name}</span>
+        <span className={styles.name}>{keepDatesTogether(item.name)}</span>
         <div className={styles.meta}>
-          <span className={styles.status}>{item.status}</span>
+          <span className={styles.status}>
+            {keepDatesTogether(item.status)}
+          </span>
           {item.news > 0 && onOpen ? (
             <Button
               data-watch-news

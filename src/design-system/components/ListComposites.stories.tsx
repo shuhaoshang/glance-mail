@@ -2,7 +2,6 @@ import { expect, fn, userEvent } from 'storybook/test';
 import { FoundationPage } from '../foundations/catalog';
 import { SectionCard } from './SectionCard/SectionCard';
 import { BriefRow } from './BriefRow/BriefRow';
-import { CollapsedGroup } from './CollapsedGroup/CollapsedGroup';
 import { maya, newItem } from './listSamples';
 import styles from './ListExamples.module.css';
 import type { Meta, StoryObj } from '@storybook/react-vite';
@@ -39,7 +38,7 @@ export const States: Story = {
   render: () => (
     <FoundationPage
       title="List states"
-      description="Compare row and Set aside feedback in the current theme. Selection keeps the brand tint; outlines identify keyboard focus."
+      description="Compare row states in the current theme. The brand ring marks selection. The outline marks keyboard focus."
     >
       <div className={styles.states}>
         {[
@@ -61,11 +60,6 @@ export const States: Story = {
                 onSelect={fn()}
               />
             </SectionCard>
-            <CollapsedGroup
-              groups={maya.setAside}
-              selected={state.startsWith('Selected')}
-              onSelect={fn()}
-            />
           </div>
         ))}
       </div>

@@ -33,9 +33,9 @@ Issues 01 → 18, one PR each, in this order: 01, 02, 17, 03, 04, 05, **18**, 06
    └─ 06 brief page ─ 11 demo bar ─ 07 scene cards ─ 08 detail ─ 09 lifecycle ─ 10 ask ─ 12 set aside ─ 13 edge states ─ 14 dark theme ─ 15 a11y pass ─ 16 e2e flows
 ```
 
-## Creating the issues on GitHub
+## Working from the GitHub issues
 
-All issues have already been created on GitHub. Do not run `create-issues.sh` again; it would create duplicate issues. Work from the existing GitHub issues and the matching files in `issues/`.
+All issues already exist on GitHub. Use those issues and their matching files in `issues/`.
 
 ## Reviewing a pull request (designer checklist)
 

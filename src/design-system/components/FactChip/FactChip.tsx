@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import type { FactKind } from '../../../data/types';
 import tones from '../factStyles.module.css';
 import styles from './FactChip.module.css';
@@ -17,7 +18,7 @@ export function FactChip({ kind, label, urgent = false }: FactChipProps) {
     >
       <span className={styles.srOnly}>{kind + ': '}</span>
       {urgent && <span className={styles.dot} aria-hidden="true" />}
-      {label}
+      {keepDatesTogether(label)}
       {urgent && <span className={styles.srOnly}>, urgent</span>}
     </span>
   );

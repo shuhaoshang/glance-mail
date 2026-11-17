@@ -680,5 +680,5 @@ Read every step above with these replacements: **Good to know** is the **Heads-u
 
 **Phone**
 
-- When the person taps a row in any email tab, then the detail opens in the bottom sheet with underline tabs; the sheet closes as before (close button, scrim, Escape, dragging the handle).
+- When the person taps a row in any email tab, then the detail opens in the bottom sheet. Needs you and Heads-up details show underline tabs. Other mail opens a single email view per [design system section 9.5](design-system.md#95-detail-panel). The person can close the sheet with the close button, by tapping the scrim, by pressing Escape, or by dragging the handle.
 - When they tap the Watchlist or Memory button in the header, then that view replaces the brief and “‹ Brief” returns to it.

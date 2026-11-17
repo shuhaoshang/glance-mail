@@ -1,4 +1,5 @@
-import { useSyncExternalStore, type HTMLAttributes } from 'react';
+import { keepDatesTogether } from '../keepDatesTogether';
+import { Children, useSyncExternalStore, type HTMLAttributes } from 'react';
 import tokenSheet from '../../tokens/tokens.css?raw';
 import styles from './Text.module.css';
 
@@ -42,6 +43,7 @@ export function Text({
   variant,
   as: Tag = 'span',
   className,
+  children,
   ...props
 }: TextProps) {
   const wide = useSyncExternalStore(subscribe, isDesktop, isServerDesktop);
@@ -52,5 +54,11 @@ export function Text({
     className,
   ];
 
-  return <Tag {...props} className={classes.filter(Boolean).join(' ')} />;
+  return (
+    <Tag {...props} className={classes.filter(Boolean).join(' ')}>
+      {Children.map(children, (child) =>
+        typeof child === 'string' ? keepDatesTogether(child) : child,
+      )}
+    </Tag>
+  );
 }

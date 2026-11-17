@@ -24,7 +24,7 @@ MoveMenu exposes the three email destinations with keyboard navigation and a che
 
 [HeadsUpRow](?path=/docs/composites-headsuprow--docs) · [OtherMailRow](?path=/docs/composites-othermailrow--docs) · [MailList](?path=/docs/composites-maillist--docs) · [Rows and details examples](?path=/story/composites-mail-rows-and-details--maya-heads-up)
 
-Heads-up rows open details with a persistent source and an Original email tab. Other mail shows its reason, basis, original paragraphs, and a legend limited to the highlight kinds present. The moved-row matrix demonstrates each source kind in each destination without implementing moves. Phone details reuse DetailSheet and the underline appearance of SegmentedControl. KnowRow remains available for the current app and edge-state stories during migration.
+Heads-up rows open details with a persistent source and an Original email tab. Other mail shows its reason, basis, original paragraphs, and a legend limited to the highlight kinds present. The moved-row matrix demonstrates each source kind in each destination without implementing moves. Phone details reuse DetailSheet and the underline appearance of SegmentedControl. KnowRow remains available for the edge-state stories.
 
 ## Watchlist
 
@@ -46,11 +46,9 @@ EmailView renders the supplied subject, metadata, and exact email paragraphs. It
 
 [AskThread](?path=/docs/composites-askthread--docs) offers prepared questions, attributed answers with judgment sources, and a plain not-found answer when the email does not say. The demo note replaces a free-text input.
 
-## Set aside and new mail
+## New mail
 
-[SetAsideList](?path=/docs/composites-setasidelist--docs) renders supplied group counts, mail rows, kept states, and items moved out of Needs you. Its caller owns keeping, undoing, restoring, and sheet navigation. Hidden-row counts exclude kept rows from the current Set aside count.
-
-[NewMailRow](?path=/docs/composites-newmailrow--docs) becomes a plain acknowledgement after adding mail. Whole emails kept in [KnowRow](?path=/docs/composites-knowrow--docs) use the mail tile and “Moved by you” label without invented facts.
+[NewMailRow](?path=/docs/composites-newmailrow--docs) becomes a plain acknowledgement after adding mail.
 
 [Notice](?path=/docs/composites-notice--docs) presents an inbox coverage warning and can offer one primary action.
 

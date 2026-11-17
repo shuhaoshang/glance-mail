@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../design-system/components/keepDatesTogether';
 import type { Persona } from '../data';
 import { Text } from '../design-system/components/Text/Text';
 import { useDesktopLayout } from '../design-system/components/useDesktopLayout';
@@ -40,7 +41,7 @@ export function TextLevels({ persona, level }: TextLevelsProps) {
         {formatted.needs.map(([lead, text]) => (
           <li key={lead}>
             <strong>{lead}</strong>
-            {text}
+            {keepDatesTogether(text)}
           </li>
         ))}
       </ul>
@@ -49,7 +50,7 @@ export function TextLevels({ persona, level }: TextLevelsProps) {
       </Text>
       <ul className={styles.list}>
         {formatted.know.map((text) => (
-          <li key={text}>{text}</li>
+          <li key={keepDatesTogether(text)}>{keepDatesTogether(text)}</li>
         ))}
       </ul>
       {formatted.done.length > 0 && (
@@ -59,7 +60,7 @@ export function TextLevels({ persona, level }: TextLevelsProps) {
           </Text>
           <ul className={styles.list}>
             {formatted.done.map((text) => (
-              <li key={text}>{text}</li>
+              <li key={keepDatesTogether(text)}>{keepDatesTogether(text)}</li>
             ))}
           </ul>
         </>

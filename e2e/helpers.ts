@@ -31,6 +31,14 @@ export async function progress(page: Page, done: number, total: number) {
   );
 }
 
+export async function closeDetail(page: Page) {
+  const sheet = page.getByRole('dialog');
+  if (await sheet.count()) {
+    await sheet.getByRole('button', exact('Close detail')).click();
+    await expect(sheet).toHaveCount(0);
+  }
+}
+
 export async function simulate(page: Page, label: string) {
   const trigger = page.getByRole('button', exact('Demo'));
   if (await trigger.count()) {

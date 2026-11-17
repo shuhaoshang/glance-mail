@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from 'react';
+import { useId, useRef, type Ref } from 'react';
 import type { PersonaId } from '../data';
 import { useDesktopLayout } from '../design-system/components/useDesktopLayout';
 import type { DemoLevel } from './DemoApp';
@@ -9,6 +9,9 @@ import hitTarget from '../design-system/components/HitTarget.module.css';
 interface DemoBarProps {
   personaId: PersonaId;
   level: DemoLevel;
+  expanded: boolean;
+  onExpandedChange: (expanded: boolean) => void;
+  selectedPersona: Ref<HTMLButtonElement>;
   onPersonaChange: (id: PersonaId) => void;
   onLevelChange: (level: DemoLevel) => void;
   simulation?: { label: string; disabled: boolean; onClick: () => void };
@@ -27,13 +30,15 @@ const levels = [
 export function DemoBar({
   personaId,
   level,
+  expanded,
+  onExpandedChange,
+  selectedPersona,
   onPersonaChange,
   onLevelChange,
   simulation,
 }: DemoBarProps) {
   const desktop = useDesktopLayout();
   const phone = usePhoneLabels();
-  const [expanded, setExpanded] = useState(false);
   const id = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   return (
@@ -52,7 +57,7 @@ export function DemoBar({
         onKeyDown={(event) => {
           if (!desktop && expanded && event.key === 'Escape') {
             event.preventDefault();
-            setExpanded(false);
+            onExpandedChange(false);
             trigger.current?.focus();
           }
         }}
@@ -66,7 +71,7 @@ export function DemoBar({
             )}
             aria-expanded={expanded}
             aria-controls={id}
-            onClick={() => setExpanded((value) => !value)}
+            onClick={() => onExpandedChange(!expanded)}
           >
             Demo
           </button>
@@ -86,6 +91,7 @@ export function DemoBar({
                 {personas.map((persona) => (
                   <button
                     key={persona.id}
+                    ref={personaId === persona.id ? selectedPersona : undefined}
                     type="button"
                     aria-label={persona.label}
                     aria-pressed={personaId === persona.id}

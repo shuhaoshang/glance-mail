@@ -1,3 +1,4 @@
+import { keepDatesTogether } from '../keepDatesTogether';
 import { useId, useRef, useState } from 'react';
 import type { Item } from '../../../data/types';
 import { Text } from '../Text/Text';
@@ -48,7 +49,7 @@ function Content({
                 variant="body"
                 className={[styles.question, motion.enter].join(' ')}
               >
-                {qa.q}
+                {keepDatesTogether(qa.q)}
               </Text>
               <section
                 data-answer={index}
@@ -110,12 +111,12 @@ function Content({
             {item.qa.map((qa, index) =>
               asked.includes(index) ? null : (
                 <Button
-                  key={qa.q}
+                  key={keepDatesTogether(qa.q)}
                   variant="outline"
                   aria-controls={prefix + '-history'}
                   onClick={() => ask(index)}
                 >
-                  {qa.q}
+                  {keepDatesTogether(qa.q)}
                 </Button>
               ),
             )}

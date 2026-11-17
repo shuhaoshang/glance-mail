@@ -236,7 +236,7 @@ export const NewMail: Story = {
     docs: {
       description: {
         story:
-          'Sarah’s pending mail stays visible and Add to brief records onAdd. See [Maya’s Set aside flow](?path=/story/patterns-set-aside--maya-flow) for the full add and ranking behavior.',
+          'Sarah’s pending mail stays visible and Add to brief records onAdd. See [Maya’s new mail flow](?path=/story/patterns-new-mail--added-other-mail) for the full add and ranking behavior.',
       },
     },
   },

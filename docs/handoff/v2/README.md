@@ -12,7 +12,6 @@ Start with `codex-kickoff.md`.
 | `provided/tokens.css` | The new token file. Copy it over `src/design-system/tokens/tokens.css` in issue 20. Do not edit values |
 | `provided/data/*.json` | The version 2 persona data. Copy over `src/data/` in issue 24 |
 | `provided/types.ts` | The version 2 types that match the data. Copy over `src/data/types.ts` in issue 24, then format |
-| `create-issues.sh` | Creates the issues with the GitHub CLI |
 
 Outside this folder, the same package updates the documents (`docs/decisions.md` D47 to D61, `docs/design-system.md` §9, `docs/design-rules.md` §16, `docs/product-brief.md` §23, `docs/user-flows.md` “Visual 2.0”, `docs/data-model.md` “Version 2”) and adds references: `docs/prototype/v2/` (static pages, one per state) and `docs/screens/v2/` (the same states as images).
 
@@ -49,6 +48,8 @@ Outside this folder, the same package updates the documents (`docs/decisions.md`
 | 30 | Account menu and theme | feat | 26 |
 | 31 | Settings and the signed-out page | feat | 30 |
 | 32 | Flows, screenshots and cleanup | chore | 27, 29, 31 |
+
+All 14 issues already exist on GitHub. Use the matching files in `issues/` as the handoff.
 
 One issue per PR. Issues 21 and 25 may be split into two PRs each if the review would take longer than about ten minutes; say how you split them.
 

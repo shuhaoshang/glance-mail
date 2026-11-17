@@ -201,3 +201,39 @@ test('Both sign-in choices return to the brief and the demo bar stays visible', 
     }
   }
 });
+
+test('Calendar dates stay on one line in narrow Settings rows and Memory notes', async ({
+  page,
+}) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await cleanStart(page, 'daniel');
+  await action(page, 'Settings');
+  const inboxes = section(page, 'Inboxes');
+  await expect(
+    inboxes.getByText('Work · connected Oct 28', { exact: true }),
+  ).toBeVisible();
+  for (const label of ['Work', 'Personal']) {
+    const meta = inboxes.getByText(label + ' · connected Oct 28', {
+      exact: true,
+    });
+    const lineCount = await meta.evaluate((element) => {
+      const date = 'Oct\u00a028';
+      const text = [...element.childNodes].find((node) =>
+        node.textContent?.includes(date),
+      );
+      if (!text) return 0;
+      const offset = text.textContent!.indexOf(date);
+      const range = document.createRange();
+      range.setStart(text, offset);
+      range.setEnd(text, offset + date.length);
+      return new Set([...range.getClientRects()].map((rect) => rect.top)).size;
+    });
+    expect(lineCount).toBe(1);
+  }
+  await page.getByRole('button', exact('Back to brief')).click();
+  await page.getByRole('button', exact('Memory')).click();
+  const memory = page.getByRole('list', exact('Your instructions'));
+  await expect(memory.getByText('Added Oct 20', { exact: true })).toBeVisible();
+  const notes = await memory.getByRole('listitem').allTextContents();
+  expect(notes.some((text) => /(?:Oct|Nov)\u00a0\d+/.test(text))).toBe(true);
+});

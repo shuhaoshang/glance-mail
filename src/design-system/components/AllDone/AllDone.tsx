@@ -1,4 +1,3 @@
-import { Button } from '../Button/Button';
 import { Text } from '../Text/Text';
 import { Icon } from '../Icon/Icon';
 import styles from './AllDone.module.css';
@@ -6,18 +5,14 @@ export function AllDone({
   done,
   total,
   know,
-  aside,
+  other,
   snoozed = 0,
-  wording = 'legacy',
-  onReviewAside,
 }: {
   done: number;
   total: number;
   know: number;
-  aside: number;
+  other: number;
   snoozed?: number;
-  wording?: 'legacy' | 'tabs';
-  onReviewAside?: (trigger: HTMLButtonElement) => void;
 }) {
   return (
     <section aria-label="All done" className={styles.panel}>
@@ -42,22 +37,11 @@ export function AllDone({
               ' will come back later.'
             : '') +
           ' ' +
-          (wording === 'tabs'
-            ? know + ' emails in Heads-up and ' + aside + ' in Other mail.'
-            : know +
-              ' things are good to know, and ' +
-              aside +
-              ' emails are set aside.')}
+          know +
+          ' emails in Heads-up and ' +
+          other +
+          ' in Other mail.'}
       </Text>
-      {wording === 'legacy' && onReviewAside && (
-        <Button
-          data-review-set-aside
-          variant="tint"
-          onClick={(event) => onReviewAside(event.currentTarget)}
-        >
-          Review set aside
-        </Button>
-      )}
     </section>
   );
 }

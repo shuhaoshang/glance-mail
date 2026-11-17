@@ -678,60 +678,6 @@
       }
     }
   ],
-  "setAside": [
-    {
-      "title": "Newsletters",
-      "short": "newsletters",
-      "count": 18,
-      "rows": [
-        {
-          "id": "n0",
-          "title": "Revenue Ops Digest",
-          "sub": "This week: pricing pages that convert",
-          "isNew": true
-        },
-        {
-          "id": "n1",
-          "title": "SaaS Sales Weekly",
-          "sub": "Five renewal plays for Q4"
-        },
-        {
-          "id": "n2",
-          "title": "Pipeline Notes",
-          "sub": "November pricing benchmarks"
-        }
-      ]
-    },
-    {
-      "title": "You were CC’d",
-      "short": "CC’d",
-      "count": 9,
-      "rows": [
-        {
-          "id": "c1",
-          "title": "Tom Becker → Corvo team",
-          "sub": "Re: QBR agenda, final version"
-        },
-        {
-          "id": "c2",
-          "title": "Sales Ops → all of Sales",
-          "sub": "Reminder: update forecasts by month end"
-        }
-      ]
-    },
-    {
-      "title": "Promotions",
-      "short": "promotions",
-      "count": 4,
-      "rows": [
-        {
-          "id": "p1",
-          "title": "SaaSConnect 2026",
-          "sub": "Early-bird tickets end Friday"
-        }
-      ]
-    }
-  ],
   "otherMail": {
     "total": 31,
     "rows": [

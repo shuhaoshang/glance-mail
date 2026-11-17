@@ -184,7 +184,7 @@ Motion only shows cause and effect; nothing moves for decoration.
 
 US English throughout.
 
-- Dates: “Thursday, November 5”, “Nov 15”, “Fri”
+- Dates: “Thursday, November 5”, “Nov 15”, “Fri”. Keep each calendar date on one line.
 - Times: “8:41 AM”
 - Money: “$48,000/yr”, “$68.40”
 - Relative time is preferred when it is shorter: “tomorrow”, “Waiting 2 days”

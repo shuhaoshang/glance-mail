@@ -144,9 +144,9 @@ export function OutlineActionsExample() {
         <Button
           variant="outline"
           leadingIcon="tray-arrow"
-          onClick={() => setAction('Move to Set aside')}
+          onClick={() => setAction('Move to')}
         >
-          Move to Set aside
+          Move to
         </Button>
       </div>
       <output aria-live="polite">

@@ -453,49 +453,6 @@
       }
     }
   ],
-  "setAside": [
-    {
-      "title": "Newsletters",
-      "short": "newsletters",
-      "count": 10,
-      "rows": [
-        {
-          "id": "n1",
-          "title": "PTA Weekly",
-          "sub": "Bake sale sign-ups are open"
-        },
-        {
-          "id": "n2",
-          "title": "Little Readers",
-          "sub": "Five picture books for November"
-        }
-      ]
-    },
-    {
-      "title": "Promotions",
-      "short": "promotions",
-      "count": 6,
-      "rows": [
-        {
-          "id": "p1",
-          "title": "ToyBarn",
-          "sub": "Holiday sale starts Friday"
-        }
-      ]
-    },
-    {
-      "title": "You were CC’d",
-      "short": "CC’d",
-      "count": 2,
-      "rows": [
-        {
-          "id": "c1",
-          "title": "Soccer parents → team",
-          "sub": "Carpool for Saturday"
-        }
-      ]
-    }
-  ],
   "otherMail": {
     "total": 18,
     "rows": [

@@ -355,14 +355,6 @@ The label defaults to “set aside” and can be “good to know.” An optional
 
 `CollapsedGroup` can also render as a static card without a chevron, interactive states, or a tab stop.
 
-### SetAsideList
-
-Groups with a title and a count. Each row has a sender or subject, a subject line, and a “Show in brief” text button. A kept row shows “✓ In Good to know · Undo”. Below the rows: “+N more” as plain text, only when more exist.
-
-When the user has moved items out of Needs you, the first group is **Moved by you**: each row shows the item name and its request, with a “Back to Needs you” text button.
-
-On desktop the list opens in the detail area. On phone it opens in the same sheet as the detail view, titled “Set aside”, with the same motion and ways to close.
-
 ### DoneRow
 
 A filled `--color-brand` circle with an `--color-on-brand` check at `--size-icon` (a muted clock for snoozed items, a muted tray-arrow for items moved to Set aside), then “**Name** · what happened”. Undo is optional: only items done during the session receive `onUndo` and show the Undo text button. Rows from `doneBefore` have no restore data and no Undo. Done rows appear with the enter motion (§2). Rows with Undo have a minimum height of `--size-touch`; Undo has its own 44 px target within the row, so adjacent targets never overlap. Use a 12 px gap, with padding 8 4 8 12 on desktop and 8 8 8 16 on phone, from the references.
@@ -513,7 +505,7 @@ Foundations/        Colors (light and dark), Type, Spacing, Radius, Motion
 Primitives/         Button, IconButton, SegmentedControl, FactChip, AccountLabel, Badge, GlanceMark, ReasonPill,
                     Field, Highlight, SourcePanel, ReasonPanel, DateTile, Person, Checkbox, Switch,
                     ProgressBar, Skeleton, Icons
-Composites/         BriefRow, SectionCard, KnowRow, CollapsedGroup, SetAsideList, DoneRow, NewMailRow,
+Composites/         BriefRow, SectionCard, KnowRow, CollapsedGroup, DoneRow, NewMailRow,
                     Notice, DetailPanel, DetailSheet, EmailView, AskThread, SnoozeMenu
 Scene cards/        Deal, Decision, Approval, Payment, Mismatch, Event, Range, Checklist, TextFallback
 Patterns/           Brief (desktop, phone), Edge states, Levels (L1/L2/L3)
@@ -662,7 +654,7 @@ The tab remembers its selected row for the session. Opening a tab for the first 
   - The email body in a `--color-surface-muted` block, radius `--radius-panel`, padding 20 24, paragraphs in `Reading` style 16 apart, highlights as in EmailView (`judg` uses `--color-judgment-ink`).
   - The legend, 12 below, 12/16 muted: a `judgment`-ink sample “Highlighted”, “what Glance used to sort it.”, then a money-ink sample “Amounts” “and” a time-ink sample “dates” “are marked too.” Show only the kinds that appear in the email; with only `judg`, the sentence ends after “sort it.”
 - **Moved emails** keep the detail of where they came from. Under the Person line they show “You moved this here. Glance will sort emails like it the same way.” (14/20, `--color-brand-text` on `--color-brand-tint`, padding 8 12, radius 12).
-- **Empty tab:** the list panel shows “Nothing here.” (16/24 semibold) and “Emails you move to {tab} will show up here.” (14/20, muted), centered, 40 padding; there is no detail panel. Needs you with everything done keeps the built AllDone. In the app, its body reads “{done} of {total} actions done. {know} emails in Heads-up and {other} in Other mail.” Keep the existing snoozed sentence after the first sentence when applicable. Legacy wording remains only in existing library and edge-state stories.
+- **Empty tab:** the list panel shows “Nothing here.” (16/24 semibold) and “Emails you move to {tab} will show up here.” (14/20, muted), centered, 40 padding; there is no detail panel. Needs you with everything done keeps the built AllDone. In the app, its body reads “{done} of {total} actions done. {know} emails in Heads-up and {other} in Other mail.” Keep the existing snoozed sentence after the first sentence when applicable.
 
 **ReasonPill (changed):** ring is `--border-hairline` in `--color-brand-stroke`. Label: “Why it’s {ordinal}” plus “: {first judgment label}” when the item has a judgment (“Why it’s first: Renewal risk”, “Why it’s second”). Ordinals are words up to tenth; after that “Why it’s ranked 11th”. A chevron at the end points down, and up while open. Moved items have no pill.
 
@@ -754,7 +746,7 @@ Two sections, 32 apart:
 **MemoryRow** (hairline above, padding 16 0): a 16 mark (an opening quotation mark in `--color-brand` for instructions; a bulb icon in `--color-brand` for learned), the text (16/24, `--color-text`), under it the meta (14/20, muted: “Added Oct 28”, “From 4 opens · Oct 20”), and on the right Edit and Remove IconButtons. On the phone the two buttons sit on their own line under the meta, aligned right.
 
 - Edit turns the text into a TextInput with Save and Cancel. Saving an instruction keeps its place. Saving a learned pattern moves it to the end of Your instructions with the meta “Was learned · edited just now”.
-- New instructions get the meta “Added today”.
+- New instructions go to the end of Your instructions with the meta “Added today”, in the same position as a saved learned pattern.
 - Remove removes the row and shows the toast.
 
 Watchlist and Memory changes last for the session and reset with the persona, like every other demo state.
@@ -798,7 +790,7 @@ Demo behavior, so that nothing is a dead control (D29): switches and selects cha
 
 ### 9.14 Components retired
 
-`CollapsedGroup`, `SetAsideList` and `SectionCard` are no longer used by the app. They stay in the library only while an edge-state story still uses them; edge states under tabs are a later round (see `docs/handoff/v2/README.md`).
+`SetAsideList` was removed. `CollapsedGroup` and `SectionCard` stay in the library for the edge-state stories. Edge states under tabs are a later round (see `docs/handoff/v2/README.md`).
 
 ### 9.15 Storybook
 
